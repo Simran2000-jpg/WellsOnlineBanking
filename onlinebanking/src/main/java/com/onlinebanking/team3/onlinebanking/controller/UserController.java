@@ -1,5 +1,7 @@
-package com.onlinebanking.team3.onlinebanking;
+package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.model.User;
+import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

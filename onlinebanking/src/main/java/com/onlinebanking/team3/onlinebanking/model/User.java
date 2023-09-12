@@ -1,4 +1,4 @@
-package com.onlinebanking.team3.onlinebanking;
+package com.onlinebanking.team3.onlinebanking.model;
 
 import jakarta.persistence.*;
 import org.springframework.web.bind.annotation.GetMapping;

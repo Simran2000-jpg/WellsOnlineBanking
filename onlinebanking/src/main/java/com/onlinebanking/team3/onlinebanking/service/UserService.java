@@ -1,11 +1,11 @@
-package com.onlinebanking.team3.onlinebanking;
+package com.onlinebanking.team3.onlinebanking.service;
 
+import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
