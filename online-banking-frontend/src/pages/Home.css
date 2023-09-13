@@ -1,0 +1,7 @@
+.landing-page-img {
+    width: 100%;
+    min-height: 95vh;
+    background-image: url(/src/images/landing_page_image.jpg);
+    background-size: contain;
+    background-repeat: round;
+}
