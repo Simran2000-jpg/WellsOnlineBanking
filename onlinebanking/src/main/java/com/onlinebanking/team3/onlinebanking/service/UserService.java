@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -14,12 +15,16 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User saveUser(User u) {
+    public User registerUser(User u) {
         return userRepository.save(u);
     }
 
     public List<User> listAll() {
         return userRepository.findAll();
+    }
+
+    public Optional<User> loginUser(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 
 //    public User getUser(String userId) {
