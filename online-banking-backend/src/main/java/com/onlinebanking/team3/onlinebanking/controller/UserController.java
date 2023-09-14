@@ -1,8 +1,10 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.User;
+import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,9 @@ public class UserController {
     @Autowired
     private UserService uService;
 
+    @Autowired
+    private AccountService accountService;
+
     @GetMapping("/welcome")
     public String demo() {
         return "Welcome User";
@@ -33,6 +38,18 @@ public class UserController {
 
             address.setUser(user);
             user.setAddress(address);
+
+//
+//            List<Account> accounts = user.getAccounts();
+//
+//            for(Account account:accounts) {
+//                account.setUser(user);
+//
+//            }
+//
+//            user.setAccounts(accounts);
+
+
             User registeredUser = uService.registerUser(user);
 
             if(registeredUser!=null) {
@@ -66,6 +83,13 @@ public class UserController {
         }
 
         return isLoggedIn;
+    }
+
+    @PostMapping("/{userId}/accounts")
+    public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
+        User user = uService.getUserById(userId);
+        account.setUser(user);
+        return accountService.createAccount(account);
     }
 
     @GetMapping("/users")
