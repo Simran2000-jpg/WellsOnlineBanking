@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,8 +23,9 @@ public class Account {
 
     private String transactionPassword;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
 
     public Account(@NonNull String ifscCode, @NonNull String mailingAddress, @NonNull double balance, String transactionPassword) {

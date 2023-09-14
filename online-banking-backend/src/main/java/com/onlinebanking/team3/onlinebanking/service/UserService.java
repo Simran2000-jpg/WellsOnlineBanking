@@ -2,6 +2,7 @@ package com.onlinebanking.team3.onlinebanking.service;
 
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,13 @@ public class UserService {
 
     public Optional<User> loginUser(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
+    }
+
+
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
     }
 
 //    public User getUser(String userId) {
