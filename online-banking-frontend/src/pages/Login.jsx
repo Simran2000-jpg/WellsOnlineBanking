@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/Register.css";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -24,7 +25,12 @@ const Login = () => {
                   </button>
                 </div>
                 <span className="user-login mt-4">
-                  Haven't registered for NetBanking yet? Click Here to <a href="#">Register</a>
+                  Haven't registered for NetBanking yet? Click Here to {" "}
+                  <a href="#">
+                    <NavLink to={'/register'}>
+                      Register
+                    </NavLink>
+                  </a>
                 </span>
               </form>
             </div>

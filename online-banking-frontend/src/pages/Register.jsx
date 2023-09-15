@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
-import { useState } from "react";
 
 const Register = () => {
   const [wasRegisterClicked, setWasRegisterClicked] = useState(false);
@@ -54,7 +54,12 @@ const Register = () => {
                   </button>
                 </div>
                 <span className="user-login ">
-                  Already Have an Account? Click Here to <a href="#">Register</a>
+                  Already Have an Account? Click Here to {" "}
+                  <a href="#">
+                    <NavLink to={'/login'}>
+                      Login
+                    </NavLink>
+                  </a>
                 </span>
               </form>
             </div>

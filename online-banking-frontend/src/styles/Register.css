@@ -1,6 +1,5 @@
 .form-container {
   background-color: rgba(255, 255, 255, 0.9);
-  font-family: "Titillium Web", sans-serif;
   padding: 25px 30px 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
@@ -102,7 +101,7 @@
 .form-vertical .btn:focus {
   color: #fff;
   background-color: #0cd674;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.3) inset;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
   outline: none;
 }
 .form-horizontal .user-login,

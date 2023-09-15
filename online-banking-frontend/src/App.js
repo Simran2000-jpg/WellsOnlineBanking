@@ -12,15 +12,19 @@ import Register from "./pages/Register";
 
 function App() {
   return (
-    <div className="App">
+    <>
       <Router>
-        {/* <NavbarComponent /> */}
-        {/* <Home /> */}
-        {/* <Login /> */}
-        <Register />
+        <NavbarComponent />
+        <div className="App pt-5">
+          <Routes>
+            <Route path="/login" element={<Login />} ></Route>
+            <Route path="/register" element={<Register />} ></Route>
+            <Route path="/" element={<Home />} ></Route>
+          </Routes>
+        </div>
+        <Footer />
       </Router>
-      {/* <Footer /> */}
-    </div>
+    </>
   );
 }
 
