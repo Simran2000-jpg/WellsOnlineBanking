@@ -3,8 +3,12 @@ package com.onlinebanking.team3.onlinebanking.controller;
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
+//import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
+import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
+//import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
+import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 //@CrossOrigin("*")
@@ -23,6 +26,9 @@ public class UserController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private BeneficiaryService beneficiaryService;
 
     @GetMapping("/welcome")
     public String demo() {
@@ -90,6 +96,13 @@ public class UserController {
         User user = uService.getUserById(userId);
         account.setUser(user);
         return accountService.createAccount(account);
+    }
+
+    @PostMapping("/{userId}/beneficiaries")
+    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
+        User user = uService.getUserById(userId);
+        beneficiary.setUser(user);
+        return beneficiaryService.createBeneficiary(beneficiary);
     }
 
     @GetMapping("/users")

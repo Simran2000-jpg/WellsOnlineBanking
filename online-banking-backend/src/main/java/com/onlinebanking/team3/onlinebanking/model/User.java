@@ -73,6 +73,12 @@ public class User {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Address address;
 
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+//    private List<Beneficiary> beneficiaries = new ArrayList<>();
+
+
+
     public User() {
 
     }
@@ -117,6 +123,7 @@ public class User {
         this.kyc = kyc;
         this.accounts = accounts;
         this.address = address;
+//        this.beneficiaries =  beneficiaries;
     }
 
     public Address getAddress() {
@@ -138,6 +145,14 @@ public class User {
     public String getFirstName() {
         return firstName;
     }
+
+//    public List<Beneficiary> getBeneficiaries() {
+//        return beneficiaries;
+//    }
+//
+//    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
+//        this.beneficiaries = beneficiaries;
+//    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
