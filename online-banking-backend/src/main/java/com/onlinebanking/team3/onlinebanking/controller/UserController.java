@@ -45,16 +45,6 @@ public class UserController {
             address.setUser(user);
             user.setAddress(address);
 
-//
-//            List<Account> accounts = user.getAccounts();
-//
-//            for(Account account:accounts) {
-//                account.setUser(user);
-//
-//            }
-//
-//            user.setAccounts(accounts);
-
 
             User registeredUser = uService.registerUser(user);
 
@@ -91,19 +81,19 @@ public class UserController {
         return isLoggedIn;
     }
 
-    @PostMapping("/{userId}/accounts")
-    public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
-        User user = uService.getUserById(userId);
-        account.setUser(user);
-        return accountService.createAccount(account);
-    }
+//    @PostMapping("/{userId}/accounts")
+//    public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
+//        User user = uService.getUserById(userId);
+//        account.setUser(user);
+//        return accountService.createAccount(account);
+//    }
 
-    @PostMapping("/{userId}/beneficiaries")
-    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
-        User user = uService.getUserById(userId);
-        beneficiary.setUser(user);
-        return beneficiaryService.createBeneficiary(beneficiary);
-    }
+//    @PostMapping("/{userId}/beneficiaries")
+//    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
+//        User user = uService.getUserById(userId);
+//        beneficiary.setUser(user);
+//        return beneficiaryService.createBeneficiary(beneficiary);
+//    }
 
     @GetMapping("/users")
 

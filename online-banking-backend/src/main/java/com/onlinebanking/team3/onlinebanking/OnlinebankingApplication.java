@@ -10,3 +10,6 @@ public class OnlinebankingApplication {
 		SpringApplication.run(OnlinebankingApplication.class, args);
 	}
 }
+
+
+

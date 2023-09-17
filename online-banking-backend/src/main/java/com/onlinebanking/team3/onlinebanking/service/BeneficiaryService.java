@@ -4,6 +4,7 @@ import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.repository.AccountRepository;
 import com.onlinebanking.team3.onlinebanking.repository.BeneficiaryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class BeneficiaryService {
     }
 
 
-
-
+    public Beneficiary getBeneficiaryById(Long beneficiaryId) {
+        return beneficiaryRepository.findById(beneficiaryId)
+                .orElseThrow(() -> new EntityNotFoundException("Beneficiary not found with ID: " + beneficiaryId));
+    }
 }

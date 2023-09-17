@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
@@ -19,7 +23,7 @@ public class Account {
 
     private @NonNull String mailingAddress;
 
-    private @NonNull double balance;
+    private @NonNull BigDecimal balance;
 
     private String transactionPassword;
 
@@ -28,10 +32,15 @@ public class Account {
     @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
 
-    public Account(@NonNull String ifscCode, @NonNull String mailingAddress, @NonNull double balance, String transactionPassword) {
+    @JsonIgnore
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL)
+    private List<Transaction> transactions = new ArrayList<>();
+
+    public Account(@NonNull String ifscCode, @NonNull String mailingAddress, @NonNull BigDecimal balance, String transactionPassword,List<Transaction> transactions) {
         this.ifscCode = ifscCode;
         this.mailingAddress = mailingAddress;
         this.balance = balance;
         this.transactionPassword = transactionPassword;
+        this.transactions = transactions;
     }
 }
