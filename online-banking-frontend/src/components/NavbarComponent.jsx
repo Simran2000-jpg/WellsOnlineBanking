@@ -18,7 +18,7 @@ const NavbarComponent = () => {
           </NavLink>
           <Nav className="justify-content-end">
             <Nav.Item className="my-2 mx-2 nav-item-styling">
-              <NavLink to={"/"} className="text-decoration-none nav-link-styling">
+              <NavLink to={"/openaccount"} className="text-decoration-none nav-link-styling">
                 <i className="bi bi-bank"></i>
                 <span className="mx-2">Open an Account</span>
               </NavLink>

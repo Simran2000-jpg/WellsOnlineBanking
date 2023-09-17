@@ -47,14 +47,17 @@ const Register = () => {
                 <div className="text-center mb-4">
                   <button
                     className="my-2 mx-auto btn btn-success"
-                    type="submit"
-                    onClick={() => setWasRegisterClicked(true)}
+                    // type="submit"
+                    onClick={(e) => {
+                      e.preventDefault;
+                      setWasRegisterClicked(true)
+                    }}
                   >
                     Register
                   </button>
                 </div>
                 <span className="user-login ">
-                  Already Have an Account? Click Here to {" "}
+                  Already registered for NetBanking? Click Here to {" "}
                   <a href="#">
                     <NavLink to={'/login'}>
                       Login

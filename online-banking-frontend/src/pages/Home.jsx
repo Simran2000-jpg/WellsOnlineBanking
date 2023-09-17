@@ -7,8 +7,8 @@ const Home = () => {
         // <div className='landing-page-img'>
         // </div>
         <Container className='pt-2'>
-            <h1 className='display-3'>Home</h1>
-        </Container>
+        <h1 className='display-3'>Home</h1>
+    </Container>
     )
 }
 
