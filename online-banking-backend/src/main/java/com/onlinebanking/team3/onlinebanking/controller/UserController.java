@@ -1,10 +1,12 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.config.JwtTokenUtil;
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 //import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
+import com.onlinebanking.team3.onlinebanking.model.JwtResponse;
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
 //import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
@@ -34,8 +36,6 @@ public class UserController {
     public String demo() {
         return "Welcome User";
     }
-
-
 
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@Validated @RequestBody User user) {
@@ -74,9 +74,8 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/loginUser")
-    public Boolean loginUser(@Validated @RequestBody User user) throws ResourceNotFoundException {
+    public ResponseEntity<JwtResponse> loginUser(@Validated @RequestBody User user) throws ResourceNotFoundException {
         Boolean isLoggedIn = false;
         String phone_number = user.getPhoneNumber();
         String login_password = user.getLoginPassword();
@@ -86,9 +85,13 @@ public class UserController {
 
         if(phone_number.equals(u.getPhoneNumber()) && login_password.equals(u.getLoginPassword())) {
             isLoggedIn = true;
-        }
+        }	
+        
+        final String token = JwtTokenUtil.generateToken(u);
 
-        return isLoggedIn;
+		return ResponseEntity.ok(new JwtResponse(token));
+
+//        return isLoggedIn;
     }
 
     @PostMapping("/{userId}/accounts")

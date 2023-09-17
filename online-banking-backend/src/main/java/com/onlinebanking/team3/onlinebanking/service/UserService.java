@@ -28,8 +28,6 @@ public class UserService {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-
-
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
