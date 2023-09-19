@@ -45,21 +45,16 @@ public class UserController {
             address.setUser(user);
             user.setAddress(address);
 
-//
-//            List<Account> accounts = user.getAccounts();
-//
-//            for(Account account:accounts) {
-//                account.setUser(user);
-//
-//            }
-//
-//            user.setAccounts(accounts);
+
 
 
             User registeredUser = uService.registerUser(user);
+            String ph = user.getPhoneNumber();
+            System.out.println(ph);
 
             if(registeredUser!=null) {
                 return ResponseEntity.ok("Registration Successful");
+
             }
 
             else {
@@ -80,6 +75,9 @@ public class UserController {
         Boolean isLoggedIn = false;
         String phone_number = user.getPhoneNumber();
         String login_password = user.getLoginPassword();
+
+        System.out.println(phone_number);
+        System.out.println(login_password);
 
         User u = uService.loginUser(phone_number).orElseThrow(() ->
                 new ResourceNotFoundException("No User Enrolled With This Number ::"));
@@ -105,12 +103,19 @@ public class UserController {
         return beneficiaryService.createBeneficiary(beneficiary);
     }
 
+    @GetMapping("/users/{uid}")
+    public User getUserById(@PathVariable Long uid) {
+        User u = uService.getUserById(uid);
+        return u;
+        //
+    }
     @GetMapping("/users")
-
     public List<User> getAllUsers() {
         try {
             return uService.listAll();
+
         } catch (Exception e) {
+            System.out.println("Fail");
             // TODO: handle exception
             e.printStackTrace();
             return null;
