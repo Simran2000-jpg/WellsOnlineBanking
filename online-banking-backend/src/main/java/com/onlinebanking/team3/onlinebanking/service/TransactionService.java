@@ -17,11 +17,11 @@ public class TransactionService {
     @Autowired
     TransactionRepository transactionRepository;
 
-    @Autowired
-    AccountService accountService;
-
-    @Autowired
-    BeneficiaryService beneficiaryService;
+//    @Autowired
+//    AccountService accountService;
+//
+//    @Autowired
+//    BeneficiaryService beneficiaryService;
 
     public  Transaction createTransaction(Transaction transaction) {
 //    public Transaction createTransaction(Long fromAccountId, Long toBeneficiaryId, BigDecimal amount) {

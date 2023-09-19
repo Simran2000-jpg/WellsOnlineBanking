@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
@@ -17,6 +18,16 @@ public class BeneficiaryController {
 
     @Autowired
     UserService userService;
+
+    @PostMapping("/{uid}/ben")
+    public String demo(@PathVariable Long uid, @RequestBody Beneficiary beneficiary) {
+        User user = userService.getUserById(uid);
+        beneficiary.setUser(user);
+       beneficiaryService.createBeneficiary(beneficiary);
+        return "Welcome "+uid;
+    }
+
+
 
     @PostMapping("/{userId}/beneficiaries")
     public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
