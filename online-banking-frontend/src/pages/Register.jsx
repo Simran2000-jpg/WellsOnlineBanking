@@ -49,7 +49,7 @@ const Register = () => {
                     className="my-2 mx-auto btn btn-success"
                     // type="submit"
                     onClick={(e) => {
-                      e.preventDefault;
+                      e.preventDefault();
                       setWasRegisterClicked(true)
                     }}
                   >
