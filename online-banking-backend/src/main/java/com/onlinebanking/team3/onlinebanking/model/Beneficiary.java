@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class Beneficiary {
     private @NonNull String accountNo;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(foreignKey = @ForeignKey(name = "uid"),name = "uid")
     private User user;
 

@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -66,14 +67,16 @@ public class User {
     @Column(nullable = false)
     private String kyc;
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Account> accounts = new ArrayList<>();
 
+    @JsonBackReference
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Address address;
 
 //    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Beneficiary> beneficiaries = new ArrayList<>();
 

@@ -20,5 +20,9 @@ public class BeneficiaryService {
         return beneficiaryRepository.findAll();
     }
 
+    public List<Beneficiary> getBeneficiaryByUser(Long uid) {
+        return beneficiaryRepository.findBeneficiaryByUser(uid);
+    }
+
 
 }
