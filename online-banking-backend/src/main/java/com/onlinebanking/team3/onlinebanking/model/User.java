@@ -4,6 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.nio.charset.StandardCharsets;
@@ -35,18 +41,6 @@ public class User {
     @Column(unique = true)
     private String emailId;
 
-//    @Column(nullable = false)
-//    private String permanentAddress;
-//
-//    @Column(nullable = false)
-//    private String city;
-//
-//    @Column(nullable = false)
-//    private String state;
-//
-//    @Column(nullable = false)
-//    private long pincode;
-
     @Column(unique = true)
     private String panNumber;
 
@@ -67,230 +61,185 @@ public class User {
     @Column(nullable = false)
     private String kyc;
 
-    @JsonBackReference
+//    @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Account> accounts = new ArrayList<>();
 
-    @JsonBackReference
+//  @JsonBackReference
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Address address;
+    private Address residentialAddress;
+    
+//  @JsonBackReference
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private Address permanentAddress;
 
 //    @JsonIgnore
-    @JsonBackReference
+//    @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Beneficiary> beneficiaries = new ArrayList<>();
 
+	public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId,
+			String panNumber, String aadharNumber, String dob, String occupation, String gender, String kyc,
+			Address residentialAddress, Address permanentAddress) {
+		super();
+		this.uid = uid;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.phoneNumber = phoneNumber;
+		this.emailId = emailId;
+		this.panNumber = panNumber;
+		this.aadharNumber = aadharNumber;
+		this.dob = dob;
+		this.occupation = occupation;
+		this.gender = gender;
+		this.kyc = kyc;
+		this.residentialAddress = residentialAddress;
+		this.permanentAddress = permanentAddress;
+	}
+	
+	public User() {
+		super();
+	}
 
+	public long getUid() {
+		return uid;
+	}
 
-    public User() {
+	public void setUid(long uid) {
+		this.uid = uid;
+	}
 
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String permanentAddress, String city, String state, long pincode, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc) {
-        this.uid = uid;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.emailId = emailId;
-//        this.permanentAddress = permanentAddress;
-//        this.city = city;
-//        this.state = state;
-//        this.pincode = pincode;
-        this.panNumber = panNumber;
-        this.aadharNumber = aadharNumber;
-        this.dob = dob;
-        this.occupation = occupation;
-        this.gender = gender;
-        this.loginPassword = loginPassword;
-        this.kyc = kyc;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String permanentAddress, String city, String state, long pincode, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, List<Account> accounts,Address address,List<Beneficiary> beneficiaries) {
-        this.uid = uid;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.emailId = emailId;
-//        this.permanentAddress = permanentAddress;
-//        this.city = city;
-//        this.state = state;
-//        this.pincode = pincode;
-        this.panNumber = panNumber;
-        this.aadharNumber = aadharNumber;
-        this.dob = dob;
-        this.occupation = occupation;
-        this.gender = gender;
-        this.loginPassword = loginPassword;
-        this.kyc = kyc;
-        this.accounts = accounts;
-        this.address = address;
-        this.beneficiaries =  beneficiaries;
-    }
+	public String getMiddleName() {
+		return middleName;
+	}
 
-    public Address getAddress() {
-        return address;
-    }
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public long getUid() {
-        return uid;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public List<Beneficiary> getBeneficiaries() {
-        return beneficiaries;
-    }
+	public String getEmailId() {
+		return emailId;
+	}
 
-    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
-        this.beneficiaries = beneficiaries;
-    }
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public String getPanNumber() {
+		return panNumber;
+	}
 
-    public String getMiddleName() {
-        return middleName;
-    }
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
+	}
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
+	public String getAadharNumber() {
+		return aadharNumber;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public void setAadharNumber(String aadharNumber) {
+		this.aadharNumber = aadharNumber;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public String getDob() {
+		return dob;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public String getOccupation() {
+		return occupation;
+	}
 
-    public String getEmailId() {
-        return emailId;
-    }
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
+	}
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId.toLowerCase();
-    }
+	public String getGender() {
+		return gender;
+	}
 
-//    public String getPermanentAddress() {
-//        return permanentAddress;
-//    }
-//
-//    public void setPermanentAddress(String permanentAddress) {
-//        this.permanentAddress = permanentAddress;
-//    }
-//
-//    public String getCity() {
-//        return city;
-//    }
-//
-//    public void setCity(String city) {
-//        this.city = city;
-//    }
-//
-//    public String getState() {
-//        return state;
-//    }
-//
-//    public void setState(String state) {
-//        this.state = state;
-//    }
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-//    public long getPincode() {
-//        return pincode;
-//    }
-//
-//    public void setPincode(long pincode) {
-//        this.pincode = pincode;
-//    }
+	public String getLoginPassword() {
+		return loginPassword;
+	}
 
-    public String getPanNumber() {
-        return panNumber;
-    }
+	public void setLoginPassword(String loginPassword) {
+      Base64.Encoder encoder = Base64.getEncoder();
+      String normalString = loginPassword;
+      String encodedString = encoder.encodeToString(   // encrypt password in database field
+      normalString.getBytes(StandardCharsets.UTF_8) );
+      this.loginPassword = encodedString;
+	}
 
-    public void setPanNumber(String panNumber) {
-        this.panNumber = panNumber;
-    }
+	public String getKyc() {
+		return kyc;
+	}
 
-    public String getAadharNumber() {
-        return aadharNumber;
-    }
+	public void setKyc(String kyc) {
+		this.kyc = kyc;
+	}
 
-    public void setAadharNumber(String aadharNumber) {
-        this.aadharNumber = aadharNumber;
-    }
+	public List<Account> getAccounts() {
+		return accounts;
+	}
 
-    public String getDob() {
-        return dob;
-    }
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
 
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
+	public Address getResidentialAddress() {
+		return residentialAddress;
+	}
 
-    public String getOccupation() {
-        return occupation;
-    }
+	public void setResidentialAddress(Address residentialAddress) {
+		this.residentialAddress = residentialAddress;
+	}
 
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
-    }
+	public Address getPermanentAddress() {
+		return permanentAddress;
+	}
 
-    public String getGender() {
-        return gender;
-    }
+	public void setPermanentAddress(Address permanentAddress) {
+		this.permanentAddress = permanentAddress;
+	}
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	public List<Beneficiary> getBeneficiaries() {
+		return beneficiaries;
+	}
 
-    public String getLoginPassword() {
-        return loginPassword;
-    }
+	public void setBeneficiaries(List<Beneficiary> beneficiaries) {
+		this.beneficiaries = beneficiaries;
+	}
 
-    public void setLoginPassword(String loginPassword) {
-//        this.loginPassword = loginPassword;
-        Base64.Encoder encoder = Base64.getEncoder();
-        String normalString = loginPassword;
-        String encodedString = encoder.encodeToString(   // encrypt password in database field
-        normalString.getBytes(StandardCharsets.UTF_8) );
-        this.loginPassword = encodedString;
-    }
-
-    public String getKyc() {
-        return kyc;
-    }
-
-    public void setKyc(String kyc) {
-        this.kyc = kyc;
-    }
-
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
 }

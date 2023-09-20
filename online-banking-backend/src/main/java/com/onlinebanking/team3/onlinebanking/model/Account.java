@@ -18,22 +18,31 @@ public class Account {
 
     private @NonNull String ifscCode;
 
-    private @NonNull String mailingAddress;
+//    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+//    private @NonNull Address mailingAddress;
+    
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
+    private Address mailingAddress;
 
     private @NonNull double balance;
 
     private String transactionPassword;
 
-    @JsonIgnore
-    @JsonBackReference
+//    @JsonIgnore
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
 
-    public Account(@NonNull String ifscCode, @NonNull String mailingAddress, @NonNull double balance, String transactionPassword) {
-        this.ifscCode = ifscCode;
-        this.mailingAddress = mailingAddress;
-        this.balance = balance;
-        this.transactionPassword = transactionPassword;
-    }
+	public Account(@NonNull String ifscCode, @NonNull Address mailingAddress, @NonNull double balance,
+		User user) {
+		super();
+		this.ifscCode = ifscCode;
+		this.mailingAddress = mailingAddress;
+		this.balance = balance;
+		this.user = user;
+	}
+
+
 }

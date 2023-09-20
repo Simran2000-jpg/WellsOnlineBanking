@@ -1,6 +1,7 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 //import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
@@ -11,11 +12,13 @@ import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 
 @RestController
 //@CrossOrigin("*")
@@ -24,7 +27,7 @@ public class UserController {
     private UserService uService;
 
     @Autowired
-    private AccountService accountService;
+    private AccountService aService;
 
     @Autowired
     private BeneficiaryService beneficiaryService;
@@ -39,26 +42,18 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@Validated @RequestBody User user) {
         try {
-            Address address = user.getAddress();
+        	User registeredUser = uService.registerUser(user);
+        	
+            Address residentialAddress = user.getResidentialAddress();
+            
+            Account registeredAccount = new Account("NX1845", residentialAddress, 0, user);
+            
+            aService.createAccount(registeredAccount);
 
-            address.setUser(user);
-            user.setAddress(address);
-
-
-
-
-            User registeredUser = uService.registerUser(user);
-            String ph = user.getPhoneNumber();
-            System.out.println(ph);
-
-            if(registeredUser!=null) {
+            if(registeredUser!=null)
                 return ResponseEntity.ok("Registration Successful");
-
-            }
-
-            else {
+            else
                 return ResponseEntity.badRequest().body("Registration Failed");
-            }
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -69,7 +64,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/loginUser")
+    @PostMapping(value = "/loginUser", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean loginUser(@Validated @RequestBody User user) throws ResourceNotFoundException {
         Boolean isLoggedIn = false;
         String phone_number = user.getPhoneNumber();
