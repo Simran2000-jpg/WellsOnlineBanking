@@ -74,8 +74,8 @@ public class User {
     private Address address;
 
 //    @JsonIgnore
-//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-//    private List<Beneficiary> beneficiaries = new ArrayList<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Beneficiary> beneficiaries = new ArrayList<>();
 
 
 
@@ -103,7 +103,7 @@ public class User {
         this.kyc = kyc;
     }
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String permanentAddress, String city, String state, long pincode, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, List<Account> accounts,Address address) {
+    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String permanentAddress, String city, String state, long pincode, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, List<Account> accounts,Address address,List<Beneficiary> beneficiaries) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -123,7 +123,7 @@ public class User {
         this.kyc = kyc;
         this.accounts = accounts;
         this.address = address;
-//        this.beneficiaries =  beneficiaries;
+        this.beneficiaries =  beneficiaries;
     }
 
     public Address getAddress() {
@@ -146,13 +146,13 @@ public class User {
         return firstName;
     }
 
-//    public List<Beneficiary> getBeneficiaries() {
-//        return beneficiaries;
-//    }
-//
-//    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
-//        this.beneficiaries = beneficiaries;
-//    }
+    public List<Beneficiary> getBeneficiaries() {
+        return beneficiaries;
+    }
+
+    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
+        this.beneficiaries = beneficiaries;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
