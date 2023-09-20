@@ -5,6 +5,7 @@ import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +44,10 @@ public class BeneficiaryController {
     }
 
     @GetMapping("/beneficiaries/{uid}")
-    public List<Beneficiary> getBeneficiaryByUser(@PathVariable Long uid) {
-        return beneficiaryService.getBeneficiaryByUser(uid);
+    public ResponseEntity<List<Beneficiary>> getAllBeneficiaryByUser(@PathVariable Long uid) {
+//        return beneficiaryService.getBeneficiaryByUser(uid);
+        List<Beneficiary> beneficiaries = beneficiaryService.getBeneficiaryByUser(uid);
+        return ResponseEntity.ok(beneficiaries);
     }
+
 }

@@ -21,7 +21,7 @@ public class BeneficiaryService {
     }
 
     public List<Beneficiary> getBeneficiaryByUser(Long uid) {
-        return beneficiaryRepository.findBeneficiaryByUser(uid);
+        return beneficiaryRepository.findAllByUserId(uid);
     }
 
 

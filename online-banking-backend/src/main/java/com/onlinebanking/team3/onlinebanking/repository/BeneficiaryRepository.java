@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface BeneficiaryRepository extends JpaRepository<Beneficiary,Long> {
 //    List<Beneficiary> findByUserId(Long userId);
-    @Query("SELECT * FROM beneficiary WHERE beneficiary.uid=:uid")
-    List<Beneficiary> findBeneficiaryByUser(
-            @Param("uid") Long uid
+    @Query("SELECT b FROM Beneficiary b WHERE b.user.id=:uid")
+    List<Beneficiary> findAllByUserId(
+             Long uid
     );
 }
