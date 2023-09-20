@@ -28,8 +28,8 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{accountNo}")
-    public Optional<Account> getParticularAccount(@PathVariable Long accountNo) {
-        Optional<Account> account = accountService.getAccountByAccountNo(accountNo);
+    public Account getParticularAccount(@PathVariable Long accountNo) {
+        Account account = accountService.getAccountById(accountNo);
         return account;
     }
 

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
@@ -23,8 +26,14 @@ public class Beneficiary {
     @JoinColumn(foreignKey = @ForeignKey(name = "uid"),name = "uid")
     private User user;
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
+    private List<Transaction> transactions = new ArrayList<>();
+
     public Beneficiary(String ifscCode, @NonNull String accountNo) {
         this.ifscCode = ifscCode;
         this.accountNo = accountNo;
     }
+
+
 }
