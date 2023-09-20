@@ -1,6 +1,8 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 //import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
@@ -9,6 +11,7 @@ import com.onlinebanking.team3.onlinebanking.service.AccountService;
 //import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -104,16 +110,17 @@ public class UserController {
         return u;
         //
     }
-    @GetMapping("/users")
-    public List<User> getAllUsers() {
-        try {
-            return uService.listAll();
 
-        } catch (Exception e) {
-            System.out.println("Fail");
-            // TODO: handle exception
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers(@RequestHeader (name = "Authorization")String authentication) {
+        try {
+            AdminAuthentication.authenticateAdminCredentials(authentication);
+            return ResponseEntity.ok(uService.listAll());
+
+        } catch (UnauthorizedAccessException e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 

@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OpenAccount from "./pages/OpenAccount";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -18,10 +19,11 @@ function App() {
         <NavbarComponent />
         <div className="App pt-5">
           <Routes>
-            <Route path="/openaccount" element={<OpenAccount />} ></Route>
-            <Route path="/login" element={<Login />} ></Route>
-            <Route path="/register" element={<Register />} ></Route>
-            <Route path="/" element={<Home />} ></Route>
+            <Route path="/openaccount" element={<OpenAccount />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/register" element={<Register />}></Route>
+            <Route path="/admin" element={<Admin />}></Route>
+            <Route path="/" element={<Home />}></Route>
           </Routes>
         </div>
         <Footer />
