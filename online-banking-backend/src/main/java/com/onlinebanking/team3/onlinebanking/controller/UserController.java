@@ -1,7 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
-import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 //import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
@@ -89,19 +88,14 @@ public class UserController {
         return isLoggedIn;
     }
 
-    @PostMapping("/{userId}/accounts")
-    public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
-        User user = uService.getUserById(userId);
-        account.setUser(user);
-        return accountService.createAccount(account);
-    }
 
-    @PostMapping("/{userId}/beneficiaries")
-    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
-        User user = uService.getUserById(userId);
-        beneficiary.setUser(user);
-        return beneficiaryService.createBeneficiary(beneficiary);
-    }
+
+//    @PostMapping("/{userId}/beneficiaries")
+//    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
+//        User user = uService.getUserById(userId);
+//        beneficiary.setUser(user);
+//        return beneficiaryService.createBeneficiary(beneficiary);
+//    }
 
     @GetMapping("/users/{uid}")
     public User getUserById(@PathVariable Long uid) {
