@@ -67,16 +67,16 @@ public class User {
     @Column(nullable = false)
     private String kyc;
 
-    @JsonBackReference
+//    @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Account> accounts = new ArrayList<>();
 
-    @JsonBackReference
+//    @JsonBackReference
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Address address;
 
 //    @JsonIgnore
-    @JsonBackReference
+//    @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Beneficiary> beneficiaries = new ArrayList<>();
 

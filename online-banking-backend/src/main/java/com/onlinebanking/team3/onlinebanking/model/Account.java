@@ -28,12 +28,12 @@ public class Account {
     private String transactionPassword;
 
     @JsonIgnore
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
 
-    @JsonBackReference
+//    @JsonBackReference
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Transaction> transactions = new ArrayList<>();
 
