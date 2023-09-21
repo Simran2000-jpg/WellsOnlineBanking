@@ -11,30 +11,32 @@ const OpenAccount = () => {
     const [stepNumber, setStepNumber] = useState(1);
 
     const user = {
-        "firstName": "John",
+        "firstName": "",
         "middleName": "",
-        "lastName": "DOe",
-        "phoneNumber": "1234567890",
-        "emailId": "jd01@gmail.com",
-        "panNumber": "XYA",
-        "aadharNumber": "XYA",
-        "dob": "02/24/2000",
-        "occupation": "ABC",
-        "gender": "Male",
-        "loginPassword": "00",
-        "kyc": "Yes",
+        "lastName": "",
+        "phoneNumber": "",
+        "emailId": "",
+        "panNumber": "",
+        "aadharNumber": "",
+        "dob": "",
+        "occupation": "",
+        "gender": "",
+        "loginPassword": "",
+        "kyc": "",
         "address": {
-            "permanentAddress": "12/25, Baker Street",
-            "city": "TownH",
-            "state": "California",
-            "pincode": "560036"
+            "permanentAddress": "",
+            "city": "",
+            "state": "",
+            "pincode": ""
         }
     }
 
+    const [formFieldValues, setFormFieldValues] = useState(user)
+
     const handleFormSubmit = () => {
-        axios.post('http://localhost:8085/obs/register', { ...user });
+        axios.post('http://localhost:8085/register', { ...formFieldValues });
     }
-    
+
     const nextOrSubmitButtonHandler = () => {
         if (stepNumber !== FINAL_STEP_NUMBER)
             setStepNumber(prevState => prevState + 1);
@@ -43,14 +45,36 @@ const OpenAccount = () => {
             handleFormSubmit();
     }
 
+    const handleFormValueChange = (e) => {
+        const { name, value } = e.target;
+        setFormFieldValues(prevState => ({ ...prevState, [name]: value }));
+    }
+
+    const handleAddressFieldChange = (e) => {
+        const { name, value } = e.target;
+        setFormFieldValues(prevState => (
+            {
+                ...prevState,
+                address: {
+                    ...prevState.address,
+                    [name]: value
+                }
+            }
+        ));
+    }
+
+    useEffect(() => {
+        console.log(formFieldValues)
+    }, [formFieldValues])
+
     const getElementForCurrentStep = () => {
         switch (stepNumber) {
             case 1:
-                return <PersonalDetailsForm />
+                return <PersonalDetailsForm handleFormValueChange={handleFormValueChange} />
             case 2:
-                return <AddressDetailsForm />
+                return <AddressDetailsForm handleAddressFieldChange={handleAddressFieldChange} />
             case 3:
-                return <OccupationDetailsForm />
+                return <OccupationDetailsForm handleFormValueChange={handleFormValueChange} />
 
             default:
                 return <></>;

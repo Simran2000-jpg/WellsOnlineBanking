@@ -1,6 +1,7 @@
 import React from 'react'
 
-const PersonalDetailsForm = () => {
+const PersonalDetailsForm = (props) => {
+    const { handleFormValueChange } = props;
     return (
         <>
             <div className='d-flex justify-content-start mb-2'>
@@ -24,33 +25,44 @@ const PersonalDetailsForm = () => {
                         <div className="col-md-3 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>First Name*</label>
-                                <input className="form-control" type="text" />
+                                <input name="firstName" className="form-control" type="text" onChange={handleFormValueChange} />
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Middle Name</label>
-                                <input className="form-control" type="text" />
+                                <input name="middleName" className="form-control" type="text" onChange={handleFormValueChange} />
                             </div>
                         </div>
                         <div className="col-md-4 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Last Name*</label>
-                                <input className="form-control" type="text" />
+                                <input name="lastName" className="form-control" type="text" onChange={handleFormValueChange} />
                             </div>
                         </div>
                     </div>
                     <div className="row">
+                        {/* <div className="col-md-2 col-sm-12">
+                            <div className="form-group d-inline-flex flex-column align-items-start w-100">
+                                <label>Sex*</label>
+                                <select name="gender" className="form-control form-select" onChange={handleFormValueChange} defaultValue="">
+                                    <option value=""></option>
+                                    <option value="male">{"<"} Rs.2,50,000</option>
+                                    <option value="female">Rs.2,50,000 - Rs.5,00,000</option>
+                                    <option value="other">Rs.5,00,000 - Rs.10,00,000</option>
+                                </select>
+                            </div>
+                        </div> */}
                         <div className="col-md-6 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Mobile Number*</label>
-                                <input className="form-control" type="text" />
+                                <input name="phoneNumber" className="form-control" type="text" maxLength={10} onChange={handleFormValueChange} />
                             </div>
                         </div>
                         <div className="col-md-6 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Email ID*</label>
-                                <input className="form-control" type="email" />
+                                <input name="emailId" className="form-control" type="email" onChange={handleFormValueChange} />
                             </div>
                         </div>
                     </div>
@@ -58,13 +70,13 @@ const PersonalDetailsForm = () => {
                         <div className="col-md-6 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Aadhaar Card Number*</label>
-                                <input className="form-control" type="text" />
+                                <input name="aadharNumber" className="form-control" type="text" maxLength={12} onChange={handleFormValueChange} />
                             </div>
                         </div>
                         <div className="col-md-6 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>PAN Card Number*</label>
-                                <input className="form-control" type="text" />
+                                <input name="panNumber" className="form-control" type="text" maxLength={10} onChange={handleFormValueChange} />
                             </div>
                         </div>
                     </div>
@@ -72,7 +84,7 @@ const PersonalDetailsForm = () => {
                         <div className="col-md-6 col-sm-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Date of Birth*</label>
-                                <input className="form-control" type="date" />
+                                <input name="dob" className="form-control" type="date" onChange={handleFormValueChange} />
                             </div>
                         </div>
                         <div className="col-md-6 col-sm-12">
