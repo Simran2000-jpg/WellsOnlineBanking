@@ -7,9 +7,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account,Long> {
-//List<Account> findAll();
-//    public Account findById(Long accountNo);
-
-//    List<Account> findByUserId(Long uid);
-
 }

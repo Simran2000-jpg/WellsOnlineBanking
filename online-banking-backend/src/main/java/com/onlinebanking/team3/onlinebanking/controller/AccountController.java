@@ -19,7 +19,6 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/{userId}/accounts")
     public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
         User user = userService.getUserById(userId);
@@ -50,12 +49,9 @@ public class AccountController {
         try {
             return accountService.listAll();
         }
-
         catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-
-
 }

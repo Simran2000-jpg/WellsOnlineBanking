@@ -1,12 +1,11 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
-//import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
-import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
-//import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
+import com.onlinebanking.team3.onlinebanking.service.AddressService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@CrossOrigin("*")
 public class UserController {
     @Autowired
     private UserService uService;
@@ -30,36 +28,36 @@ public class UserController {
     @Autowired
     private BeneficiaryService beneficiaryService;
 
+    @Autowired
+    private AddressService addressService;
+
     @GetMapping("/welcome")
     public String demo() {
         return "Welcome User";
     }
 
 
-
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@Validated @RequestBody User user) {
         try {
-            Address address = user.getAddress();
 
-            address.setUser(user);
-            user.setAddress(address);
+            Address residentialAddress = user.getResidentialAddress();
+            Address permanentAddress = user.getPermanentAddress();
 
-
-
+            Address registeredResidentialAddress = addressService.saveAddress(residentialAddress);
+            Address registeredPermanentAddress = addressService.saveAddress(permanentAddress);
 
             User registeredUser = uService.registerUser(user);
-            String ph = user.getPhoneNumber();
-            System.out.println(ph);
 
-            if(registeredUser!=null) {
+            Address mailingAddress = user.getResidentialAddress();
+            Account account = new Account("NX1845", mailingAddress, 0, user);
+
+            Account registeredAccount = accountService.createAccount(account);
+
+            if(registeredUser!=null)
                 return ResponseEntity.ok("Registration Successful");
-
-            }
-
-            else {
+            else
                 return ResponseEntity.badRequest().body("Registration Failed");
-            }
 
         } catch (Exception e) {
             // TODO: handle exception

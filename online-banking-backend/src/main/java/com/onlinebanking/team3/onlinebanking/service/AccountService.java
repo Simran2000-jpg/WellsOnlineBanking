@@ -18,24 +18,12 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-//    public Optional<Account> getAccountByAccountNo(Long accountNo) {
-//        return accountRepository.findById(accountNo);
-//    }
-
-
-//    public List<Account> getUserAccounts(Long uid) {
-//        return accountRepository.findByUserId(uid);
-//    }
-
     public Account getAccountById(Long accountId) {
         return accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
     }
 
-
     public List<Account> listAll() {
         return accountRepository.findAll();
     }
-
-
 }
