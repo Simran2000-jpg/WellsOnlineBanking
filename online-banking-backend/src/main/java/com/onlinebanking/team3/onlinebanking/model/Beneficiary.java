@@ -1,7 +1,11 @@
 package com.onlinebanking.team3.onlinebanking.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -18,11 +22,18 @@ public class Beneficiary {
     private @NonNull String accountNo;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(foreignKey = @ForeignKey(name = "uid"),name = "uid")
     private User user;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
+    private List<Transaction> transactions = new ArrayList<>();
 
     public Beneficiary(String ifscCode, @NonNull String accountNo) {
         this.ifscCode = ifscCode;
         this.accountNo = accountNo;
     }
+
+
 }
