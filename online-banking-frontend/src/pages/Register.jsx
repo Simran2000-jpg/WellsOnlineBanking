@@ -1,9 +1,61 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
+import Authy from 'authy';
+
+const authy = require('authy')('296a94b91498fd87dc6f89ec2b7a27c4');
+// const authy = new Authy();
 
 const Register = () => {
   const [wasRegisterClicked, setWasRegisterClicked] = useState(false);
+  const [registerFormDetails, setRegisterFormDetails] = useState({
+    accountNumber: '',
+    emailId: '',
+    loginPassword: '',
+    transactionPassword: ''
+  })
+  const [otp, setOTP] = useState('');
+  const [verificationStatus, setVerificationStatus] = useState('');
+
+  const onHandleChange = (event) => {
+    setRegisterFormDetails({ [event.target.name]: event.target.value });
+  }
+
+  const handleSendOTP = async () => {
+    try {
+      // Generate and send OTP via email using Twilio Authy
+      console.log(registerFormDetails.emailId);
+      // const apiUrl = 'https://api.authy.com/protected/json/sms/rohithvepery8%40gmail.com?api_key=296a94b91498fd87dc6f89ec2b7a27c4?callback=myCallback';
+      // jsonp(apiUrl, null, (err, response) => {
+      //   if (err) {
+      //     console.error('JSONP request error:', err);
+      //   } else {
+      //     console.log(response);
+      //   }
+      // });
+      const response = await authy.request_sms(registerFormDetails.emailId, true);
+      setVerificationStatus(`OTP sent to ${registerFormDetails.emailId}`);
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      setVerificationStatus('Error sending OTP');
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    try {
+      // Verify OTP entered by the user
+      const response = await authy.verify(registerFormDetails.emailId, otp);
+      if (response.success) {
+        setVerificationStatus('OTP verified successfully');
+      } else {
+        setVerificationStatus('OTP verification failed');
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      setVerificationStatus('Error verifying OTP');
+    }
+  };
+
   return (
     <div className="form-bg my-5 mx-auto">
       <div className="container">
@@ -17,7 +69,7 @@ const Register = () => {
                   <input className="form-control" type="text" />
                 </div>
                 <div className="form-group"> <label>Email ID*</label>
-                  <input className="form-control" type="email" />
+                  <input className="form-control" name="emailId" type="email" onChange={onHandleChange} />
                 </div>
                 <div className="form-group">
                   <label>Login Password*</label>
@@ -50,12 +102,14 @@ const Register = () => {
                     // type="submit"
                     onClick={(e) => {
                       e.preventDefault();
+                      if (!wasRegisterClicked) { handleSendOTP() }
                       setWasRegisterClicked(true)
                     }}
                   >
                     Register
                   </button>
                 </div>
+                <p>{verificationStatus}</p>
                 <span className="user-login ">
                   Already registered for NetBanking? Click Here to {" "}
                   <a href="#">
