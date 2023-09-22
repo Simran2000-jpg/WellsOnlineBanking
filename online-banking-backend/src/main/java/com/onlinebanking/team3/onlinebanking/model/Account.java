@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,8 +27,9 @@ public class Account {
     @JoinColumn(name = "mailingAddress_id")
     private Address mailingAddress;
 
-    private @NonNull double balance;`
+    private @NonNull double balance;
 
+    @Setter(AccessLevel.NONE) 
     private String transactionPassword;
 
     @ManyToOne
@@ -41,5 +44,13 @@ public class Account {
         this.mailingAddress = mailingAddress;
         this.balance = balance;
         this.user = user;
+    }
+    
+    public void setTransactionPassword(String transactionPassword) {
+        Base64.Encoder encoder = Base64.getEncoder();
+        String normalString = transactionPassword;
+        String encodedString = encoder.encodeToString(   // encrypt password in database field
+                normalString.getBytes(StandardCharsets.UTF_8) );
+        this.transactionPassword= encodedString;
     }
 }
