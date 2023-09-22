@@ -40,11 +40,15 @@ public class User {
     @Column(unique = true)
     private String aadharNumber;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private String dob;
 
     @Column(nullable = false)
     private String occupation;
+
+    private String sourceOfIncome;
+
+    private String grossAnnualIncome;
 
     @Column(nullable = false)
     private String gender;
@@ -52,9 +56,27 @@ public class User {
     private String loginPassword;
 
     @Column(nullable = false)
-    private String kyc;
+    private boolean kyc;
 
-//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private String fatherName;
+
+    public String getSourceOfIncome() {
+        return sourceOfIncome;
+    }
+
+    public void setSourceOfIncome(String sourceOfIncome) {
+        this.sourceOfIncome = sourceOfIncome;
+    }
+
+    public String getGrossAnnualIncome() {
+        return grossAnnualIncome;
+    }
+
+    public void setGrossAnnualIncome(String grossAnnualIncome) {
+        this.grossAnnualIncome = grossAnnualIncome;
+    }
+
+    //    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 //    private List<Account> accounts = new ArrayList<>();
 
     @ManyToOne
@@ -73,7 +95,7 @@ public class User {
 
     }
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, Address residentialAddress, Address permanentAddress) {
+    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String sourceOfIncome, String grossAnnualIncome, String gender, String loginPassword, Boolean kyc, String fatherName, Address residentialAddress, Address permanentAddress) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -84,13 +106,14 @@ public class User {
         this.aadharNumber = aadharNumber;
         this.dob = dob;
         this.occupation = occupation;
+        this.sourceOfIncome = sourceOfIncome;
+        this.grossAnnualIncome = grossAnnualIncome;
         this.gender = gender;
         this.loginPassword = loginPassword;
         this.kyc = kyc;
-//        this.accounts = accounts;
+        this.fatherName = fatherName;
         this.residentialAddress = residentialAddress;
         this.permanentAddress = permanentAddress;
-//        this.beneficiaries = beneficiaries;
     }
 
     public long getUid() {
@@ -123,6 +146,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
     }
 
     public String getPhoneNumber() {
@@ -193,13 +224,15 @@ public class User {
         this.loginPassword = encodedString;
     }
 
-    public String getKyc() {
+    public Boolean getKyc() {
         return kyc;
     }
 
-    public void setKyc(String kyc) {
+    public void setKyc(Boolean kyc) {
         this.kyc = kyc;
     }
+
+
 
 //    public List<Account> getAccounts() {
 //        return accounts;
