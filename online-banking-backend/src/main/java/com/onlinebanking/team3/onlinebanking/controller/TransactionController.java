@@ -26,15 +26,15 @@ public class TransactionController {
     @Autowired
     BeneficiaryService beneficiaryService;
 
-    @PostMapping("/transactions/{aid}/{bid}")
-    public ResponseEntity<Transaction> createTransaction(@PathVariable Long aid,
-                                                         @PathVariable Long bid,
+    @PostMapping("/transactions/{fromId}/{toId}")
+    public ResponseEntity<Transaction> createTransaction(@PathVariable Long fromId,
+                                                         @PathVariable Long toId,
                                                          @RequestBody Transaction transaction) {
-        Account account = accountService.getAccountById(aid);
-        Beneficiary beneficiary = beneficiaryService.getBeneficiaryById(bid);
+        Account fromAccount = accountService.getAccountById(fromId);
+        Account toAccount = accountService.getAccountById(toId);
 
-        transaction.setAccount(account);
-        transaction.setBeneficiary(beneficiary);
+        transaction.setToAccount(toAccount);
+        transaction.setFromAccount(fromAccount);
 
         Transaction t = transactionService.createTransaction(transaction);
 

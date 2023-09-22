@@ -27,8 +27,8 @@ public class Beneficiary {
     private User user;
 
 //    @JsonBackReference
-    @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
-    private List<Transaction> transactions = new ArrayList<>();
+//    @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
+//    private List<Transaction> transactions = new ArrayList<>();
 
     public Beneficiary(String ifscCode, @NonNull String accountNo) {
         this.ifscCode = ifscCode;

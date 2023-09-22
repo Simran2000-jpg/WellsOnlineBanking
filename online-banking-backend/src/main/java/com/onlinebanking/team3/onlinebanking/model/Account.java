@@ -25,7 +25,7 @@ public class Account {
     @JoinColumn(name = "mailingAddress_id")
     private Address mailingAddress;
 
-    private @NonNull double balance;`
+    private @NonNull double balance;
 
     private String transactionPassword;
 
@@ -33,8 +33,11 @@ public class Account {
     @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Transaction> transactions = new ArrayList<>();
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL)
+    private List<Transaction> fromtransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL)
+    private List<Transaction> Totransactions = new ArrayList<>();
 
     public Account(@NonNull String ifscCode, Address mailingAddress, @NonNull double balance, User user) {
         this.ifscCode = ifscCode;
