@@ -8,6 +8,11 @@ import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.AddressService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
+
+import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,7 +42,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/register")
+    @PostMapping("/createUser")
     public ResponseEntity<String> createUser(@Validated @RequestBody User user) {
         try {
 
@@ -85,6 +90,32 @@ public class UserController {
         }
 
         return isLoggedIn;
+    }
+    
+    @PutMapping("/register")
+    public ResponseEntity<String> registerInternetBanking(@RequestParam String emailId, @RequestParam Long accountNumber, @RequestParam String loginPassword, @RequestParam String transactionPassword) {
+    	try {
+        	Account account = accountService.getAccountById(accountNumber);
+        	User user = uService.getUserById(account.getUser().getUid());
+        	
+        	if(account.getUser().getEmailId().equals(emailId)) {
+        		user.setLoginPassword(loginPassword);
+        		User updatedUser = uService.registerUser(user);
+        		
+        		account.setTransactionPassword(transactionPassword);
+        		Account updatedAccount = accountService.createAccount(account);
+                return ResponseEntity.ok("Registration Successful");
+        	}
+            else {
+                return ResponseEntity.badRequest().body("Account Number and Email Id mismatch");
+            }
+        	
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An Error Occurred: "+e.getMessage());
+
+		}
     }
 
 
