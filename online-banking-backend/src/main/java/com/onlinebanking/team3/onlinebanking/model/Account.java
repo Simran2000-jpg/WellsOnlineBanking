@@ -25,7 +25,7 @@ public class Account {
     @JoinColumn(name = "mailingAddress_id")
     private Address mailingAddress;
 
-    private @NonNull double balance;`
+    private @NonNull double balance;
 
     private String transactionPassword;
 

@@ -19,6 +19,8 @@ public class Transaction {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private @NonNull LocalDateTime transactionDateTime;
     private double amount;
+    
+    private @NonNull String transactionType;
 
 //    @JsonBackReference
     @ManyToOne
