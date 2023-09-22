@@ -23,7 +23,7 @@ public class Transaction {
     @JoinColumn(foreignKey = @ForeignKey(name = "to_id"), name = "to_id")
     private Account toAccount; // Foreign key reference to the User entity
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "from_id"), name = "from_id")
     private Account fromAccount;

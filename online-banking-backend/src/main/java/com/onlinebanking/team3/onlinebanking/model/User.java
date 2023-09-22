@@ -54,8 +54,8 @@ public class User {
     @Column(nullable = false)
     private String kyc;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Account> accounts = new ArrayList<>();
+//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+//    private List<Account> accounts = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "residentialAddress_id")
@@ -65,15 +65,15 @@ public class User {
     @JoinColumn(name = "permanentAddress_id")
     private Address permanentAddress;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Beneficiary> beneficiaries = new ArrayList<>();
+//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+//    private List<Beneficiary> beneficiaries = new ArrayList<>();
 
 
     public User() {
 
     }
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, List<Account> accounts, Address residentialAddress, Address permanentAddress, List<Beneficiary> beneficiaries) {
+    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, Address residentialAddress, Address permanentAddress) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -87,10 +87,10 @@ public class User {
         this.gender = gender;
         this.loginPassword = loginPassword;
         this.kyc = kyc;
-        this.accounts = accounts;
+//        this.accounts = accounts;
         this.residentialAddress = residentialAddress;
         this.permanentAddress = permanentAddress;
-        this.beneficiaries = beneficiaries;
+//        this.beneficiaries = beneficiaries;
     }
 
     public long getUid() {
@@ -201,13 +201,13 @@ public class User {
         this.kyc = kyc;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
+//    public List<Account> getAccounts() {
+//        return accounts;
+//    }
+//
+//    public void setAccounts(List<Account> accounts) {
+//        this.accounts = accounts;
+//    }
 
     public Address getResidentialAddress() {
         return residentialAddress;
@@ -225,11 +225,11 @@ public class User {
         this.permanentAddress = permanentAddress;
     }
 
-    public List<Beneficiary> getBeneficiaries() {
-        return beneficiaries;
-    }
+//    public List<Beneficiary> getBeneficiaries() {
+//        return beneficiaries;
+//    }
 
-    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
-        this.beneficiaries = beneficiaries;
-    }
+//    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
+//        this.beneficiaries = beneficiaries;
+//    }
 }

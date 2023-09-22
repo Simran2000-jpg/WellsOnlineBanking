@@ -32,12 +32,12 @@ public class Account {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL)
-    private List<Transaction> fromtransactions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL)
-    private List<Transaction> Totransactions = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL)
+//    private List<Transaction> fromtransactions = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL)
+//    private List<Transaction> Totransactions = new ArrayList<>();
 
     public Account(@NonNull String ifscCode, Address mailingAddress, @NonNull double balance, User user) {
         this.ifscCode = ifscCode;
@@ -45,4 +45,5 @@ public class Account {
         this.balance = balance;
         this.user = user;
     }
+
 }
