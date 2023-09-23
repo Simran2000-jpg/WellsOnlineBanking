@@ -55,7 +55,7 @@ public class UserController {
             User registeredUser = uService.registerUser(user);
 
             Address mailingAddress = user.getResidentialAddress();
-            Account account = new Account("NX1845", mailingAddress, 0, user);
+            Account account = new Account("NX1845", mailingAddress, 1000, user);
 
             Account registeredAccount = accountService.createAccount(account);
 
