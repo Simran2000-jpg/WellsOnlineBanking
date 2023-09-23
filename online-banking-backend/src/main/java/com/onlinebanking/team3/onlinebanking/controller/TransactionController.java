@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.exception.TransactionNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.Transaction;
@@ -45,42 +46,50 @@ public class TransactionController {
 
     }
 
-//    @PostMapping("/transfer")
-//    public ResponseEntity<Transaction> transferFunds(@RequestBody TransferRequest request) {
-//        // Perform validation, authorization, and error handling as needed
-//        try {
-//            Transaction transaction = transactionService.transferFunds(
-//                    request.getFromAccountId(),
-//                    request.getToAccountId(),
-//                    request.getAmount()
-//            );
-//            return ResponseEntity.ok(transaction);
-//        } catch (TransactionException e) {
-//            // Handle transaction-related exceptions
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 
-//    @GetMapping("/{transactionId}")
-//    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long transactionId) {
-//        Transaction transaction = transactionService.getTransactionById(transactionId);
-//        if (transaction != null) {
-//            return ResponseEntity.ok(transaction);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+
+    @GetMapping("transactions/{transactionId}")
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long transactionId) {
+        Transaction transaction = transactionService.getTransactionById(transactionId);
+        if (transaction != null) {
+            return ResponseEntity.ok(transaction);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 //
-//    @GetMapping("/user/{userId}")
-//    public ResponseEntity<List<Transaction>> getUserTransactions(@PathVariable Long userId) {
-//        List<Transaction> transactions = transactionService.getUserTransactions(userId);
-//        return ResponseEntity.ok(transactions);
-//    }
+    @GetMapping("/transactions/accounts/{accountNo}")
+    public ResponseEntity<List<Transaction>> getTransactionsByAccount(@PathVariable Long accountNo) {
+        List<Transaction> transactions = transactionService.getTransactionsByAccount(accountNo);
+        return ResponseEntity.ok(transactions);
+    }
 
 
-    @GetMapping
+    @GetMapping("/transactions/all")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactions);
+    }
+
+    //update
+    @PutMapping("/{transactionId}")
+    public ResponseEntity<Transaction> updateTransaction(
+            @PathVariable Long transactionId,
+            @RequestBody Transaction updatedTransaction
+    ) {
+        Transaction updated = transactionService.updateTransaction(transactionId, updatedTransaction);
+        return ResponseEntity.ok(updated);
+    }
+
+    //delete
+
+    @DeleteMapping("/{transactionId}")
+    public ResponseEntity<?> deleteTransaction(@PathVariable Long transactionId) {
+        try {
+            transactionService.deleteTransaction(transactionId);
+            return ResponseEntity.noContent().build();
+        } catch (TransactionNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

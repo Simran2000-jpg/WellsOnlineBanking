@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.service;
 
+import com.onlinebanking.team3.onlinebanking.exception.TransactionNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Transaction;
 import com.onlinebanking.team3.onlinebanking.repository.TransactionRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -60,9 +62,48 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-//    public Transaction getTransactionById(Long transactionId) {
-//        return transactionRepository.findById(transactionId).orElse(null);
+    public Transaction getTransactionById(Long transactionId) {
+        return transactionRepository.findById(transactionId).orElse(null);
+    }
+
+//    public List<Transaction> getAccountTransactions(Long accountId) {
+//        return transactionRepository.findByAccountId(accountId);
 //    }
+
+    public List<Transaction> getTransactionsByAccount(Long accountNo) {
+        return transactionRepository.findTransactionsByAccountNo(accountNo);
+    }
+
+    public Transaction updateTransaction(Long transactionId, Transaction updatedTransaction) {
+        // Find the existing transaction by ID
+        Optional<Transaction> existingTransactionOptional = transactionRepository.findById(transactionId);
+
+        if (existingTransactionOptional.isPresent()) {
+            Transaction existingTransaction = existingTransactionOptional.get();
+
+            // Update the transaction details
+            // You can update fields like amount, description, etc.
+            existingTransaction.setAmount(updatedTransaction.getAmount());
+//            existingTransaction.setDescription(updatedTransaction.getDescription());
+
+            // Save the updated transaction
+            return transactionRepository.save(existingTransaction);
+        } else {
+            throw new TransactionNotFoundException("Transaction not found "+transactionId);
+        }
+    }
+
+    public void deleteTransaction(Long transactionId) {
+        // Find the existing transaction by ID
+        Optional<Transaction> existingTransactionOptional = transactionRepository.findById(transactionId);
+
+        if (existingTransactionOptional.isPresent()) {
+            // Transaction found, delete it
+            transactionRepository.deleteById(transactionId);
+        } else {
+            throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found");
+        }
+    }
 //
 //    public List<Transaction> getUserTransactions(Long userId) {
 //        return transactionRepository.findByUserId(userId);
