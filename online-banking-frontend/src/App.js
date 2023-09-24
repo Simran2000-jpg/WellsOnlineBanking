@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OpenAccount from "./pages/OpenAccount";
 import Admin from "./pages/Admin";
+import UserDetails from "./pages/UserDetails";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/admin" element={<Admin />}></Route>
+            <Route path="/user/:id" element={<UserDetails />}></Route>
             <Route path="/" element={<Home />}></Route>
           </Routes>
         </div>

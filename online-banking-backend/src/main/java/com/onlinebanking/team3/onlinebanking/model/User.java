@@ -75,7 +75,7 @@ public class User {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Address address;
 
-//    @JsonIgnore
+    @JsonIgnore
     @JsonBackReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Beneficiary> beneficiaries = new ArrayList<>();

@@ -20,12 +20,12 @@ public class Transaction {
     private @NonNull LocalDateTime transactionDateTime;
     private double amount;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "aid"), name = "aid")
     private Account account; // Foreign key reference to the User entity
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "bid"), name = "bid")
     private Beneficiary beneficiary;

@@ -22,11 +22,11 @@ public class Beneficiary {
     private @NonNull String accountNo;
 
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
     @JoinColumn(foreignKey = @ForeignKey(name = "uid"),name = "uid")
     private User user;
 
-    @JsonBackReference
+//    @JsonBackReference
     @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
     private List<Transaction> transactions = new ArrayList<>();
 
