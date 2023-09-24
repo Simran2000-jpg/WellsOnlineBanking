@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 
 function Transaction() {
     const [fromAccount, setFromAccount] = useState('');
@@ -10,7 +9,6 @@ function Transaction() {
     const [remarks, setRemarks] = useState('');
     const [toAccountOptions, setToAccountOptions] = useState([]);
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
 
     const createBeneficiary = async (ifscCode, accountNo) => {
