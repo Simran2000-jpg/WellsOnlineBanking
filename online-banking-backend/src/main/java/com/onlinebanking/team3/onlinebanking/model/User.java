@@ -28,6 +28,11 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
+    private String gender;
+
+    private String fatherName;
+
     @Column(unique = true)
     private String phoneNumber;
 
@@ -50,34 +55,10 @@ public class User {
 
     private String grossAnnualIncome;
 
-    @Column(nullable = false)
-    private String gender;
-
     private String loginPassword;
 
     @Column(nullable = false)
     private boolean kyc;
-
-    private String fatherName;
-
-    public String getSourceOfIncome() {
-        return sourceOfIncome;
-    }
-
-    public void setSourceOfIncome(String sourceOfIncome) {
-        this.sourceOfIncome = sourceOfIncome;
-    }
-
-    public String getGrossAnnualIncome() {
-        return grossAnnualIncome;
-    }
-
-    public void setGrossAnnualIncome(String grossAnnualIncome) {
-        this.grossAnnualIncome = grossAnnualIncome;
-    }
-
-    //    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-//    private List<Account> accounts = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "residentialAddress_id")
@@ -86,9 +67,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "permanentAddress_id")
     private Address permanentAddress;
-
-//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-//    private List<Beneficiary> beneficiaries = new ArrayList<>();
 
 
     public User() {
@@ -100,6 +78,8 @@ public class User {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
+        this.gender = gender;
+        this.fatherName = fatherName;
         this.phoneNumber = phoneNumber;
         this.emailId = emailId;
         this.panNumber = panNumber;
@@ -108,10 +88,8 @@ public class User {
         this.occupation = occupation;
         this.sourceOfIncome = sourceOfIncome;
         this.grossAnnualIncome = grossAnnualIncome;
-        this.gender = gender;
         this.loginPassword = loginPassword;
         this.kyc = kyc;
-        this.fatherName = fatherName;
         this.residentialAddress = residentialAddress;
         this.permanentAddress = permanentAddress;
     }
@@ -146,6 +124,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getFatherName() {
@@ -204,12 +190,20 @@ public class User {
         this.occupation = occupation;
     }
 
-    public String getGender() {
-        return gender;
+    public String getSourceOfIncome() {
+        return sourceOfIncome;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setSourceOfIncome(String sourceOfIncome) {
+        this.sourceOfIncome = sourceOfIncome;
+    }
+
+    public String getGrossAnnualIncome() {
+        return grossAnnualIncome;
+    }
+
+    public void setGrossAnnualIncome(String grossAnnualIncome) {
+        this.grossAnnualIncome = grossAnnualIncome;
     }
 
     public String getLoginPassword() {
@@ -232,16 +226,6 @@ public class User {
         this.kyc = kyc;
     }
 
-
-
-//    public List<Account> getAccounts() {
-//        return accounts;
-//    }
-//
-//    public void setAccounts(List<Account> accounts) {
-//        this.accounts = accounts;
-//    }
-
     public Address getResidentialAddress() {
         return residentialAddress;
     }
@@ -257,12 +241,4 @@ public class User {
     public void setPermanentAddress(Address permanentAddress) {
         this.permanentAddress = permanentAddress;
     }
-
-//    public List<Beneficiary> getBeneficiaries() {
-//        return beneficiaries;
-//    }
-
-//    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
-//        this.beneficiaries = beneficiaries;
-//    }
 }

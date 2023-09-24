@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService uService;
@@ -73,19 +74,14 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/loginUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean loginUser(@Validated @RequestBody User user) throws ResourceNotFoundException {
+    @PostMapping(value = "/loginUser")
+    public Boolean loginUser(@RequestParam String phoneNumber, @RequestParam String password) throws ResourceNotFoundException {
         Boolean isLoggedIn = false;
-        String phone_number = user.getPhoneNumber();
-        String login_password = user.getLoginPassword();
 
-        System.out.println(phone_number);
-        System.out.println(login_password);
-
-        User u = uService.loginUser(phone_number).orElseThrow(() ->
+        User u = uService.loginUser(phoneNumber).orElseThrow(() ->
                 new ResourceNotFoundException("No User Enrolled With This Number ::"));
 
-        if(phone_number.equals(u.getPhoneNumber()) && login_password.equals(u.getLoginPassword())) {
+        if(phoneNumber.equals(u.getPhoneNumber()) && password.equals(u.getLoginPassword())) {
             isLoggedIn = true;
         }
 
