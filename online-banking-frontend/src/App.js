@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OpenAccount from "./pages/OpenAccount";
+import Transaction from "./pages/Transaction";
 import UserDasboard from "./pages/UserDashboard";
 import SidebarComponent from "./components/SidebarComponent";
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/openaccount" element={<OpenAccount />} ></Route>
             <Route path="/login" element={<Login />} ></Route>
             <Route path="/register" element={<Register />} ></Route>
+            <Route path="/transaction" element={<Transaction />} ></Route>
             <Route path="/" element={<Home />} ></Route>
             <Route path="/dashboard" element={<UserDasboard />} ></Route>
             <Route path="/dashboard/:xyz" element={<UserDasboard />} ></Route>

@@ -1,17 +1,21 @@
 package com.onlinebanking.team3.onlinebanking.service;
 
-import com.onlinebanking.team3.onlinebanking.exception.TransactionNotFoundException;
-import com.onlinebanking.team3.onlinebanking.model.Account;
-import com.onlinebanking.team3.onlinebanking.model.Transaction;
-import com.onlinebanking.team3.onlinebanking.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+
 import org.hibernate.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.onlinebanking.team3.onlinebanking.exception.TransactionNotFoundException;
+import com.onlinebanking.team3.onlinebanking.model.Account;
+import com.onlinebanking.team3.onlinebanking.model.Transaction;
+import com.onlinebanking.team3.onlinebanking.repository.TransactionRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class TransactionService {
@@ -29,35 +33,56 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transaction transferFunds(Long fromAccountId, Long toAccountId, double amount) {
+    public Transaction transferFunds(Long fromAccountId, Long toAccountId, double amount, String remarks, String transactionPassword) {
         // Retrieve sender and recipient accounts
-        Account fromAccount = accountService.getAccountById(fromAccountId);
+        Account fromAccount = accountService.getAccountById(fromAccountId);      		  
         Account toAccount = accountService.getAccountById(toAccountId);
+        
+        Base64.Encoder encoder = Base64.getEncoder();
+        String normalString = transactionPassword;
+        String encodedPassword = encoder.encodeToString(normalString.getBytes(StandardCharsets.UTF_8) );
+        
+        if(encodedPassword.equals(fromAccount.getTransactionPassword())) {
+        	//check if it's from same bank
+        	if(toAccount.getIfscCode().equals("NX1845")) { 
+            	// Check if the sender has enough balance
+            	double fromAccountBalance = fromAccount.getBalance();
+    	        if (fromAccountBalance-amount < 0) {
+    	            throw new TransactionException("Insufficient balance in the sender's account.");
+    	        }
+    	        else {
+    	        	
+    	        }
+            }
+            else {
+            	// from different bank not in accounts table but in beneficiary table
+            }
+        	
+            // Create a new transaction
+            Transaction transaction = new Transaction();
+            transaction.setTransactionDateTime(LocalDateTime.now());
+            transaction.setAmount(amount);
+            transaction.setFromAccount(fromAccount);
+            transaction.setToAccount(toAccount);
+            transaction.setRemarks(remarks);
 
-        // Check if the sender has enough balance
-        double fromAccountBalance = fromAccount.getBalance();
-        if (fromAccountBalance-amount < 0) {
-            throw new TransactionException("Insufficient balance in the sender's account.");
+            // Update account balances
+            fromAccount.setBalance(fromAccount.getBalance()-amount);
+            if(toAccount.getIfscCode().equals("NX1845"))
+            	toAccount.setBalance(toAccount.getBalance()+amount);
+
+            // Save the transaction and update account balances
+            transactionRepository.save(transaction);
+            accountService.updateAccount(fromAccount);
+            accountService.updateAccount(toAccount);
+
+            return transaction;
         }
-
-        // Create a new transaction
-        Transaction transaction = new Transaction();
-        transaction.setTransactionDateTime(LocalDateTime.now());
-        transaction.setAmount(amount);
-        transaction.setFromAccount(fromAccount);
-        transaction.setToAccount(toAccount);
-
-        // Update account balances
-        fromAccount.setBalance(fromAccountBalance-amount);
-        toAccount.setBalance(toAccount.getBalance()+amount);
-
-        // Save the transaction and update account balances
-        transactionRepository.save(transaction);
-        accountService.updateAccount(fromAccount);
-        accountService.updateAccount(toAccount);
-
-        return transaction;
+        else {
+        	throw new TransactionException("Incorrect Transaction Password");
+        }          
     }
+    
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
