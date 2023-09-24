@@ -28,7 +28,9 @@ public class TransactionController {
     @PostMapping("/transactions/{fromId}/{toId}")
     public Transaction createTransaction(@PathVariable Long fromId,
                                                          @PathVariable Long toId,
-                                                         @RequestBody Transaction transaction) {
+                                                         @RequestParam double amount,
+                                                         @RequestParam String remarks,
+                                                         @RequestParam String transactionPassword) {
 //        Account fromAccount = accountService.getAccountById(fromId);
 //        Account toAccount = accountService.getAccountById(toId);
 //
@@ -38,9 +40,9 @@ public class TransactionController {
 //        Transaction t = transactionService.createTransaction(transaction);
 //
 //        return ResponseEntity.ok(t);
-        double amount = transaction.getAmount();
+//        double amount = transaction.getAmount();
 
-        return transactionService.transferFunds(fromId,toId,amount);
+        return transactionService.transferFunds(fromId,toId,amount,remarks,transactionPassword);
 
 
 
