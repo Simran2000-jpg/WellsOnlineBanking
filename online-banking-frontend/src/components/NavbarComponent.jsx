@@ -35,12 +35,6 @@ const NavbarComponent = () => {
                 <span className="mx-2">Register</span>
               </NavLink>
             </Nav.Item>
-            <Nav.Item className="my-2 mx-2 nav-item-styling">
-              <NavLink to={"/transaction"} className="text-decoration-none nav-link-styling">
-                <i className="bi bi-person-fill-add"></i>
-                <span className="mx-2">Transaction</span>
-              </NavLink>
-            </Nav.Item>
           </Nav>
         </Container>
       </Navbar>
