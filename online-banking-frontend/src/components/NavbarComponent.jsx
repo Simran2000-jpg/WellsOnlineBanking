@@ -10,9 +10,9 @@ const NavbarComponent = () => {
     <>
       <Navbar fixed="top" bg="light">
         <Container>
-          <NavLink to={"/"} className={'text-decoration-none'}>
+          <NavLink to={"/"} className={'text-decoration-none'} style={{marginLeft:"-85px"}}>
             <Navbar.Brand>
-              <img alt="" src={Logo} width="40" height="30" className="d-inline-block align-top" />
+              <img alt="" src={Logo} width="40" height="30" />
               Nexus Bank
             </Navbar.Brand>
           </NavLink>
