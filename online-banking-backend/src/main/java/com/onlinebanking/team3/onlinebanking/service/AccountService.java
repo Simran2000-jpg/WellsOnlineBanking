@@ -26,4 +26,7 @@ public class AccountService {
     public List<Account> listAll() {
         return accountRepository.findAll();
     }
+
+    public void updateAccount(Account fromAccount) {
+    }
 }

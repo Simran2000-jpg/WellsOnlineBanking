@@ -28,6 +28,11 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
+    private String gender;
+
+    private String fatherName;
+
     @Column(unique = true)
     private String phoneNumber;
 
@@ -40,22 +45,20 @@ public class User {
     @Column(unique = true)
     private String aadharNumber;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private String dob;
 
     @Column(nullable = false)
     private String occupation;
 
-    @Column(nullable = false)
-    private String gender;
+    private String sourceOfIncome;
+
+    private String grossAnnualIncome;
 
     private String loginPassword;
 
     @Column(nullable = false)
-    private String kyc;
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Account> accounts = new ArrayList<>();
+    private boolean kyc;
 
     @ManyToOne
     @JoinColumn(name = "residentialAddress_id")
@@ -65,32 +68,30 @@ public class User {
     @JoinColumn(name = "permanentAddress_id")
     private Address permanentAddress;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Beneficiary> beneficiaries = new ArrayList<>();
-
 
     public User() {
 
     }
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, List<Account> accounts, Address residentialAddress, Address permanentAddress, List<Beneficiary> beneficiaries) {
+    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String sourceOfIncome, String grossAnnualIncome, String gender, String loginPassword, Boolean kyc, String fatherName, Address residentialAddress, Address permanentAddress) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
+        this.gender = gender;
+        this.fatherName = fatherName;
         this.phoneNumber = phoneNumber;
         this.emailId = emailId;
         this.panNumber = panNumber;
         this.aadharNumber = aadharNumber;
         this.dob = dob;
         this.occupation = occupation;
-        this.gender = gender;
+        this.sourceOfIncome = sourceOfIncome;
+        this.grossAnnualIncome = grossAnnualIncome;
         this.loginPassword = loginPassword;
         this.kyc = kyc;
-        this.accounts = accounts;
         this.residentialAddress = residentialAddress;
         this.permanentAddress = permanentAddress;
-        this.beneficiaries = beneficiaries;
     }
 
     public long getUid() {
@@ -123,6 +124,22 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
     }
 
     public String getPhoneNumber() {
@@ -173,12 +190,20 @@ public class User {
         this.occupation = occupation;
     }
 
-    public String getGender() {
-        return gender;
+    public String getSourceOfIncome() {
+        return sourceOfIncome;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setSourceOfIncome(String sourceOfIncome) {
+        this.sourceOfIncome = sourceOfIncome;
+    }
+
+    public String getGrossAnnualIncome() {
+        return grossAnnualIncome;
+    }
+
+    public void setGrossAnnualIncome(String grossAnnualIncome) {
+        this.grossAnnualIncome = grossAnnualIncome;
     }
 
     public String getLoginPassword() {
@@ -193,20 +218,12 @@ public class User {
         this.loginPassword = encodedString;
     }
 
-    public String getKyc() {
+    public Boolean getKyc() {
         return kyc;
     }
 
-    public void setKyc(String kyc) {
+    public void setKyc(Boolean kyc) {
         this.kyc = kyc;
-    }
-
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
     }
 
     public Address getResidentialAddress() {
@@ -223,13 +240,5 @@ public class User {
 
     public void setPermanentAddress(Address permanentAddress) {
         this.permanentAddress = permanentAddress;
-    }
-
-    public List<Beneficiary> getBeneficiaries() {
-        return beneficiaries;
-    }
-
-    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
-        this.beneficiaries = beneficiaries;
     }
 }
