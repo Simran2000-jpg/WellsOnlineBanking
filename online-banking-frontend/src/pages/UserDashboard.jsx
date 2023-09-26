@@ -19,14 +19,13 @@ const UserDasboard = () => {
     return (
         <Container className='pt-2'>
             <SidebarComponent/>
-            {/* <h1 className='display-6'>User Dashboard</h1> */}            
             {
                 (path[2] === "account-details") ? <AccountDetails/> : 
                 (path[2] === "account-statement") ? <AccountStatement/> : 
                 (path[2] === "funds-transfer") ? <Transaction/> :
                 (path[2] === "add-beneficiary") ? <AddBeneficiary/> :
                 (path[2] === "view-beneficiary") ? <ViewBeneficiary/> :
-                <Home/>
+                ""
             }
         </Container>
     )

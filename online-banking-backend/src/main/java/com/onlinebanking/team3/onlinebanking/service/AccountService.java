@@ -30,6 +30,10 @@ public class AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
     }
 
+    public List<Account> getAccountsByUser(Long uid) {
+        return accountRepository.findActiveAccountsForUser(uid);
+    }
+
     public List<Account> listAll() {
         return accountRepository.findAll();
     }
@@ -37,10 +41,14 @@ public class AccountService {
     public void updateAccount(Account fromAccount) {
     }
 
+
     public List<Account> getActiveAccountsForUser(Long userId) {
         return accountRepository.findActiveAccountsForUser(userId);
     }
 
+    public Optional<List<Account>> getAccountsForUser(Long userId){
+        return accountRepository.findAccountsForUser(userId);
+    }
     public Account addNewAccount(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with ID "+userId + " not found"));
         Account account = new Account("NX1845", user.getResidentialAddress(), 1000, true, user);
@@ -49,4 +57,22 @@ public class AccountService {
         return accountRepository.save(account);
 
     }
+
+    public Account updateActiveStatus(Long accountId){
+        Optional<Account> existingAccountOptional = accountRepository.findById(accountId);
+
+        if (existingAccountOptional.isPresent()) {
+            Account existingAccount = existingAccountOptional.get();
+
+            existingAccount.setIsActive(!existingAccount.getIsActive());
+
+
+            // Save the updated account
+            return accountRepository.save(existingAccount);
+        } else {
+            throw new UserNotFoundException("Account with ID " + accountId + " not found");
+        }
+    }
+
+
 }

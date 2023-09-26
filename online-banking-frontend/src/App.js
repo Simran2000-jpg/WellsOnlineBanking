@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OpenAccount from "./pages/OpenAccount";
+import Admin from "./pages/Admin";
+import UserDetails from "./pages/UserDetails";
 import Transaction from "./pages/Transaction";
 import UserDasboard from "./pages/UserDashboard";
 import SidebarComponent from "./components/SidebarComponent";
@@ -61,19 +63,24 @@ function App() {
               <Route path="/login" element={<Login />}></Route>
             )} */}
 
-            <Route path="/" element={<Home />}></Route>
             <Route path="/dashboard" element={<UserDasboard />}></Route>
             {user !== null ? (
               <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
-            )}   
+ 
             {user &&   (<>    
             <Route path="/dashboard/add-beneficiary" element={<AddBeneficiary />} ></Route>
             <Route path="/dashboard/view-beneficiary" element={<ViewBeneficiary />} ></Route>
             </> 
             )
             }
+
+
+            <Route path="/admin" element={<Admin />}></Route>
+            <Route path="/user/:id" element={<UserDetails />}></Route>
+
+            <Route path="/" element={<Home />}></Route>
           </Routes>
         </div>
         <Footer />
