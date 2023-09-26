@@ -168,7 +168,7 @@ function Transaction() {
                                 </div>
                                 <div className="text-center mb-4">
                                     <button className="my-4 mx-auto btn btn-success" type="submit" 
-                                    // disabled={!areAllFieldsFilled()} 
+                                    disabled={!areAllFieldsFilled()} 
                                     >
                                         Initiate Transaction
                                     </button>
