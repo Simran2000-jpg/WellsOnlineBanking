@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function AddBeneficiary() {
     const [beneficiaryName, setBeneficiaryName] = useState('');
@@ -6,10 +7,24 @@ function AddBeneficiary() {
     const [confirmAccountNumber, setConfirmAccountNumber] = useState('');
     const [ifscCode, setIfscCode] = useState('');
 
+    const createBeneficiary = async () => {
+        var userId;
+        try {
+            const response = await axios.post(`http://localhost:8085/beneficiaries/${userId}`, {
+                ifscCode: ifscCode,
+                accountNo: accountNumber,
+                name: beneficiaryName
+            });
+        } catch (error) {
+            console.error('Error fetching account options:', error);
+        }
+    };
+
     const handleAddBeneficiary = (e) => {
         e.preventDefault();
         if (accountNumber === confirmAccountNumber) {
             console.log('Beneficiary added:', beneficiaryName, accountNumber, ifscCode);
+            createBeneficiary();
         } else {
             console.log('Account numbers do not match.');
         }
