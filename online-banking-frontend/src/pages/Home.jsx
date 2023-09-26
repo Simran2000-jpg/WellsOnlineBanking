@@ -7,7 +7,6 @@ const Home = () => {
 
   useEffect(() => {
     setUser(localStorage.getItem("phoneNumber"));
-
     const onStorage = () => {
       setUser(localStorage.getItem("userId"));
     };
@@ -16,7 +15,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("storage", onStorage);
     };
-  }, []);
+  });
 
   return (
     // <div className='landing-page-img'>
