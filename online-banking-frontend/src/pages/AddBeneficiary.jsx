@@ -25,7 +25,7 @@ function AddBeneficiary() {
                 setSuccessMessage("Added Beneficiary successful");
                 setTimeout(() => {
                     navigate("/dashboard/view-beneficiary");
-                  }, 2000);
+                  }, 1000);
 
             }else{
                 //add controller error message in backend
