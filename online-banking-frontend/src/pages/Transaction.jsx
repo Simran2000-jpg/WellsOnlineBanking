@@ -7,20 +7,11 @@ function Transaction() {
     const [amount, setAmount] = useState();
     const [transactionPassword, setTransactionPassword] = useState('');
     const [remarks, setRemarks] = useState('');
+    const [transactionType, setTransactionType] = useState("IMPS");
     const [toAccountOptions, setToAccountOptions] = useState([]);
+    const [fromAccountOptions, setFromAccountOptions] = useState([]);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
-    const createBeneficiary = async (ifscCode, accountNo) => {
-        try {
-            const response = await axios.post('http://localhost:8085/beneficiaries/100', {
-                ifscCode: ifscCode,
-                accountNo: accountNo,
-            });
-        } catch (error) {
-            console.error('Error fetching account options:', error);
-        }
-    };
 
     useEffect(() => {
         const fetchToAccountOptions = async () => {
@@ -33,23 +24,36 @@ function Transaction() {
                 console.error('Error fetching account options:', error);
             }
         };
+
+        const fetchFromAccountOptions = async () => {
+            try {
+                // const response = await axios.get(' ');
+                // console.log(response);
+                // setFromAccountOptions(response.data);
+            } catch (error) {
+                setError('Error fetching account options:')
+                console.error('Error fetching account options:', error);
+            }
+        };
         fetchToAccountOptions();
+        fetchFromAccountOptions();
     }, []);
 
     const areAllFieldsFilled = () => {
         return (
-          fromAccount !== '' &&
-          toAccount !== '' &&
-          amount !== '' &&
-          transactionPassword !== ''
+            fromAccount !== '' &&
+            toAccount !== '' &&
+            amount !== '' &&
+            transactionPassword !== ''
         );
-      };
+    };
 
     const initiateTransaction = async () => {
         try {
             const response = await axios.post(`http://localhost:8085/transactions/${fromAccount}/${toAccount}`,
                 {
                     "amount": amount,
+                    "transactionType": transactionType,
                     "transactionPassword": transactionPassword,
                     "remarks": remarks
                 },
@@ -67,6 +71,7 @@ function Transaction() {
 
     const handleTransaction = (e) => {
         e.preventDefault();
+        console.log(transactionType);
         console.log('From Account:', fromAccount);
         console.log('To Account:', toAccount);
         console.log('Amount:', amount);
@@ -86,18 +91,42 @@ function Transaction() {
                                     {successMessage && <div className="alert alert-success"><label>{successMessage}</label></div>}
                                     {error && <div className="alert alert-danger"><label>{error}</label></div>}
 
+                                    <label>Transaction Type*</label>
+                                    <select
+                                        value={transactionType}
+                                        className="form-select form-control"
+                                        onChange={(e) => setTransactionType(e.target.value)}>
+                                        <option value="IMPS">IMPS</option>
+                                        <option value="NEFT">NEFT</option>
+                                        <option value="RTGS">RTGS</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+
                                     <label>From Account*</label>
-                                    <input
+                                    {/* <input
                                         className="form-control"
                                         type="text"
                                         value={fromAccount}
                                         onChange={(e) => setFromAccount(e.target.value)}
-                                    />
+                                    /> */}
+                                    <select
+                                        className="form-select form-control"
+                                        value={fromAccount}
+                                        onChange={(e) => setFromAccount(e.target.value)}
+                                    >
+                                        <option value="">Select From Account</option>
+                                        {fromAccountOptions.map((option) => (
+                                            <option key={option.bid} value={option.bid}>
+                                                {option.accountNo}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className="form-group">
                                     <label>To Account*</label>
                                     <select
-                                        className="form-control"
+                                        className="form-select form-control"
                                         value={toAccount}
                                         onChange={(e) => setToAccount(e.target.value)}
                                     >
@@ -137,7 +166,9 @@ function Transaction() {
                                     />
                                 </div>
                                 <div className="text-center mb-4">
-                                    <button className="my-4 mx-auto btn btn-success" type="submit" disabled={!areAllFieldsFilled()} >
+                                    <button className="my-4 mx-auto btn btn-success" type="submit" 
+                                    // disabled={!areAllFieldsFilled()} 
+                                    >
                                         Initiate Transaction
                                     </button>
                                 </div>

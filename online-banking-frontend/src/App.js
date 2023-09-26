@@ -14,6 +14,7 @@ import Transaction from "./pages/Transaction";
 import UserDasboard from "./pages/UserDashboard";
 import SidebarComponent from "./components/SidebarComponent";
 import { useEffect, useState } from "react";
+import AddBeneficiary from "./pages/AddBeneficiary";
 
 function App() {
   const [user, setUser] = useState("");
