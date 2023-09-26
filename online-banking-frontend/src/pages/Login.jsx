@@ -11,20 +11,27 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("hmmmm", password);
+    
     const loginData = {
       phoneNumber,
-      password
-    }
+      password,
+    };
     const response = await axios.post(
-      "http://localhost:8085/loginUser",loginData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+      "http://localhost:8085/loginUser",
+      loginData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
 
-    localStorage.setItem('phoneNumber', phoneNumber);
+    const userResponse = await axios.get(
+      "http://localhost:8085/users/phone/" + phoneNumber
+    );
 
-    if(response.data)
-      history("/");
+    localStorage.setItem("userId", userResponse.data.uid);
+    window.dispatchEvent(new Event('storage'))
+
+    if (response.data) history("/");
   };
 
   return (

@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins="http://localhost:3000")
 @RestController
@@ -80,12 +81,11 @@ public class UserController {
     public Boolean loginUser(@RequestParam String phoneNumber, @RequestParam String password) throws ResourceNotFoundException {
         Boolean isLoggedIn = false;
 
-        User u = uService.loginUser(phoneNumber).orElseThrow(() ->
+        User u = uService.findUserByPhoneNumber(phoneNumber).orElseThrow(() ->
                 new ResourceNotFoundException("No User Enrolled With This Number ::"));
 
-        if(phoneNumber.equals(u.getPhoneNumber()) && password.equals(u.getLoginPassword())) {
+        if(password.equals(u.getLoginPassword()))
             isLoggedIn = true;
-        }
 
         return isLoggedIn;
     }
@@ -116,26 +116,20 @@ public class UserController {
 		}
     }
 
-
-
-//    @PostMapping("/{userId}/beneficiaries")
-//    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
-//        User user = uService.getUserById(userId);
-//        beneficiary.setUser(user);
-//        return beneficiaryService.createBeneficiary(beneficiary);
-//    }
-
     @GetMapping("/users/{uid}")
     public User getUserById(@PathVariable Long uid) {
-        User u = uService.getUserById(uid);
-        return u;
-        //
+        return uService.getUserById(uid);
     }
+
+    @GetMapping("/users/phone/{ph}")
+    public Optional<User> getUserByPhoneNumber(@PathVariable String ph) {
+        return uService.findUserByPhoneNumber(ph);
+    }
+
     @GetMapping("/users")
     public List<User> getAllUsers() {
         try {
             return uService.listAll();
-
         } catch (Exception e) {
             System.out.println("Fail");
             // TODO: handle exception
