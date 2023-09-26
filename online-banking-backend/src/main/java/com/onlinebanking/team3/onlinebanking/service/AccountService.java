@@ -30,6 +30,10 @@ public class AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
     }
 
+    public List<Account> getAccountsByUser(Long uid) {
+        return accountRepository.findActiveAccountsForUser(uid);
+    }
+
     public List<Account> listAll() {
         return accountRepository.findAll();
     }

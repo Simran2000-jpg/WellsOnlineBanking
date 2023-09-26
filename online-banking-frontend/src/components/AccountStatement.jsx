@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Table } from "react-bootstrap";
-import "../styles/AccountStatement.css"; // Import the CSS for styling
+import "../styles/AccountStatement.css";
+import axios from "axios";
 
 const AccountStatement = () => {
+  const [user, setUser] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState("");
   const [transactions, setTransactions] = useState([]);
@@ -10,24 +12,30 @@ const AccountStatement = () => {
   const [endDate, setEndDate] = useState("");
   const [fromAccount, setFromAccount] = useState("");
   const [toAccount, setToAccount] = useState("");
-  const [sortByDate, setSortByDate] = useState(false);
 
-  // Simulate fetching account list from an API
   useEffect(() => {
-    // Replace this with your actual API call or data retrieval logic
-    // For now, we'll simulate fetching data after a short delay
-    const fetchAccounts = async () => {
-      // Simulate an API request delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    setUser(localStorage.getItem("userId"));
+    user && fetchAccounts();
+    accounts.length > 0 && fetchTransactions();
+  }, [user]);
 
-      // Replace with actual data retrieval logic
-      // For demonstration purposes, we'll set some sample account data
-      const accountList = ["Account 1", "Account 2", "Account 3"];
-      setAccounts(accountList);
-    };
+  const fetchAccounts = async () => {
+    console.log("himmm : ", user);
+    const response = await axios.get(
+      " http://localhost:8085/accounts/user/" + user
+    );
+    console.log("data", response.data);
+    setAccounts(response.data);
+  };
 
-    fetchAccounts();
-  }, []);
+  const fetchTransactions = async () => {
+    console.log("hmmm : ", user);
+    const response = await axios.get(
+      " http://localhost:8085/transactions/account/" + accounts[1]
+    );
+    console.log("transactions", response.data);
+    setAccounts(response.data);
+  };
 
   // Simulate fetching transactions for the selected account
   useEffect(() => {
@@ -85,10 +93,6 @@ const AccountStatement = () => {
       );
     }
 
-    if (sortByDate) {
-      filteredTransactions.sort((a, b) => a.date.localeCompare(b.date));
-    }
-
     setTransactions(filteredTransactions);
   };
 
@@ -104,10 +108,9 @@ const AccountStatement = () => {
             as="select"
             onChange={(e) => setSelectedAccount(e.target.value)}
           >
-            <option value="">Select an account</option>
             {accounts.map((account, index) => (
-              <option key={index} value={account}>
-                {account}
+              <option key={index} value={account.accountNo}>
+                {account.accountNo}
               </option>
             ))}
           </Form.Control>
@@ -116,55 +119,51 @@ const AccountStatement = () => {
 
       {/* Filter and sort options */}
       <Form>
-        <div style={{display:"inline-flex", width:"100%"}}>
-        <Form.Group>
-          <Form.Label>Start Date:</Form.Label>
-          <Form.Control
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            style={{marginLeft:"0px", width:"380px"}}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>End Date:</Form.Label>
-          <Form.Control
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            style={{width:"380px"}}
-          />
-        </Form.Group>
+        <div style={{ display: "inline-flex", width: "100%" }}>
+          <Form.Group>
+            <Form.Label>Start Date:</Form.Label>
+            <Form.Control
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              style={{ marginLeft: "0px", width: "380px" }}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>End Date:</Form.Label>
+            <Form.Control
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              style={{ width: "380px" }}
+            />
+          </Form.Group>
         </div>
-        <div style={{display:"inline-flex", width:"100%"}}>
-        <Form.Group>
-          <Form.Label>From Account:</Form.Label>
-          <Form.Control
-            type="text"
-            value={fromAccount}
-            onChange={(e) => setFromAccount(e.target.value)}
-            style={{marginLeft:"0px", width:"380px"}}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>To Account:</Form.Label>
-          <Form.Control
-            type="text"
-            value={toAccount}
-            onChange={(e) => setToAccount(e.target.value)}
-            style={{width:"380px"}}
-          />
-        </Form.Group>
+        <div style={{ display: "inline-flex", width: "100%" }}>
+          <Form.Group>
+            <Form.Label>From Account:</Form.Label>
+            <Form.Control
+              type="text"
+              value={fromAccount}
+              onChange={(e) => setFromAccount(e.target.value)}
+              style={{ marginLeft: "0px", width: "380px" }}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>To Account:</Form.Label>
+            <Form.Control
+              type="text"
+              value={toAccount}
+              onChange={(e) => setToAccount(e.target.value)}
+              style={{ width: "380px" }}
+            />
+          </Form.Group>
         </div>
-        {/* <Form.Group>
-          <Form.Check
-            type="checkbox"
-            label="Sort by Date"
-            checked={sortByDate}
-            onChange={(e) => setSortByDate(e.target.checked)}
-          />
-        </Form.Group> */}
-        <Button variant="primary" onClick={filterTransactions} style={{marginTop:"10px"}}>
+        <Button
+          variant="primary"
+          onClick={filterTransactions}
+          style={{ marginTop: "10px" }}
+        >
           Submit
         </Button>
       </Form>

@@ -25,7 +25,7 @@ const UserDasboard = () => {
                 (path[2] === "funds-transfer") ? <Transaction/> :
                 (path[2] === "add-beneficiary") ? <AddBeneficiary/> :
                 (path[2] === "view-beneficiary") ? <ViewBeneficiary/> :
-                <Home/>
+                ""
             }
         </Container>
     )
