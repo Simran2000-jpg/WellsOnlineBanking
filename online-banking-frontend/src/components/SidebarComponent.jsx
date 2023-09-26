@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../styles/Register.css";
 import "../styles/SidebarComponent.css"; // Create a new CSS file for the sidebar styles
 
@@ -10,7 +11,7 @@ const SidebarComponent = () => {
   const path = pathname[1];
 
   return (
-    <div className="sidebar">
+    <div className="sidebar bg-light">
       <ul>
         <li>
           <NavLink to={`/${path}/account-details`}>
@@ -18,8 +19,8 @@ const SidebarComponent = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to={`/${path}/add-beneficiary`}>
-            <i className="bi bi-card-list"></i> Add Beneficiary
+          <NavLink to={`/${path}/view-beneficiary`}>
+            <i className="bi bi-card-list"></i> Manage Beneficiary
           </NavLink>
         </li>
         <li>

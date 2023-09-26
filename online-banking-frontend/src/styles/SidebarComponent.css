@@ -1,52 +1,67 @@
 /* Sidebar container */
 .sidebar {
-    width: 225px; /* Adjust the width as needed */
-    background-color: #333; /* Sidebar background color */
-    height: 100%; /* Make the sidebar full height */
-    position: fixed; /* Keep the sidebar fixed on the screen */
-    top: 0;
-    left: 0;
-    overflow-y: auto; /* Add a scrollbar if the content overflows */
-    padding-top: 20px; /* Add some top padding */
-    color: #fff; /* Text color */
-    margin-top: 50px;
-    text-align: left;
-  }
-  
-  /* Sidebar links */
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin: 0;
-    padding: 0;
-  }
-  
-  .sidebar ul li a {
-    display: block;
-    padding: 15px 20px;
-    text-decoration: none;
-    color: #fff;
-    transition: background-color 0.3s;
-  }
-  
-  .sidebar ul li a:hover {
-    background-color: #555; /* Highlight on hover */
-  }
-  
-  /* Optional: Active link styling */
-  .sidebar ul li a.active {
-    background-color: #0cd674; /* Active link background color */
-  }
-  
-  /* Optional: Sidebar header styling */
-  .sidebar-header {
-    text-align: left;
-    padding: 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-    color: #0cd674; /* Header text color */
-  }
-  
+  width: 225px;
+  /* Adjust the width as needed */
+  height: 100%;
+  /* Make the sidebar full height */
+  position: fixed;
+  /* Keep the sidebar fixed on the screen */
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  /* Add a scrollbar if the content overflows */
+  padding-top: 20px;
+  /* Add some top padding */
+  margin-top: 50px;
+  text-align: left;
+}
+
+/* Sidebar links */
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background-color: rgba(12, 214, 116, 0.7);
+  /* Highlight on hover */
+  color: #fff;
+}
+
+/* Optional: Active link styling */
+.sidebar ul li a.active {
+  background-color: rgb(12, 214, 116);
+  /* Active link background color */
+  color: #fff;
+}
+
+/* Optional: Sidebar header styling */
+.sidebar-header {
+  text-align: left;
+  padding: 20px 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #0cd674;
+  /* Header text color */
+}
+
+.margin-left-sidebar {
+  margin-left: 210px;
+}
+
+.mild-border {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}

@@ -17,8 +17,9 @@ public class Transaction {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private @NonNull LocalDateTime transactionDateTime;
     private double amount;
+    private String transactionType;
     private String remarks;
-
+    
 //    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "to_id"), name = "to_id")
@@ -29,10 +30,11 @@ public class Transaction {
     @JoinColumn(foreignKey = @ForeignKey(name = "from_id"), name = "from_id")
     private Account fromAccount;
 
-    public Transaction(@NonNull LocalDateTime transactionDateTime, double amount, String remarks) {
+    public Transaction(@NonNull LocalDateTime transactionDateTime, double amount,String transactionType, String remarks) {
         this.transactionDateTime = transactionDateTime;
         this.amount = amount;
         this.remarks = remarks;
+        this.transactionType = transactionType;
     }
 
     public Long getId() {
@@ -81,6 +83,14 @@ public class Transaction {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
 	}
     
 }
