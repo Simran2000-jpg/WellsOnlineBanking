@@ -57,25 +57,30 @@ function App() {
               <Route path="/login" element={<Login />}></Route>
             )}
 
-            {/* {user !== null ? (
-              <Route path="/transaction" element={<Transaction />}></Route>
+            {user !== null ? (
+              <Route path="/funds-transfer" element={<Transaction />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
-            )} */}
+            )}
 
             <Route path="/dashboard" element={<UserDasboard />}></Route>
             {user !== null ? (
               <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
- 
-            {user &&   (<>    
-            <Route path="/dashboard/add-beneficiary" element={<AddBeneficiary />} ></Route>
-            <Route path="/dashboard/view-beneficiary" element={<ViewBeneficiary />} ></Route>
-            </> 
-            )
-            }
-
+            )}
+            {user && (
+              <>
+                <Route
+                  path="/dashboard/add-beneficiary"
+                  element={<AddBeneficiary />}
+                ></Route>
+                <Route
+                  path="/dashboard/view-beneficiary"
+                  element={<ViewBeneficiary />}
+                ></Route>
+              </>
+            )}
 
             <Route path="/admin" element={<Admin />}></Route>
             <Route path="/user/:id" element={<UserDetails />}></Route>

@@ -3,8 +3,10 @@ package com.onlinebanking.team3.onlinebanking.controller;
 import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
 import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
+import com.onlinebanking.team3.onlinebanking.model.Transaction;
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
+import com.onlinebanking.team3.onlinebanking.service.TransactionService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,9 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TransactionService transactionService;
+
     @PutMapping("/addNewAccount/{userId}")
     public Account addNewAccount(@PathVariable Long userId) {
 
@@ -35,10 +40,22 @@ public class AccountController {
         return account;
     }
 
-     @GetMapping("/accounts/user/{uid}")
+    @GetMapping("/accounts/user/{uid}")
     public List<Account> getUserAccounts(@PathVariable Long uid) {
         try {
             return accountService.getAccountsByUser(uid);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping("/transactions/accounts/user/{uid}")
+    public List<Transaction> getUsersFirstAccountTransactions(@PathVariable Long uid) {
+        try {
+            List<Account> accounts = accountService.getAccountsByUser(uid);
+            return transactionService.getTransactionsByAccount(accounts.get(0).getAccountNo());
         }
         catch (Exception e) {
             e.printStackTrace();
