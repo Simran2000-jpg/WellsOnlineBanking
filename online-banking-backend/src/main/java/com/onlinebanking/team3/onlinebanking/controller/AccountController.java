@@ -35,6 +35,17 @@ public class AccountController {
         return account;
     }
 
+     @GetMapping("/accounts/user/{uid}")
+    public List<Account> getUserAccounts(@PathVariable Long uid) {
+        try {
+            return accountService.getAccountsByUser(uid);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     @GetMapping("/user/{uid}/accounts")
     public ResponseEntity<List<Account>> getAccountsForUserId(@PathVariable Long uid){
         try {
