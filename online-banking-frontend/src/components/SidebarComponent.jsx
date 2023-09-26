@@ -29,7 +29,7 @@ const SidebarComponent = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to={`/${path}/transaction`}>
+          <NavLink to={`/${path}/funds-transfer`}>
             <i className="bi bi-currency-exchange"></i> Funds Transfer
           </NavLink>
         </li>
