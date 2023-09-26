@@ -36,7 +36,7 @@ const UserDetails = () => {
   return (
     <div className="form-bg my-5 mx-auto container">
       <div className="row justify-content-center">
-        <div className="col-md-6 col-12 col-md-offset-3 col-sm-offset-2">
+        <div className="col-md-6 col-12 ">
           <div className="form-container">
             <h2 className="title">USER DETAILS</h2>
             <table className="table table-striped">
