@@ -1,6 +1,7 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.User;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @CrossOrigin(origins="http://localhost:3000")
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService uService;
@@ -57,7 +58,7 @@ public class UserController {
             User registeredUser = uService.registerUser(user);
 
             Address mailingAddress = user.getResidentialAddress();
-            Account account = new Account("NX1845", mailingAddress, 1000, user);
+            Account account = new Account("NX1845", mailingAddress, 1000, true, user);
 
             Account registeredAccount = accountService.createAccount(account);
 
@@ -142,5 +143,14 @@ public class UserController {
             return null;
         }
     }
+
+    //UPDATE
+    @PutMapping("findUser/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
+        User updated = uService.updateUser(userId, updatedUser);
+        return ResponseEntity.ok(updated);
+    }
+
+    //
 
 }

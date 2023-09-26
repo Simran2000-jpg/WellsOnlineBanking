@@ -5,6 +5,7 @@ import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,5 +54,11 @@ public class AccountController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @GetMapping("/active/{userId}")
+    public ResponseEntity<List<Account>> getActiveAccountsForUser(@PathVariable Long userId) {
+        List<Account> activeAccounts = accountService.getActiveAccountsForUser(userId);
+        return ResponseEntity.ok(activeAccounts);
     }
 }

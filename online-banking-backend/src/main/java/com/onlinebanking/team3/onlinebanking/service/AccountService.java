@@ -29,4 +29,8 @@ public class AccountService {
 
     public void updateAccount(Account fromAccount) {
     }
+
+    public List<Account> getActiveAccountsForUser(Long userId) {
+        return accountRepository.findActiveAccountsForUser(userId);
+    }
 }
