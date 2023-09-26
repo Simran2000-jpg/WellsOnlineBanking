@@ -1,6 +1,7 @@
 import React from 'react'
 
-const OccupationDetailsForm = () => {
+const OccupationDetailsForm = (props) => {
+    const { handleFormValueChange } = props;
     return (
 
         <>
@@ -13,8 +14,7 @@ const OccupationDetailsForm = () => {
                         <div className="col-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Occupation Type*</label>
-                                <select className="form-control form-select">
-                                    <option value="" selected></option>
+                                <select name="occupation" className="form-control form-select" onChange={handleFormValueChange} defaultValue="">
                                     <option value="gov_employee">Government Employee</option>
                                     <option value="pvt_sector_employee">Private Sector Employee</option>
                                     <option value="business_owner">Business owner</option>
@@ -27,8 +27,7 @@ const OccupationDetailsForm = () => {
                         <div className="col-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Source of income*</label>
-                                <select className="form-control form-select">
-                                    <option value="" selected></option>
+                                <select name="sourceOfIncome" className="form-control form-select" onChange={handleFormValueChange} defaultValue="">
                                     <option value="wages">Employment Salary/Wages</option>
                                     <option value="self_income">Self-Employment Income</option>
                                     <option value="business_profits">Business Profits</option>
@@ -41,8 +40,7 @@ const OccupationDetailsForm = () => {
                         <div className="col-12">
                             <div className="form-group d-inline-flex flex-column align-items-start w-100">
                                 <label>Gross Annual Income*</label>
-                                <select className="form-control form-select">
-                                    <option value="" selected></option>
+                                <select name="grossAnnualIncome" className="form-control form-select" onChange={handleFormValueChange} defaultValue="">
                                     <option value="low">{"<"} Rs.2,50,000</option>
                                     <option value="low_mid">Rs.2,50,000 - Rs.5,00,000</option>
                                     <option value="upper_mid">Rs.5,00,000 - Rs.10,00,000</option>
@@ -53,7 +51,7 @@ const OccupationDetailsForm = () => {
                     </div>
                 </div>
             </form>
-            <div className='d-flex justify-content-start mb-2'>
+            {/* <div className='d-flex justify-content-start mb-2'>
                 <h4 className="sub-title">Banking Details</h4>
             </div>
             <form className="form-horizontal">
@@ -103,7 +101,7 @@ const OccupationDetailsForm = () => {
                         </div>
                     </div>
                 </div >
-            </form >
+            </form > */}
         </>
     )
 }

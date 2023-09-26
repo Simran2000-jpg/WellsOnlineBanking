@@ -15,11 +15,10 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    @SequenceGenerator(name="user_seq",initialValue = 100,allocationSize = 1)
+    @SequenceGenerator(name = "user_seq", initialValue = 100, allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "user_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_seq")
     private long uid;
-
 
     @Column(nullable = false)
     private String firstName;
@@ -29,23 +28,16 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
+    private String gender;
+
+    private String fatherName;
+
     @Column(unique = true)
     private String phoneNumber;
 
     @Column(unique = true)
     private String emailId;
-
-//    @Column(nullable = false)
-//    private String permanentAddress;
-//
-//    @Column(nullable = false)
-//    private String city;
-//
-//    @Column(nullable = false)
-//    private String state;
-//
-//    @Column(nullable = false)
-//    private long pincode;
 
     @Column(unique = true)
     private String panNumber;
@@ -53,88 +45,55 @@ public class User {
     @Column(unique = true)
     private String aadharNumber;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private String dob;
 
     @Column(nullable = false)
     private String occupation;
 
-    @Column(nullable = false)
-    private String gender;
+    private String sourceOfIncome;
+
+    private String grossAnnualIncome;
 
     private String loginPassword;
 
     @Column(nullable = false)
-    private String kyc;
+    private boolean kyc;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Account> accounts = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "residentialAddress_id")
+    private Address residentialAddress;
 
-    @JsonBackReference
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Address address;
-
-    @JsonIgnore
-    @JsonBackReference
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Beneficiary> beneficiaries = new ArrayList<>();
-
-
+    @ManyToOne
+    @JoinColumn(name = "permanentAddress_id")
+    private Address permanentAddress;
 
     public User() {
 
     }
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String permanentAddress, String city, String state, long pincode, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc) {
+    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId,
+            String panNumber, String aadharNumber, String dob, String occupation, String sourceOfIncome,
+            String grossAnnualIncome, String gender, String loginPassword, Boolean kyc, String fatherName,
+            Address residentialAddress, Address permanentAddress) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
+        this.gender = gender;
+        this.fatherName = fatherName;
         this.phoneNumber = phoneNumber;
         this.emailId = emailId;
-//        this.permanentAddress = permanentAddress;
-//        this.city = city;
-//        this.state = state;
-//        this.pincode = pincode;
         this.panNumber = panNumber;
         this.aadharNumber = aadharNumber;
         this.dob = dob;
         this.occupation = occupation;
-        this.gender = gender;
+        this.sourceOfIncome = sourceOfIncome;
+        this.grossAnnualIncome = grossAnnualIncome;
         this.loginPassword = loginPassword;
         this.kyc = kyc;
-    }
-
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String permanentAddress, String city, String state, long pincode, String panNumber, String aadharNumber, String dob, String occupation, String gender, String loginPassword, String kyc, List<Account> accounts,Address address,List<Beneficiary> beneficiaries) {
-        this.uid = uid;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.emailId = emailId;
-//        this.permanentAddress = permanentAddress;
-//        this.city = city;
-//        this.state = state;
-//        this.pincode = pincode;
-        this.panNumber = panNumber;
-        this.aadharNumber = aadharNumber;
-        this.dob = dob;
-        this.occupation = occupation;
-        this.gender = gender;
-        this.loginPassword = loginPassword;
-        this.kyc = kyc;
-        this.accounts = accounts;
-        this.address = address;
-        this.beneficiaries =  beneficiaries;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+        this.residentialAddress = residentialAddress;
+        this.permanentAddress = permanentAddress;
     }
 
     public long getUid() {
@@ -147,14 +106,6 @@ public class User {
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public List<Beneficiary> getBeneficiaries() {
-        return beneficiaries;
-    }
-
-    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
-        this.beneficiaries = beneficiaries;
     }
 
     public void setFirstName(String firstName) {
@@ -177,6 +128,22 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -190,40 +157,8 @@ public class User {
     }
 
     public void setEmailId(String emailId) {
-        this.emailId = emailId.toLowerCase();
+        this.emailId = emailId;
     }
-
-//    public String getPermanentAddress() {
-//        return permanentAddress;
-//    }
-//
-//    public void setPermanentAddress(String permanentAddress) {
-//        this.permanentAddress = permanentAddress;
-//    }
-//
-//    public String getCity() {
-//        return city;
-//    }
-//
-//    public void setCity(String city) {
-//        this.city = city;
-//    }
-//
-//    public String getState() {
-//        return state;
-//    }
-//
-//    public void setState(String state) {
-//        this.state = state;
-//    }
-
-//    public long getPincode() {
-//        return pincode;
-//    }
-//
-//    public void setPincode(long pincode) {
-//        this.pincode = pincode;
-//    }
 
     public String getPanNumber() {
         return panNumber;
@@ -257,12 +192,20 @@ public class User {
         this.occupation = occupation;
     }
 
-    public String getGender() {
-        return gender;
+    public String getSourceOfIncome() {
+        return sourceOfIncome;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setSourceOfIncome(String sourceOfIncome) {
+        this.sourceOfIncome = sourceOfIncome;
+    }
+
+    public String getGrossAnnualIncome() {
+        return grossAnnualIncome;
+    }
+
+    public void setGrossAnnualIncome(String grossAnnualIncome) {
+        this.grossAnnualIncome = grossAnnualIncome;
     }
 
     public String getLoginPassword() {
@@ -270,27 +213,34 @@ public class User {
     }
 
     public void setLoginPassword(String loginPassword) {
-//        this.loginPassword = loginPassword;
         Base64.Encoder encoder = Base64.getEncoder();
         String normalString = loginPassword;
-        String encodedString = encoder.encodeToString(   // encrypt password in database field
-        normalString.getBytes(StandardCharsets.UTF_8) );
+        String encodedString = encoder.encodeToString( // encrypt password in database field
+                normalString.getBytes(StandardCharsets.UTF_8));
         this.loginPassword = encodedString;
     }
 
-    public String getKyc() {
+    public Boolean getKyc() {
         return kyc;
     }
 
-    public void setKyc(String kyc) {
+    public void setKyc(Boolean kyc) {
         this.kyc = kyc;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
+    public Address getResidentialAddress() {
+        return residentialAddress;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    public void setResidentialAddress(Address residentialAddress) {
+        this.residentialAddress = residentialAddress;
+    }
+
+    public Address getPermanentAddress() {
+        return permanentAddress;
+    }
+
+    public void setPermanentAddress(Address permanentAddress) {
+        this.permanentAddress = permanentAddress;
     }
 }

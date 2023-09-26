@@ -5,6 +5,7 @@ import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,17 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
+    // @PostMapping("/{userId}/accounts")
+    // public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
+    //     User user = userService.getUserById(userId);
+    //     account.setUser(user);
+    //     return accountService.createAccount(account);
+    // }
 
-    @PostMapping("/{userId}/accounts")
-    public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
-        User user = userService.getUserById(userId);
-        account.setUser(user);
-        return accountService.createAccount(account);
+    @PutMapping("/addNewAccount/{userId}")
+    public Account addNewAccount(@PathVariable Long userId) {
+
+        return accountService.addNewAccount(userId);
     }
 
     @GetMapping("/accounts/{accountNo}")
@@ -50,12 +56,15 @@ public class AccountController {
         try {
             return accountService.listAll();
         }
-
         catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-
+    @GetMapping("/active/{userId}")
+    public ResponseEntity<List<Account>> getActiveAccountsForUser(@PathVariable Long userId) {
+        List<Account> activeAccounts = accountService.getActiveAccountsForUser(userId);
+        return ResponseEntity.ok(activeAccounts);
+    }
 }

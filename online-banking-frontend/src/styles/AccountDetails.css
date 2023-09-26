@@ -1,0 +1,30 @@
+/* AccountDetails.css */
+
+.account-details-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin: 20px auto;
+    max-width: 400px;
+  }
+  
+  .account-details-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .account-info {
+    font-size: 18px;
+    text-align: left;
+  }
+  
+  .account-info p {
+    margin: 10px 0;
+  }
+  
+  /* Customize the styling as needed */
+  

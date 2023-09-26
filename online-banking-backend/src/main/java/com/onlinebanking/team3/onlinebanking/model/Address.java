@@ -12,17 +12,13 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long addressId;
-    private @NonNull String permanentAddress;
+    private @NonNull String address;
     private @NonNull String city;
     private @NonNull String state;
     private int pincode;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public Address(@NonNull String permanentAddress, @NonNull String city, @NonNull String state, int pincode) {
-        this.permanentAddress = permanentAddress;
+    public Address(@NonNull String address, @NonNull String city, @NonNull String state, int pincode) {
+        this.address = address;
         this.city = city;
         this.state = state;
         this.pincode = pincode;

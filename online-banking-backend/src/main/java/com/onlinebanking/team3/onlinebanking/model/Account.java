@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @NoArgsConstructor
@@ -21,27 +23,40 @@ public class Account {
 
     private @NonNull String ifscCode;
 
-    private @NonNull String mailingAddress;
+    private Boolean isActive;
 
-    private @NonNull double balance;
+    @OneToOne
+    @JoinColumn(name = "mailingAddress_id")
+    private Address mailingAddress;
 
+
+    private double balance;
+
+    @Setter(AccessLevel.NONE) 
     private String transactionPassword;
 
-    @JsonIgnore
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "user_id"), name = "user_id")
     private User user;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Transaction> transactions = new ArrayList<>();
+//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+//    private List<Transaction> transactions = new ArrayList<>();
 
-
-    public Account(@NonNull String ifscCode, @NonNull String mailingAddress, @NonNull double balance, String transactionPassword) {
+    public Account(@NonNull String ifscCode, Address mailingAddress, double balance, Boolean isActive ,User user) {
         this.ifscCode = ifscCode;
         this.mailingAddress = mailingAddress;
         this.balance = balance;
-        this.transactionPassword = transactionPassword;
+        this.isActive = isActive;
+        this.user = user;
     }
+    
+    public void setTransactionPassword(String transactionPassword) {
+        Base64.Encoder encoder = Base64.getEncoder();
+        String normalString = transactionPassword;
+        String encodedString = encoder.encodeToString(   // encrypt password in database field
+                normalString.getBytes(StandardCharsets.UTF_8) );
+        this.transactionPassword= encodedString;
+    }
+
+    
 }
