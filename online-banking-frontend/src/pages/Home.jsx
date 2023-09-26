@@ -7,7 +7,7 @@ const Home = () => {
 
   useEffect(() => {
     setUser(localStorage.getItem("phoneNumber"));
-  });
+  }, []);
 
   return (
     // <div className='landing-page-img'>
