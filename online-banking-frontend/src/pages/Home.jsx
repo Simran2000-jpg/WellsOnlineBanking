@@ -7,6 +7,15 @@ const Home = () => {
 
   useEffect(() => {
     setUser(localStorage.getItem("phoneNumber"));
+
+    const onStorage = () => {
+      setUser(localStorage.getItem("userId"));
+    };
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      window.removeEventListener("storage", onStorage);
+    };
   }, []);
 
   return (

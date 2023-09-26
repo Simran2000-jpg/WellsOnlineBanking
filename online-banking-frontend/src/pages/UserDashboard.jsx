@@ -7,17 +7,25 @@ import AccountStatement from '../components/AccountStatement'
 import { useLocation } from 'react-router-dom'
 import Home from './Home'
 import Transaction from './Transaction'
+import AddBeneficiary from './AddBeneficiary'
+import ViewBeneficiary from './ViewBeneficiary'
 
 const UserDasboard = () => {
     const location = useLocation();
 
     const path = location.pathname.split("/");
+    console.log(path);
 
     return (
         <Container className='pt-2'>
             <SidebarComponent/>
             {
-                (path[2] === "account-details") ? <AccountDetails/> : (path[2] === "account-statement") ? <AccountStatement/> : (path[2] === "transaction") ? <Transaction/> : <Home/>
+                (path[2] === "account-details") ? <AccountDetails/> : 
+                (path[2] === "account-statement") ? <AccountStatement/> : 
+                (path[2] === "funds-transfer") ? <Transaction/> :
+                (path[2] === "add-beneficiary") ? <AddBeneficiary/> :
+                (path[2] === "view-beneficiary") ? <ViewBeneficiary/> :
+                <Home/>
             }
         </Container>
     )

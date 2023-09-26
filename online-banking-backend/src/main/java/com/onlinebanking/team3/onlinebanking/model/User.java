@@ -15,9 +15,9 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    @SequenceGenerator(name="user_seq",initialValue = 100,allocationSize = 1)
+    @SequenceGenerator(name = "user_seq", initialValue = 100, allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "user_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_seq")
     private long uid;
 
     @Column(nullable = false)
@@ -68,12 +68,14 @@ public class User {
     @JoinColumn(name = "permanentAddress_id")
     private Address permanentAddress;
 
-
     public User() {
 
     }
 
-    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId, String panNumber, String aadharNumber, String dob, String occupation, String sourceOfIncome, String grossAnnualIncome, String gender, String loginPassword, Boolean kyc, String fatherName, Address residentialAddress, Address permanentAddress) {
+    public User(long uid, String firstName, String middleName, String lastName, String phoneNumber, String emailId,
+            String panNumber, String aadharNumber, String dob, String occupation, String sourceOfIncome,
+            String grossAnnualIncome, String gender, String loginPassword, Boolean kyc, String fatherName,
+            Address residentialAddress, Address permanentAddress) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -213,8 +215,8 @@ public class User {
     public void setLoginPassword(String loginPassword) {
         Base64.Encoder encoder = Base64.getEncoder();
         String normalString = loginPassword;
-        String encodedString = encoder.encodeToString(   // encrypt password in database field
-                normalString.getBytes(StandardCharsets.UTF_8) );
+        String encodedString = encoder.encodeToString( // encrypt password in database field
+                normalString.getBytes(StandardCharsets.UTF_8));
         this.loginPassword = encodedString;
     }
 
