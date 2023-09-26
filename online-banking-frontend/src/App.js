@@ -68,7 +68,8 @@ function App() {
               <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
- 
+            )}
+            
             {user &&   (<>    
             <Route path="/dashboard/add-beneficiary" element={<AddBeneficiary />} ></Route>
             <Route path="/dashboard/view-beneficiary" element={<ViewBeneficiary />} ></Route>
