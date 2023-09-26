@@ -23,13 +23,6 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
-    // @PostMapping("/{userId}/accounts")
-    // public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
-    //     User user = userService.getUserById(userId);
-    //     account.setUser(user);
-    //     return accountService.createAccount(account);
-    // }
-
     @PutMapping("/addNewAccount/{userId}")
     public Account addNewAccount(@PathVariable Long userId) {
 
@@ -42,7 +35,17 @@ public class AccountController {
         return account;
     }
 
-
+     @GetMapping("/accounts/user/{uid}")
+    public List<Account> getUserAccounts(@PathVariable Long uid) {
+        try {
+            return accountService.getAccountsByUser(uid);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     @GetMapping("/user/{uid}/accounts")
     public ResponseEntity<List<Account>> getAccountsForUserId(@PathVariable Long uid){
         try {
@@ -60,18 +63,6 @@ public class AccountController {
 
 
     }
-
-//    @GetMapping("/accounts/{uid}")
-//    public List<Account> getUserAccounts(@PathVariable Long uid) {
-//        try {
-//            return accountService.getUserAccounts(uid);
-//        }
-//
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 
     @GetMapping("/accounts")
     public List<Account> getAllAccounts() {

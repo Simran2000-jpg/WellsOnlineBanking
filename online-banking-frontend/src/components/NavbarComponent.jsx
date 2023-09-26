@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../logo.svg";
 
 import "../styles/NavbarComponent.css";
 
 const NavbarComponent = () => {
+  const history = useNavigate();
+
   const [user, setUser] = useState("");
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const NavbarComponent = () => {
 
     localStorage.removeItem("userId");
     window.dispatchEvent(new Event("storage"));
+    history("/");
   };
 
   return (
@@ -52,6 +55,28 @@ const NavbarComponent = () => {
                 </NavLink>
               </Nav.Item>
             )}
+            {user !== null && (
+              <Nav.Item className="my-2 mx-2 nav-item-styling">
+                <NavLink
+                  to={"/register"}
+                  className="text-decoration-none nav-link-styling"
+                >
+                  <i className="bi bi-person-fill-add"></i>
+                  <span className="mx-2">Register Internet Banking</span>
+                </NavLink>
+              </Nav.Item>
+            )}
+            {user !== null && (
+              <Nav.Item className="my-2 mx-2 nav-item-styling">
+                <NavLink
+                  to={"/dashboard"}
+                  className="text-decoration-none nav-link-styling"
+                >
+                  <i class="bi bi-speedometer2"></i>
+                  <span className="mx-2">Dashboard</span>
+                </NavLink>
+              </Nav.Item>
+            )}
             {user === null ? (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
@@ -70,18 +95,6 @@ const NavbarComponent = () => {
                 >
                   <i class="bi bi-box-arrow-right"></i>
                   <span className="mx-2">Logout</span>
-                </NavLink>
-              </Nav.Item>
-            )}
-
-            {user !== null && (
-              <Nav.Item className="my-2 mx-2 nav-item-styling">
-                <NavLink
-                  to={"/register"}
-                  className="text-decoration-none nav-link-styling"
-                >
-                  <i className="bi bi-person-fill-add"></i>
-                  <span className="mx-2">Register</span>
                 </NavLink>
               </Nav.Item>
             )}

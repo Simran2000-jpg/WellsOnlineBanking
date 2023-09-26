@@ -11,7 +11,7 @@ const SidebarComponent = () => {
   const path = pathname[1];
 
   return (
-    <div className="sidebar">
+    <div className="sidebar bg-light">
       <ul>
         <li>
           <NavLink to={`/${path}/account-details`}>
@@ -29,7 +29,7 @@ const SidebarComponent = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to={`/${path}/transaction`}>
+          <NavLink to={`/${path}/funds-transfer`}>
             <i className="bi bi-currency-exchange"></i> Funds Transfer
           </NavLink>
         </li>

@@ -26,13 +26,17 @@ public class BeneficiaryService {
 //    public Optional<Beneficiary> getById(Long bid) {
 //        return beneficiaryRepository.findById(bid);
 //    }
-public Beneficiary getBeneficiaryById(Long beneficiaryId) {
-    return beneficiaryRepository.findById(beneficiaryId)
-            .orElseThrow(() -> new EntityNotFoundException("Beneficiary not found with ID: " + beneficiaryId));
-}
+	public Beneficiary getBeneficiaryById(Long beneficiaryId) {
+	    return beneficiaryRepository.findById(beneficiaryId)
+	            .orElseThrow(() -> new EntityNotFoundException("Beneficiary not found with ID: " + beneficiaryId));
+	}
+	
     public List<Beneficiary> getBeneficiaryByUser(Long uid) {
         return beneficiaryRepository.findAllByUserId(uid);
     }
-
+    
+    public void deleteBeneficiaryById(Long beneficiaryId) {
+    	beneficiaryRepository.deleteById(beneficiaryId);
+    }
 
 }

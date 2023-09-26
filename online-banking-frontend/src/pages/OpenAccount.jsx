@@ -234,10 +234,12 @@ const OpenAccount = () => {
     }
     setError("");
     generatePassword();
-    setFormFieldValues((prevState) => ({
-      ...prevState,
+    setFormFieldValues({
+      ...formFieldValues,
       loginPassword: generatedPassword,
-    }));
+    });
+
+    console.log(formFieldValues);
 
     axios
       .post("http://localhost:8085/createUser", {
