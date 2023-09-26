@@ -15,6 +15,7 @@ import UserDasboard from "./pages/UserDashboard";
 import SidebarComponent from "./components/SidebarComponent";
 import { useEffect, useState } from "react";
 import AddBeneficiary from "./pages/AddBeneficiary";
+import ViewBeneficiary from "./pages/ViewBeneficiary";
 
 function App() {
   const [user, setUser] = useState("");
@@ -54,11 +55,11 @@ function App() {
               <Route path="/login" element={<Login />}></Route>
             )}
 
-            {user !== null ? (
+            {/* {user !== null ? (
               <Route path="/transaction" element={<Transaction />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
-            )}
+            )} */}
 
             <Route path="/" element={<Home />}></Route>
             <Route path="/dashboard" element={<UserDasboard />}></Route>
@@ -66,7 +67,13 @@ function App() {
               <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
-            )}
+            )}   
+            {user &&   (<>    
+            <Route path="/dashboard/add-beneficiary" element={<AddBeneficiary />} ></Route>
+            <Route path="/dashboard/view-beneficiary" element={<ViewBeneficiary />} ></Route>
+            </> 
+            )
+            }
           </Routes>
         </div>
         <Footer />

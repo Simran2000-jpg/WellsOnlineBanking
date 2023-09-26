@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function Transaction() {
+    const userId = localStorage.getItem('userId')
     const [fromAccount, setFromAccount] = useState('');
     const [toAccount, setToAccount] = useState('');
     const [amount, setAmount] = useState();
@@ -16,7 +17,7 @@ function Transaction() {
     useEffect(() => {
         const fetchToAccountOptions = async () => {
             try {
-                const response = await axios.get(' http://localhost:8085/beneficiaries');
+                const response = await axios.get('http://localhost:8085/beneficiaries');
                 console.log(response);
                 setToAccountOptions(response.data);
             } catch (error) {
@@ -27,9 +28,9 @@ function Transaction() {
 
         const fetchFromAccountOptions = async () => {
             try {
-                // const response = await axios.get(' ');
-                // console.log(response);
-                // setFromAccountOptions(response.data);
+                const response = await axios.get(`http://localhost:8085/active/${userId}`);
+                console.log(response);
+                setFromAccountOptions(response.data);
             } catch (error) {
                 setError('Error fetching account options:')
                 console.error('Error fetching account options:', error);

@@ -1,32 +1,46 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function AddBeneficiary() {
+    const navigate = useNavigate();
     const [beneficiaryName, setBeneficiaryName] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
     const [confirmAccountNumber, setConfirmAccountNumber] = useState('');
-    const [ifscCode, setIfscCode] = useState('');
+    const [ifscCode, setIfscCode] = useState('');    
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const userId = localStorage.getItem('userId')
 
     const createBeneficiary = async () => {
-        var userId;
         try {
             const response = await axios.post(`http://localhost:8085/beneficiaries/${userId}`, {
                 ifscCode: ifscCode,
                 accountNo: accountNumber,
                 name: beneficiaryName
             });
+            if(response.status == 200){
+                setError(false);
+                setSuccessMessage("Added Beneficiary successful");
+                setTimeout(() => {
+                    navigate("/dashboard/view-beneficiary");
+                  }, 2000);
+
+            }else{
+                //add controller error message in backend
+            }    
         } catch (error) {
-            console.error('Error fetching account options:', error);
+            setError("Error adding Beneficiary");
         }
     };
 
     const handleAddBeneficiary = (e) => {
         e.preventDefault();
         if (accountNumber === confirmAccountNumber) {
-            console.log('Beneficiary added:', beneficiaryName, accountNumber, ifscCode);
             createBeneficiary();
         } else {
-            console.log('Account numbers do not match.');
+            setError('Account numbers do not match.');
         }
     };
 
@@ -39,6 +53,8 @@ function AddBeneficiary() {
                             <h3 className="title">Add Beneficiary</h3>
                             <form className="form-vertical" onSubmit={handleAddBeneficiary}>
                                 <div className="form-group">
+                                    {successMessage && <div className="alert alert-success"><label>{successMessage}</label></div>}
+                                    {error && <div className="alert alert-danger"><label>{error}</label></div>}
                                     <label>Beneficiary Name*</label>
                                     <input
                                         className="form-control"
