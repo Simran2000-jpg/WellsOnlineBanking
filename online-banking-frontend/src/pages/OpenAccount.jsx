@@ -50,10 +50,12 @@ const OpenAccount = () => {
 
   const handleFormSubmit = async () => {
     generatePassword();
-    setFormFieldValues((prevState) => ({
-      ...prevState,
+    setFormFieldValues({
+      ...formFieldValues,
       loginPassword: generatedPassword,
-    }));
+    });
+
+    console.log(formFieldValues);
 
     await axios.post("http://localhost:8085/createUser", {...formFieldValues});
 

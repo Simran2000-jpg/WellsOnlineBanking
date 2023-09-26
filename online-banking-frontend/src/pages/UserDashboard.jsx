@@ -18,7 +18,7 @@ const UserDasboard = () => {
             <SidebarComponent/>
             <h1 className='display-6'>User Dashboard</h1>
             {
-                (path[2] === "account-details") ? <AccountDetails/> : (path[2] === "account-statement") ? <AccountStatement/> : (path[2] === "transaction") ? <Transaction/> : <Home/>
+                (path[2] === "account-details") ? <AccountDetails/> : (path[2] === "account-statement") ? <AccountStatement/> : (path[2] === "transaction") ? <Transaction/> : ""
             }
         </Container>
     )
