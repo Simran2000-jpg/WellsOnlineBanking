@@ -31,7 +31,6 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-// @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService uService;
@@ -154,6 +153,23 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
         User updated = uService.updateUser(userId, updatedUser);
         return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("users/{userId}/verify")
+    public ResponseEntity<User> kycVerifyUser(@RequestHeader(name = "Authorization") String authentication,
+                                              @PathVariable Long userId){
+        try {
+            System.out.println("Inside KYC");
+            AdminAuthentication.authenticateAdminCredentials(authentication);
+            User updated = uService.kycVerifyUser(userId);
+
+            return ResponseEntity.ok(updated);
+
+        } catch (UnauthorizedAccessException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
     }
 
     //

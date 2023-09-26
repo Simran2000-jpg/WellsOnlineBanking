@@ -60,6 +60,22 @@ public class UserService {
             throw new UserNotFoundException("User with ID " + userId + " not found");
         }
     }
+    public User kycVerifyUser(Long userId) {
+        // Find the existing user by ID
+        Optional<User> existingUserOptional = userRepository.findById(userId);
+
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            existingUser.setKyc(!existingUser.getKyc());
+
+
+            // Save the updated user
+            return userRepository.save(existingUser);
+        } else {
+            throw new UserNotFoundException("User with ID " + userId + " not found");
+        }
+    }
 
     //delete 
     public void deleteUser(Long userId) {

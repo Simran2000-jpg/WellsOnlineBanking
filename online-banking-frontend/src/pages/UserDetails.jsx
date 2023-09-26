@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Users } from "../data/Users";
+import AdminServices from "../services/AdminServices";
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -8,18 +8,35 @@ const UserDetails = () => {
   const [user, setUser] = useState({});
 
   const fetchUser = async () => {
-    let result = Users.filter((user) => user.userId == id);
-    console.log(result[0]);
-    return result[0];
+    AdminServices.fetchUserById(id).then((res) => {
+      console.log(res);
+      setUser(res);
+      fetchAccounts();
+    });
+  };
+
+  const fetchAccounts = async () => {
+    AdminServices.fetchAccountByUser(id).then((res) => {
+      console.log(res);
+
+      setUser((user) => ({ ...user, account: res }));
+      console.log(user);
+    });
+  };
+
+  const changeActiveStatusAccount = async (accountNo) => {
+    AdminServices.changeAccountStatus(accountNo).then((res) => {
+      console.log(res);
+      fetchAccounts();
+    });
   };
   useEffect(() => {
-    console.log(id);
-    fetchUser().then((data) => setUser(data));
+    fetchUser();
   }, []);
   return (
     <div className="form-bg my-5 mx-auto container">
       <div className="row justify-content-center">
-        <div className="col-md-offset-3 col-12 col-sm-offset-2">
+        <div className="col-md-6 col-12 col-md-offset-3 col-sm-offset-2">
           <div className="form-container">
             <h2 className="title">USER DETAILS</h2>
             <table className="table table-striped">
@@ -28,7 +45,7 @@ const UserDetails = () => {
                   <>
                     <tr>
                       <td className="property">User ID</td>
-                      {user.userId && <td className="value">{user.userId}</td>}
+                      {user.uid && <td className="value">{user.uid}</td>}
                     </tr>
                     <tr>
                       <td className="property">First Name</td>
@@ -97,48 +114,83 @@ const UserDetails = () => {
                     </tr>
                     <tr>
                       <td className="property">Permanent Address</td>
-                      {user.address && (
+                      {user.permanentAddress && (
                         <td className="value">
-                          {user.address.permanentAddress}
+                          {user.permanentAddress.address}
                         </td>
                       )}
                     </tr>
                     <tr>
                       <td className="property">City</td>
-                      {user.address && (
-                        <td className="value">{user.address.city}</td>
+                      {user.permanentAddress && (
+                        <td className="value">{user.permanentAddress.city}</td>
                       )}
                     </tr>
                     <tr>
                       <td className="property">State</td>
-                      {user.address && (
-                        <td className="value">{user.address.state}</td>
+                      {user.permanentAddress && (
+                        <td className="value">{user.permanentAddress.state}</td>
                       )}
                     </tr>
                     <tr>
                       <td className="property">Pincode</td>
 
-                      {user.address && (
-                        <td className="value">{user.address.pincode}</td>
+                      {user.permanentAddress && (
+                        <td className="value">
+                          {user.permanentAddress.pincode}
+                        </td>
                       )}
                     </tr>
                     <tr>
-                      <td className="property">Account Number</td>
-                      {user.account && (
-                        <td className="value">{user.account.accountNumber}</td>
-                      )}
+                      <td className="property text-center" colSpan={2}>
+                        <h3>Accounts</h3>
+                      </td>
                     </tr>
                     <tr>
-                      <td className="property">IFSC Code</td>
-                      {user.account && (
-                        <td className="value">{user.account.ifscCode}</td>
-                      )}
-                    </tr>
-                    <tr>
-                      <td className="property">Balance</td>
-                      {user.account && (
-                        <td className="value">{user.account.balance}</td>
-                      )}
+                      <td colSpan={2}>
+                        {user.account &&
+                          user.account.map((account) => (
+                            <div
+                              className="card text-center"
+                              key={account.accountNo}
+                            >
+                              <div className="card-body">
+                                <h5 className="card-title">
+                                  Account Number: {account.accountNo}
+                                </h5>
+                                {account.isActive ? (
+                                  <button
+                                    className="btn btn-success"
+                                    onClick={() => {
+                                      changeActiveStatusAccount(
+                                        account.accountNo
+                                      );
+                                    }}
+                                  >
+                                    Active
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                      changeActiveStatusAccount(
+                                        account.accountNo
+                                      );
+                                    }}
+                                  >
+                                    Inactive
+                                  </button>
+                                )}
+                                <p className="card-text">
+                                  IFSC Code: {account.ifscCode}
+                                </p>
+                                <p className="card-text">
+                                  Balance: {account.balance}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                      </td>
                     </tr>
                   </>
                 )}
