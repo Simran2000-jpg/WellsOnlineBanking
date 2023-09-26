@@ -75,7 +75,7 @@ public class UserController {
         } catch (Exception e) {
             // TODO: handle exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An Error Occurred: " + e.getMessage());
+                    .body("An Error Occurred: " + e.getMessage().substring(0, 100));
 
         }
     }
