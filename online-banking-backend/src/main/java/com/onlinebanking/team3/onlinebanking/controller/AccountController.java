@@ -20,11 +20,17 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/{userId}/accounts")
-    public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
-        User user = userService.getUserById(userId);
-        account.setUser(user);
-        return accountService.createAccount(account);
+    // @PostMapping("/{userId}/accounts")
+    // public Account createAccount(@PathVariable Long userId, @RequestBody Account account) {
+    //     User user = userService.getUserById(userId);
+    //     account.setUser(user);
+    //     return accountService.createAccount(account);
+    // }
+
+    @PutMapping("/addNewAccount/{userId}")
+    public Account addNewAccount(@PathVariable Long userId) {
+
+        return accountService.addNewAccount(userId);
     }
 
     @GetMapping("/accounts/{accountNo}")

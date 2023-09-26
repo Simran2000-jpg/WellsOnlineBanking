@@ -1,7 +1,11 @@
 package com.onlinebanking.team3.onlinebanking.service;
 
+import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
+import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.repository.AccountRepository;
+import com.onlinebanking.team3.onlinebanking.repository.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,9 @@ import java.util.Optional;
 public class AccountService {
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public Account createAccount(Account account) {
         return accountRepository.save(account);
@@ -32,5 +39,14 @@ public class AccountService {
 
     public List<Account> getActiveAccountsForUser(Long userId) {
         return accountRepository.findActiveAccountsForUser(userId);
+    }
+
+    public Account addNewAccount(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with ID "+userId + " not found"));
+        Account account = new Account("NX1845", user.getResidentialAddress(), 1000, true, user);
+
+        // newAccount.setMailingAddress(mailingAddress);
+        return accountRepository.save(account);
+
     }
 }
