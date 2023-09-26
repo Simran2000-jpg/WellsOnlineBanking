@@ -20,6 +20,7 @@ public class Beneficiary {
 
     private String ifscCode;
     private @NonNull String accountNo;
+    private @NonNull String name;
 
     @ManyToOne
     // @JsonBackReference
@@ -30,9 +31,10 @@ public class Beneficiary {
     // @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
     // private List<Transaction> transactions = new ArrayList<>();
 
-    public Beneficiary(String ifscCode, @NonNull String accountNo) {
+    public Beneficiary(String ifscCode, @NonNull String accountNo, @NonNull String name) {
         this.ifscCode = ifscCode;
         this.accountNo = accountNo;
+        this.name = name;
     }
 
 }

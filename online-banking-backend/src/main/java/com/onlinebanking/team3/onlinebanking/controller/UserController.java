@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -84,12 +85,11 @@ public class UserController {
             throws ResourceNotFoundException {
         Boolean isLoggedIn = false;
 
-        User u = uService.loginUser(phoneNumber)
+        User u = uService.findUserByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("No User Enrolled With This Number ::"));
 
-        if (phoneNumber.equals(u.getPhoneNumber()) && password.equals(u.getLoginPassword())) {
+        if (password.equals(u.getLoginPassword()))
             isLoggedIn = true;
-        }
 
         return isLoggedIn;
     }
@@ -121,19 +121,14 @@ public class UserController {
         }
     }
 
-    // @PostMapping("/{userId}/beneficiaries")
-    // public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody
-    // Beneficiary beneficiary) {
-    // User user = uService.getUserById(userId);
-    // beneficiary.setUser(user);
-    // return beneficiaryService.createBeneficiary(beneficiary);
-    // }
-
     @GetMapping("/users/{uid}")
     public User getUserById(@PathVariable Long uid) {
-        User u = uService.getUserById(uid);
-        return u;
-        //
+        return uService.getUserById(uid);
+    }
+
+    @GetMapping("/users/phone/{ph}")
+    public Optional<User> getUserByPhoneNumber(@PathVariable String ph) {
+        return uService.findUserByPhoneNumber(ph);
     }
 
     @GetMapping("/users")
@@ -157,7 +152,7 @@ public class UserController {
 
     @PutMapping("users/{userId}/verify")
     public ResponseEntity<User> kycVerifyUser(@RequestHeader(name = "Authorization") String authentication,
-                                              @PathVariable Long userId){
+            @PathVariable Long userId) {
         try {
             System.out.println("Inside KYC");
             AdminAuthentication.authenticateAdminCredentials(authentication);

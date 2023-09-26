@@ -33,7 +33,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transaction transferFunds(Long fromAccountId, Long toAccountId, double amount, String remarks, String transactionPassword) {
+    public Transaction transferFunds(Long fromAccountId, Long toAccountId, String transactionType, double amount, String remarks, String transactionPassword) {
         // Retrieve sender and recipient accounts
         Account fromAccount = accountService.getAccountById(fromAccountId);      		  
         Account toAccount = accountService.getAccountById(toAccountId);
@@ -62,6 +62,7 @@ public class TransactionService {
             Transaction transaction = new Transaction();
             transaction.setTransactionDateTime(LocalDateTime.now());
             transaction.setAmount(amount);
+            transaction.setTransactionType(transactionType);
             transaction.setFromAccount(fromAccount);
             transaction.setToAccount(toAccount);
             transaction.setRemarks(remarks);

@@ -15,23 +15,63 @@ import UserDetails from "./pages/UserDetails";
 import Transaction from "./pages/Transaction";
 import UserDasboard from "./pages/UserDashboard";
 import SidebarComponent from "./components/SidebarComponent";
+import { useEffect, useState } from "react";
+import AddBeneficiary from "./pages/AddBeneficiary";
 
 function App() {
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    const onStorage = () => {
+      setUser(localStorage.getItem("userId"));
+    };
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      window.removeEventListener("storage", onStorage);
+    };
+  });
+
   return (
     <>
       <Router>
         <NavbarComponent />
         <div className="App pt-5">
           <Routes>
-            <Route path="/openaccount" element={<OpenAccount />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/register" element={<Register />}></Route>
-            <Route path="/transaction" element={<Transaction />}></Route>
+            {user === null ? (
+              <Route path="/openaccount" element={<OpenAccount />}></Route>
+            ) : (
+              <Route path="/" element={<Home />}></Route>
+            )}
+
+            {user === null ? (
+              <Route path="/login" element={<Login />}></Route>
+            ) : (
+              <Route path="/" element={<Home />}></Route>
+            )}
+
+            {user !== null ? (
+              <Route path="/register" element={<Register />}></Route>
+            ) : (
+              <Route path="/login" element={<Login />}></Route>
+            )}
+
+            {user !== null ? (
+              <Route path="/transaction" element={<Transaction />}></Route>
+            ) : (
+              <Route path="/login" element={<Login />}></Route>
+            )}
+
+            <Route path="/dashboard" element={<UserDasboard />}></Route>
+            {user !== null ? (
+              <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
+            ) : (
+              <Route path="/login" element={<Login />}></Route>
+            )}
+
             <Route path="/admin" element={<Admin />}></Route>
             <Route path="/user/:id" element={<UserDetails />}></Route>
 
-            <Route path="/dashboard" element={<UserDasboard />}></Route>
-            <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
             <Route path="/" element={<Home />}></Route>
           </Routes>
         </div>
