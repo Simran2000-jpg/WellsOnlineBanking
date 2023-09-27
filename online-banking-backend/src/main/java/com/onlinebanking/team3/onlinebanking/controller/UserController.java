@@ -24,7 +24,6 @@ import java.util.List;
 
 @CrossOrigin(origins="http://localhost:3000")
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService uService;
@@ -130,6 +129,14 @@ public class UserController {
         return u;
         //
     }
+    
+    @GetMapping("/users/{uid}")
+    public User getUserById(@PathVariable Long uid) {
+        User u = uService.getUserById(uid);
+        return u;
+        //
+    }
+    
     @GetMapping("/users")
     public List<User> getAllUsers() {
         try {

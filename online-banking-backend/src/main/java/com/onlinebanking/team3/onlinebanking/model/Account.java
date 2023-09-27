@@ -27,7 +27,6 @@ public class Account {
     @JoinColumn(name = "mailingAddress_id")
     private Address mailingAddress;
 
-
     private double balance;
 
     @Setter(AccessLevel.NONE) 
@@ -40,7 +39,7 @@ public class Account {
 //    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 //    private List<Transaction> transactions = new ArrayList<>();
 
-    public Account(@NonNull String ifscCode, Address mailingAddress, double balance, User user) {
+    public Account(@NonNull String ifscCode, Address mailingAddress, @NonNull double balance, User user) {
         this.ifscCode = ifscCode;
         this.mailingAddress = mailingAddress;
         this.balance = balance;
