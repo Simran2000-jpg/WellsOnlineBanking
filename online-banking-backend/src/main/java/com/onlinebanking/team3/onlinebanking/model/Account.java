@@ -23,6 +23,8 @@ public class Account {
 
     private @NonNull String ifscCode;
 
+    private Boolean isActive;
+
     @OneToOne
     @JoinColumn(name = "mailingAddress_id")
     private Address mailingAddress;
@@ -39,10 +41,11 @@ public class Account {
 //    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 //    private List<Transaction> transactions = new ArrayList<>();
 
-    public Account(@NonNull String ifscCode, Address mailingAddress, @NonNull double balance, User user) {
+    public Account(@NonNull String ifscCode, Address mailingAddress, double balance, User user) {
         this.ifscCode = ifscCode;
         this.mailingAddress = mailingAddress;
         this.balance = balance;
+        this.isActive = isActive;
         this.user = user;
     }
     
@@ -53,4 +56,6 @@ public class Account {
                 normalString.getBytes(StandardCharsets.UTF_8) );
         this.transactionPassword= encodedString;
     }
+
+    
 }

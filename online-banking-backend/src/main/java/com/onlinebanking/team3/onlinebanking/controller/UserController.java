@@ -1,6 +1,9 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
+import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.User;
@@ -8,6 +11,7 @@ import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.AddressService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +24,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins="http://localhost:3000")
 @RestController
@@ -42,7 +50,6 @@ public class UserController {
         return "Welcome User";
     }
 
-
     @PostMapping("/createUser")
     public ResponseEntity<String> createUser(@Validated @RequestBody User user) {
         try {
@@ -56,11 +63,11 @@ public class UserController {
             User registeredUser = uService.registerUser(user);
 
             Address mailingAddress = user.getResidentialAddress();
-            Account account = new Account("NX1845", mailingAddress, 1000, user);
+            Account account = new Account("NX1845", mailingAddress, 1000, true, user);
 
             Account registeredAccount = accountService.createAccount(account);
 
-            if(registeredUser!=null)
+            if (registeredUser != null)
                 return ResponseEntity.ok("Registration Successful");
             else
                 return ResponseEntity.badRequest().body("Registration Failed");
@@ -68,41 +75,41 @@ public class UserController {
         } catch (Exception e) {
             // TODO: handle exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An Error Occurred: "+e.getMessage());
+                    .body("An Error Occurred: " + e.getMessage().substring(0, 100));
 
         }
     }
 
-
     @PostMapping(value = "/loginUser")
-    public Boolean loginUser(@RequestParam String phoneNumber, @RequestParam String password) throws ResourceNotFoundException {
+    public Boolean loginUser(@RequestParam String phoneNumber, @RequestParam String password)
+            throws ResourceNotFoundException {
         Boolean isLoggedIn = false;
 
-        User u = uService.loginUser(phoneNumber).orElseThrow(() ->
-                new ResourceNotFoundException("No User Enrolled With This Number ::"));
+        User u = uService.findUserByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("No User Enrolled With This Number ::"));
 
-        if(phoneNumber.equals(u.getPhoneNumber()) && password.equals(u.getLoginPassword())) {
+        if (password.equals(u.getLoginPassword()))
             isLoggedIn = true;
-        }
 
         return isLoggedIn;
     }
-    
+
     @PutMapping("/register")
-    public ResponseEntity<String> registerInternetBanking(@RequestParam String emailId, @RequestParam Long accountNumber, @RequestParam String loginPassword, @RequestParam String transactionPassword) {
-    	try {
-        	Account account = accountService.getAccountById(accountNumber);
-        	User user = uService.getUserById(account.getUser().getUid());
-        	
-        	if(account.getUser().getEmailId().equals(emailId)) {
-        		user.setLoginPassword(loginPassword);
-        		User updatedUser = uService.registerUser(user);
-        		
-        		account.setTransactionPassword(transactionPassword);
-        		Account updatedAccount = accountService.createAccount(account);
+    public ResponseEntity<String> registerInternetBanking(@RequestParam String emailId,
+            @RequestParam Long accountNumber, @RequestParam String loginPassword,
+            @RequestParam String transactionPassword) {
+        try {
+            Account account = accountService.getAccountById(accountNumber);
+            User user = uService.getUserById(account.getUser().getUid());
+
+            if (account.getUser().getEmailId().equals(emailId)) {
+                user.setLoginPassword(loginPassword);
+                User updatedUser = uService.registerUser(user);
+
+                account.setTransactionPassword(transactionPassword);
+                Account updatedAccount = accountService.createAccount(account);
                 return ResponseEntity.ok("Registration Successful");
-        	}
-            else {
+            } else {
                 return ResponseEntity.badRequest().body("Account Number and Email Id mismatch");
             }
         	
@@ -143,11 +150,59 @@ public class UserController {
             return uService.listAll();
 
         } catch (Exception e) {
-            System.out.println("Fail");
             // TODO: handle exception
-            e.printStackTrace();
-            return null;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An Error Occurred: " + e.getMessage());
+
         }
     }
+
+    @GetMapping("/users/{uid}")
+    public User getUserById(@PathVariable Long uid) {
+        return uService.getUserById(uid);
+    }
+
+    @GetMapping("/users/phone/{ph}")
+    public Optional<User> getUserByPhoneNumber(@PathVariable String ph) {
+        return uService.findUserByPhoneNumber(ph);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers(@RequestHeader(name = "Authorization") String authentication) {
+        try {
+            AdminAuthentication.authenticateAdminCredentials(authentication);
+            return ResponseEntity.ok(uService.listAll());
+
+        } catch (UnauthorizedAccessException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    // UPDATE
+    @PutMapping("findUser/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
+        User updated = uService.updateUser(userId, updatedUser);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("users/{userId}/verify")
+    public ResponseEntity<User> kycVerifyUser(@RequestHeader(name = "Authorization") String authentication,
+            @PathVariable Long userId) {
+        try {
+            System.out.println("Inside KYC");
+            AdminAuthentication.authenticateAdminCredentials(authentication);
+            User updated = uService.kycVerifyUser(userId);
+
+            return ResponseEntity.ok(updated);
+
+        } catch (UnauthorizedAccessException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+    }
+
+    //
 
 }

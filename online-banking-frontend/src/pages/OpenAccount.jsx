@@ -15,6 +15,7 @@ const OpenAccount = () => {
 
   const [success, setSuccess] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
+  const [error, setError] = useState("");
 
   const user = {
     firstName: "",
@@ -47,18 +48,214 @@ const OpenAccount = () => {
   };
 
   const [formFieldValues, setFormFieldValues] = useState(user);
+  const [formFieldErrorValues, setFormFieldErrorValues] = useState(user);
+
+  const validateFormValues = () => {
+    let verified = true;
+    if (formFieldValues.aadharNumber.length !== 12) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        aadharNumber: "Aadhar Number should be 12 digits",
+      }));
+      verified = false;
+    }
+
+    if (formFieldValues.panNumber.length !== 10) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        panNumber: "PAN Number should be 10 characters",
+      }));
+      verified = false;
+    }
+
+    if (formFieldValues.phoneNumber.length !== 10) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        phoneNumber: "Phone Number should be 10 digits",
+      }));
+      verified = false;
+    }
+
+    if (formFieldValues.emailId.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        emailId: "Email ID is required",
+      }));
+      verified = false;
+    }
+
+    if (formFieldValues.firstName.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        firstName: "First Name is required",
+      }));
+      verified = false;
+    }
+
+    if (formFieldValues.lastName.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        lastName: "Last Name is required",
+      }));
+      verified = false;
+    }
+    if (formFieldValues.dob.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        dob: "Date of Birth is required",
+      }));
+      verified = false;
+    }
+    if (formFieldValues.fatherName.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        fatherName: "Father's Name is required",
+      }));
+      verified = false;
+    }
+    if (formFieldValues.gender.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        gender: "Gender is required",
+      }));
+      verified = false;
+    }
+    if (formFieldValues.occupation.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        occupation: "Occupation is required",
+      }));
+      verified = false;
+    }
+
+    if (formFieldValues.sourceOfIncome.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        sourceOfIncome: "Source of Income is required",
+      }));
+      verified = false;
+    }
+    if (formFieldValues.grossAnnualIncome.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        grossAnnualIncome: "Gross Annual Income is required",
+      }));
+      verified = false;
+    }
+    if (formFieldValues.residentialAddress.address.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        residentialAddress: {
+          ...prevState.residentialAddress,
+          address: "Address is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.residentialAddress.city.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        residentialAddress: {
+          ...prevState.residentialAddress,
+          city: "City is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.residentialAddress.state.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        residentialAddress: {
+          ...prevState.residentialAddress,
+          state: "State is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.residentialAddress.pincode.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        residentialAddress: {
+          ...prevState.residentialAddress,
+          pincode: "Pincode is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.permanentAddress.address.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        permanentAddress: {
+          ...prevState.permanentAddress,
+          address: "Address is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.permanentAddress.city.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        permanentAddress: {
+          ...prevState.permanentAddress,
+          city: "City is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.permanentAddress.state.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        permanentAddress: {
+          ...prevState.permanentAddress,
+          state: "State is required",
+        },
+      }));
+      verified = false;
+    }
+    if (formFieldValues.permanentAddress.pincode.length === 0) {
+      setFormFieldErrorValues((prevState) => ({
+        ...prevState,
+        permanentAddress: {
+          ...prevState.permanentAddress,
+          pincode: "Pincode is required",
+        },
+      }));
+      verified = false;
+    }
+    console.log(formFieldErrorValues);
+    return verified;
+  };
 
   const handleFormSubmit = async () => {
+    if (!validateFormValues()) {
+      setError("Please ensure all fields are entered properly");
+      setStepNumber(1);
+      return;
+    }
+    setError("");
     generatePassword();
-    setFormFieldValues((prevState) => ({
-      ...prevState,
+    setFormFieldValues({
+      ...formFieldValues,
       loginPassword: generatedPassword,
-    }));
+    });
 
-    await axios.post("http://localhost:8085/createUser", {...formFieldValues});
+    console.log(formFieldValues);
 
-    setStepNumber(4);
-    setSuccess(true);
+    axios
+      .post("http://localhost:8085/createUser", {
+        ...formFieldValues,
+      })
+      .then((res, err) => {
+        setStepNumber(4);
+        setSuccess(true);
+        return;
+      })
+      .catch((err) => {
+        setError(
+          "Error in creating user, check if user details is already used"
+        );
+        console.log(err);
+      });
   };
 
   const generatePassword = () => {
@@ -86,6 +283,10 @@ const OpenAccount = () => {
   const handleFormValueChange = (e) => {
     const { name, value } = e.target;
     setFormFieldValues((prevState) => ({ ...prevState, [name]: value }));
+    setFormFieldErrorValues((prevState) => ({
+      ...prevState,
+      [name]: "",
+    }));
   };
 
   const handleResidentialAddressFieldChange = (e) => {
@@ -95,6 +296,13 @@ const OpenAccount = () => {
       residentialAddress: {
         ...prevState.residentialAddress,
         [name]: value,
+      },
+    }));
+    setFormFieldErrorValues((prevState) => ({
+      ...prevState,
+      residentialAddress: {
+        ...prevState.residentialAddress,
+        [name]: "",
       },
     }));
   };
@@ -108,6 +316,13 @@ const OpenAccount = () => {
         [name]: value,
       },
     }));
+    setFormFieldErrorValues((prevState) => ({
+      ...prevState,
+      permanentAddress: {
+        ...prevState.permanentAddress,
+        [name]: "",
+      },
+    }));
   };
 
   useEffect(() => {
@@ -118,23 +333,31 @@ const OpenAccount = () => {
     switch (stepNumber) {
       case 1:
         return (
-          <PersonalDetailsForm handleFormValueChange={handleFormValueChange} />
+          <PersonalDetailsForm
+            formFieldValues={formFieldValues}
+            handleFormValueChange={handleFormValueChange}
+            formFieldErrorValues={formFieldErrorValues}
+          />
         );
       case 2:
         return (
           <AddressDetailsForm
+            formFieldValues={formFieldValues}
             handleResidentialAddressFieldChange={
               handleResidentialAddressFieldChange
             }
             handlePermanentAddressFieldChange={
               handlePermanentAddressFieldChange
             }
+            formFieldErrorValues={formFieldErrorValues}
           />
         );
       case 3:
         return (
           <OccupationDetailsForm
+            formFieldValues={formFieldValues}
             handleFormValueChange={handleFormValueChange}
+            formFieldErrorValues={formFieldErrorValues}
           />
         );
 
@@ -167,6 +390,9 @@ const OpenAccount = () => {
                   }}
                 ></div>
               </div>
+              {error.length != 0 && (
+                <p className="alert alert-danger">{error}</p>
+              )}
               {getElementForCurrentStep()}
               <div className="container">
                 <div className="row">

@@ -49,5 +49,11 @@ public class BeneficiaryController {
         List<Beneficiary> beneficiaries = beneficiaryService.getBeneficiaryByUser(uid);
         return ResponseEntity.ok(beneficiaries);
     }
+    
+    @DeleteMapping("/beneficiaries/{bid}")
+    public ResponseEntity<String> deleteBeneficiaryById(@PathVariable Long bid) {
+    	beneficiaryService.deleteBeneficiaryById(bid);
+    	return ResponseEntity.ok("Deleted Successfully");
+  }
 
 }
