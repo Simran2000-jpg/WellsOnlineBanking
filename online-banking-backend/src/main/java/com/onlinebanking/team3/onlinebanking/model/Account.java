@@ -41,7 +41,7 @@ public class Account {
 //    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 //    private List<Transaction> transactions = new ArrayList<>();
 
-    public Account(@NonNull String ifscCode, Address mailingAddress, double balance, User user) {
+    public Account(@NonNull String ifscCode, Address mailingAddress, double balance,Boolean isActive, User user) {
         this.ifscCode = ifscCode;
         this.mailingAddress = mailingAddress;
         this.balance = balance;

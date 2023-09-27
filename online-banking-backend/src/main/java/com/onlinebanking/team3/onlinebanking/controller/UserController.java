@@ -127,35 +127,8 @@ public class UserController {
 //    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
 //        User user = uService.getUserById(userId);
 //        beneficiary.setUser(user);
-//        return beneficiaryService.createBeneficiary(beneficiary);
-//    }
 
-    @GetMapping("/users/{uid}")
-    public User getUserById(@PathVariable Long uid) {
-        User u = uService.getUserById(uid);
-        return u;
-        //
-    }
-    
-    @GetMapping("/users/{uid}")
-    public User getUserById(@PathVariable Long uid) {
-        User u = uService.getUserById(uid);
-        return u;
-        //
-    }
-    
-    @GetMapping("/users")
-    public List<User> getAllUsers() {
-        try {
-            return uService.listAll();
-
-        } catch (Exception e) {
-            // TODO: handle exception
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An Error Occurred: " + e.getMessage());
-
-        }
-    }
+ 
 
     @GetMapping("/users/{uid}")
     public User getUserById(@PathVariable Long uid) {
