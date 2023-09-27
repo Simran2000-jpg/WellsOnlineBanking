@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.onlinebanking.team3.onlinebanking.exception.TransactionNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.Transaction;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.TransactionException;
+import org.junit.jupiter.api.Disabled;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -273,6 +275,28 @@ class TransactionServiceTest {
         transaction2.setTransactionDateTime(LocalDate.of(1970, 1, 1).atStartOfDay());
         transaction2.setTransactionType("Transaction Type");
         assertSame(transaction, transactionService.createTransaction(transaction2));
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#createTransaction(Transaction)}
+     */
+    @Test
+    void testCreateTransaction2() {
+        Transaction transaction = new Transaction();
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(transaction);
+        assertSame(transaction, transactionService.createTransaction(new Transaction()));
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#createTransaction(Transaction)}
+     */
+    @Test
+    void testCreateTransaction3() {
+        when(transactionRepository.save(Mockito.<Transaction>any()))
+                .thenThrow(new TransactionException("An error occurred"));
+        assertThrows(TransactionException.class, () -> transactionService.createTransaction(new Transaction()));
         verify(transactionRepository).save(Mockito.<Transaction>any());
     }
 
@@ -1064,6 +1088,211 @@ class TransactionServiceTest {
     }
 
     /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds7() {
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(new Account("Ifsc Code"));
+        assertThrows(TransactionException.class,
+                () -> transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou"));
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds8() {
+        Account account = new Account("Ifsc Code");
+        account.setTransactionPassword("iloveyou");
+        doNothing().when(accountService).updateAccount(Mockito.<Account>any());
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(new Transaction());
+        Transaction actualTransferFundsResult = transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d,
+                "Remarks", "iloveyou");
+        assertEquals(10.0d, actualTransferFundsResult.getAmount());
+        assertEquals("Transaction Type", actualTransferFundsResult.getTransactionType());
+        Account toAccount = actualTransferFundsResult.getToAccount();
+        assertSame(account, toAccount);
+        assertSame(toAccount, actualTransferFundsResult.getFromAccount());
+        assertEquals("Remarks", actualTransferFundsResult.getRemarks());
+        assertEquals(-10.0d, toAccount.getBalance());
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(accountService, atLeast(1)).updateAccount(Mockito.<Account>any());
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds9() {
+        Account account = new Account("Ifsc Code");
+        account.setTransactionPassword("iloveyou");
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        when(transactionRepository.save(Mockito.<Transaction>any()))
+                .thenThrow(new TransactionException("An error occurred"));
+        assertThrows(TransactionException.class,
+                () -> transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou"));
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds10() {
+        Account account = new Account("NX1845");
+        account.setTransactionPassword("iloveyou");
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        assertThrows(TransactionException.class,
+                () -> transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou"));
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    @Disabled("TODO: Complete this test")
+    void testTransferFunds11() {
+        // TODO: Complete this test.
+        //   Reason: R013 No inputs found that don't throw a trivial exception.
+        //   Diffblue Cover tried to run the arrange/act section, but the method under
+        //   test threw
+        //   java.lang.NullPointerException: Cannot invoke "String.equals(Object)" because "str" is null
+        //       at com.onlinebanking.team3.onlinebanking.service.TransactionService.transferFunds(TransactionService.java:47)
+        //   See https://diff.blue/R013 to resolve this issue.
+
+        Account account = new Account();
+        account.setTransactionPassword("iloveyou");
+        doNothing().when(accountService).updateAccount(Mockito.<Account>any());
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(new Transaction());
+        transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou");
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds12() {
+        Account account = mock(Account.class);
+        when(account.getTransactionPassword()).thenReturn("iloveyou");
+        doNothing().when(account).setTransactionPassword(Mockito.<String>any());
+        account.setTransactionPassword("iloveyou");
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        assertThrows(TransactionException.class,
+                () -> transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou"));
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(account).getTransactionPassword();
+        verify(account).setTransactionPassword(Mockito.<String>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds13() {
+        Account account = mock(Account.class);
+        when(account.getBalance()).thenReturn(10.0d);
+        doNothing().when(account).setBalance(anyDouble());
+        when(account.getIfscCode()).thenReturn("Ifsc Code");
+        when(account.getTransactionPassword()).thenReturn("aWxvdmV5b3U=");
+        doNothing().when(account).setTransactionPassword(Mockito.<String>any());
+        account.setTransactionPassword("iloveyou");
+        doNothing().when(accountService).updateAccount(Mockito.<Account>any());
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(new Transaction());
+        Transaction actualTransferFundsResult = transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d,
+                "Remarks", "iloveyou");
+        assertEquals(10.0d, actualTransferFundsResult.getAmount());
+        assertEquals("Transaction Type", actualTransferFundsResult.getTransactionType());
+        assertEquals("Remarks", actualTransferFundsResult.getRemarks());
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(accountService, atLeast(1)).updateAccount(Mockito.<Account>any());
+        verify(account).getBalance();
+        verify(account, atLeast(1)).getIfscCode();
+        verify(account).getTransactionPassword();
+        verify(account).setBalance(anyDouble());
+        verify(account).setTransactionPassword(Mockito.<String>any());
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds14() {
+        Account account = mock(Account.class);
+        when(account.getBalance()).thenThrow(new TransactionNotFoundException("aWxvdmV5b3U="));
+        when(account.getIfscCode()).thenReturn("Ifsc Code");
+        when(account.getTransactionPassword()).thenReturn("aWxvdmV5b3U=");
+        doNothing().when(account).setTransactionPassword(Mockito.<String>any());
+        account.setTransactionPassword("iloveyou");
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        assertThrows(TransactionNotFoundException.class,
+                () -> transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou"));
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(account).getBalance();
+        verify(account).getIfscCode();
+        verify(account).getTransactionPassword();
+        verify(account).setTransactionPassword(Mockito.<String>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds15() {
+        Account account = mock(Account.class);
+        when(account.getBalance()).thenReturn(10.0d);
+        doNothing().when(account).setBalance(anyDouble());
+        when(account.getIfscCode()).thenReturn("NX1845");
+        when(account.getTransactionPassword()).thenReturn("aWxvdmV5b3U=");
+        doNothing().when(account).setTransactionPassword(Mockito.<String>any());
+        account.setTransactionPassword("iloveyou");
+        doNothing().when(accountService).updateAccount(Mockito.<Account>any());
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(new Transaction());
+        Transaction actualTransferFundsResult = transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d,
+                "Remarks", "iloveyou");
+        assertEquals(10.0d, actualTransferFundsResult.getAmount());
+        assertEquals("Transaction Type", actualTransferFundsResult.getTransactionType());
+        assertEquals("Remarks", actualTransferFundsResult.getRemarks());
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(accountService, atLeast(1)).updateAccount(Mockito.<Account>any());
+        verify(account, atLeast(1)).getBalance();
+        verify(account, atLeast(1)).getIfscCode();
+        verify(account).getTransactionPassword();
+        verify(account, atLeast(1)).setBalance(anyDouble());
+        verify(account).setTransactionPassword(Mockito.<String>any());
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#transferFunds(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testTransferFunds16() {
+        Account account = mock(Account.class);
+        when(account.getBalance()).thenThrow(new TransactionNotFoundException("aWxvdmV5b3U="));
+        when(account.getIfscCode()).thenReturn("NX1845");
+        when(account.getTransactionPassword()).thenReturn("aWxvdmV5b3U=");
+        doNothing().when(account).setTransactionPassword(Mockito.<String>any());
+        account.setTransactionPassword("iloveyou");
+        when(accountService.getAccountById(Mockito.<Long>any())).thenReturn(account);
+        assertThrows(TransactionNotFoundException.class,
+                () -> transactionService.transferFunds(1L, 1L, "Transaction Type", 10.0d, "Remarks", "iloveyou"));
+        verify(accountService, atLeast(1)).getAccountById(Mockito.<Long>any());
+        verify(account).getBalance();
+        verify(account).getIfscCode();
+        verify(account).getTransactionPassword();
+        verify(account).setTransactionPassword(Mockito.<String>any());
+    }
+
+    /**
      * Method under test: {@link TransactionService#getAllTransactions()}
      */
     @Test
@@ -1206,6 +1435,28 @@ class TransactionServiceTest {
     }
 
     /**
+     * Method under test: {@link TransactionService#getTransactionById(Long)}
+     */
+    @Test
+    void testGetTransactionById2() {
+        Transaction transaction = new Transaction();
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(transaction));
+        assertSame(transaction, transactionService.getTransactionById(1L));
+        verify(transactionRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#getTransactionById(Long)}
+     */
+    @Test
+    void testGetTransactionById3() {
+        when(transactionRepository.findById(Mockito.<Long>any()))
+                .thenThrow(new TransactionException("An error occurred"));
+        assertThrows(TransactionException.class, () -> transactionService.getTransactionById(1L));
+        verify(transactionRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
      * Method under test: {@link TransactionService#getTransactionsByAccount(Long)}
      */
     @Test
@@ -1227,6 +1478,80 @@ class TransactionServiceTest {
                 .thenThrow(new TransactionException("An error occurred"));
         assertThrows(TransactionException.class, () -> transactionService.getTransactionsByAccount(1234567890L));
         verify(transactionRepository).findTransactionsByAccountNo(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#updateTransaction(Long, Transaction)}
+     */
+    @Test
+    void testUpdateTransaction() {
+        Transaction transaction = new Transaction();
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(transaction);
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new Transaction()));
+        assertSame(transaction, transactionService.updateTransaction(1L, new Transaction()));
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+        verify(transactionRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#updateTransaction(Long, Transaction)}
+     */
+    @Test
+    void testUpdateTransaction2() {
+        when(transactionRepository.save(Mockito.<Transaction>any()))
+                .thenThrow(new TransactionException("An error occurred"));
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new Transaction()));
+        assertThrows(TransactionException.class, () -> transactionService.updateTransaction(1L, new Transaction()));
+        verify(transactionRepository).save(Mockito.<Transaction>any());
+        verify(transactionRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#updateTransaction(Long, Transaction)}
+     */
+    @Test
+    void testUpdateTransaction3() {
+        Transaction transaction = mock(Transaction.class);
+        doThrow(new TransactionException("An error occurred")).when(transaction).setAmount(anyDouble());
+        Optional<Transaction> ofResult = Optional.of(transaction);
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
+        assertThrows(TransactionException.class, () -> transactionService.updateTransaction(1L, new Transaction()));
+        verify(transactionRepository).findById(Mockito.<Long>any());
+        verify(transaction).setAmount(anyDouble());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#updateTransaction(Long, Transaction)}
+     */
+    @Test
+    void testUpdateTransaction4() {
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.empty());
+        new TransactionException("An error occurred");
+        assertThrows(TransactionNotFoundException.class,
+                () -> transactionService.updateTransaction(1L, new Transaction()));
+        verify(transactionRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#updateTransaction(Long, Transaction)}
+     */
+    @Test
+    @Disabled("TODO: Complete this test")
+    void testUpdateTransaction5() {
+        // TODO: Complete this test.
+        //   Reason: R013 No inputs found that don't throw a trivial exception.
+        //   Diffblue Cover tried to run the arrange/act section, but the method under
+        //   test threw
+        //   java.lang.NullPointerException: Cannot invoke "com.onlinebanking.team3.onlinebanking.model.Transaction.getAmount()" because "updatedTransaction" is null
+        //       at com.onlinebanking.team3.onlinebanking.service.TransactionService.updateTransaction(TransactionService.java:112)
+        //   See https://diff.blue/R013 to resolve this issue.
+
+        Transaction transaction = mock(Transaction.class);
+        doThrow(new TransactionException("An error occurred")).when(transaction).setAmount(anyDouble());
+        Optional<Transaction> ofResult = Optional.of(transaction);
+        when(transactionRepository.save(Mockito.<Transaction>any())).thenReturn(new Transaction());
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
+        transactionService.updateTransaction(1L, null);
     }
 
     /**
@@ -1471,6 +1796,42 @@ class TransactionServiceTest {
         assertThrows(TransactionException.class, () -> transactionService.deleteTransaction(1L));
         verify(transactionRepository).findById(Mockito.<Long>any());
         verify(transactionRepository).deleteById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#deleteTransaction(Long)}
+     */
+    @Test
+    void testDeleteTransaction3() {
+        doNothing().when(transactionRepository).deleteById(Mockito.<Long>any());
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new Transaction()));
+        transactionService.deleteTransaction(1L);
+        verify(transactionRepository).findById(Mockito.<Long>any());
+        verify(transactionRepository).deleteById(Mockito.<Long>any());
+        assertTrue(transactionService.getAllTransactions().isEmpty());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#deleteTransaction(Long)}
+     */
+    @Test
+    void testDeleteTransaction4() {
+        doThrow(new TransactionException("An error occurred")).when(transactionRepository)
+                .deleteById(Mockito.<Long>any());
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new Transaction()));
+        assertThrows(TransactionException.class, () -> transactionService.deleteTransaction(1L));
+        verify(transactionRepository).findById(Mockito.<Long>any());
+        verify(transactionRepository).deleteById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link TransactionService#deleteTransaction(Long)}
+     */
+    @Test
+    void testDeleteTransaction5() {
+        when(transactionRepository.findById(Mockito.<Long>any())).thenReturn(Optional.empty());
+        assertThrows(TransactionNotFoundException.class, () -> transactionService.deleteTransaction(1L));
+        verify(transactionRepository).findById(Mockito.<Long>any());
     }
 }
 

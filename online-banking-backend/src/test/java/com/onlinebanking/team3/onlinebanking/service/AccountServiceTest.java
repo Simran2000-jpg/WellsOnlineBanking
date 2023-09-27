@@ -1,5 +1,6 @@
 package com.onlinebanking.team3.onlinebanking.service;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -43,6 +46,22 @@ class AccountServiceTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    /**
+     * Methods under test:
+     *
+     * <ul>
+     *   <li>default or parameterless constructor of {@link AccountService}
+     *   <li>{@link AccountService#updateAccount(Account)}
+     * </ul>
+     */
+    @Test
+    void testConstructor() {
+        AccountService actualAccountService = new AccountService();
+        actualAccountService.updateAccount(new Account("Ifsc Code"));
+        assertNull(actualAccountService.accountRepository);
+        assertNull(actualAccountService.userRepository);
+    }
 
     /**
      * Method under test: {@link AccountService#createAccount(Account)}
@@ -154,6 +173,27 @@ class AccountServiceTest {
     }
 
     /**
+     * Method under test: {@link AccountService#createAccount(Account)}
+     */
+    @Test
+    void testCreateAccount2() {
+        Account account = new Account("Ifsc Code");
+        when(accountRepository.save(Mockito.<Account>any())).thenReturn(account);
+        assertSame(account, accountService.createAccount(new Account("Ifsc Code")));
+        verify(accountRepository).save(Mockito.<Account>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#createAccount(Account)}
+     */
+    @Test
+    void testCreateAccount3() {
+        when(accountRepository.save(Mockito.<Account>any())).thenThrow(new UserNotFoundException("An error occurred"));
+        assertThrows(UserNotFoundException.class, () -> accountService.createAccount(new Account("Ifsc Code")));
+        verify(accountRepository).save(Mockito.<Account>any());
+    }
+
+    /**
      * Method under test: {@link AccountService#getAccountById(Long)}
      */
     @Test
@@ -231,6 +271,27 @@ class AccountServiceTest {
     void testGetAccountById3() {
         when(accountRepository.findById(Mockito.<Long>any())).thenThrow(new UserNotFoundException("An error occurred"));
         assertThrows(UserNotFoundException.class, () -> accountService.getAccountById(1L));
+        verify(accountRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#getAccountById(Long)}
+     */
+    @Test
+    void testGetAccountById4() {
+        Account account = new Account("Ifsc Code");
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(account));
+        assertSame(account, accountService.getAccountById(1L));
+        verify(accountRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#getAccountById(Long)}
+     */
+    @Test
+    void testGetAccountById5() {
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> accountService.getAccountById(1L));
         verify(accountRepository).findById(Mockito.<Long>any());
     }
 
@@ -539,6 +600,56 @@ class AccountServiceTest {
     }
 
     /**
+     * Method under test: {@link AccountService#addNewAccount(Long)}
+     */
+    @Test
+    void testAddNewAccount3() {
+        Account account = new Account("Ifsc Code");
+        when(accountRepository.save(Mockito.<Account>any())).thenReturn(account);
+        when(userRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new User()));
+        assertSame(account, accountService.addNewAccount(1L));
+        verify(accountRepository).save(Mockito.<Account>any());
+        verify(userRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#addNewAccount(Long)}
+     */
+    @Test
+    void testAddNewAccount4() {
+        when(accountRepository.save(Mockito.<Account>any())).thenThrow(new UserNotFoundException("An error occurred"));
+        when(userRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new User()));
+        assertThrows(UserNotFoundException.class, () -> accountService.addNewAccount(1L));
+        verify(accountRepository).save(Mockito.<Account>any());
+        verify(userRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#addNewAccount(Long)}
+     */
+    @Test
+    void testAddNewAccount5() {
+        User user = mock(User.class);
+        when(user.getResidentialAddress()).thenThrow(new UserNotFoundException("An error occurred"));
+        Optional<User> ofResult = Optional.of(user);
+        when(userRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
+        assertThrows(UserNotFoundException.class, () -> accountService.addNewAccount(1L));
+        verify(userRepository).findById(Mockito.<Long>any());
+        verify(user).getResidentialAddress();
+    }
+
+    /**
+     * Method under test: {@link AccountService#addNewAccount(Long)}
+     */
+    @Test
+    void testAddNewAccount6() {
+        when(userRepository.findById(Mockito.<Long>any())).thenReturn(Optional.empty());
+        new UserNotFoundException("An error occurred");
+        assertThrows(UserNotFoundException.class, () -> accountService.addNewAccount(1L));
+        verify(userRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
      * Method under test: {@link AccountService#updateActiveStatus(Long)}
      */
     @Test
@@ -837,6 +948,90 @@ class AccountServiceTest {
         verify(account).setMailingAddress(Mockito.<Address>any());
         verify(account).setTransactionPassword(Mockito.<String>any());
         verify(account).setUser(Mockito.<User>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#updateActiveStatus(Long)}
+     */
+    @Test
+    @Disabled("TODO: Complete this test")
+    void testUpdateActiveStatus4() {
+        // TODO: Complete this test.
+        //   Reason: R013 No inputs found that don't throw a trivial exception.
+        //   Diffblue Cover tried to run the arrange/act section, but the method under
+        //   test threw
+        //   java.lang.NullPointerException: Cannot invoke "java.lang.Boolean.booleanValue()" because the return value of "com.onlinebanking.team3.onlinebanking.model.Account.getIsActive()" is null
+        //       at com.onlinebanking.team3.onlinebanking.service.AccountService.updateActiveStatus(AccountService.java:67)
+        //   See https://diff.blue/R013 to resolve this issue.
+
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(Optional.of(new Account("Ifsc Code")));
+        accountService.updateActiveStatus(1L);
+    }
+
+    /**
+     * Method under test: {@link AccountService#updateActiveStatus(Long)}
+     */
+    @Test
+    void testUpdateActiveStatus5() {
+        Account account = new Account("Ifsc Code");
+        account.setIsActive(true);
+        Optional<Account> ofResult = Optional.of(account);
+        Account account2 = new Account("Ifsc Code");
+        when(accountRepository.save(Mockito.<Account>any())).thenReturn(account2);
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
+        assertSame(account2, accountService.updateActiveStatus(1L));
+        verify(accountRepository).save(Mockito.<Account>any());
+        verify(accountRepository).findById(Mockito.<Long>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#updateActiveStatus(Long)}
+     */
+    @Test
+    void testUpdateActiveStatus6() {
+        Account account = mock(Account.class);
+        when(account.getIsActive()).thenReturn(true);
+        doNothing().when(account).setIsActive(Mockito.<Boolean>any());
+        account.setIsActive(true);
+        Optional<Account> ofResult = Optional.of(account);
+        Account account2 = new Account("Ifsc Code");
+        when(accountRepository.save(Mockito.<Account>any())).thenReturn(account2);
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
+        assertSame(account2, accountService.updateActiveStatus(1L));
+        verify(accountRepository).save(Mockito.<Account>any());
+        verify(accountRepository).findById(Mockito.<Long>any());
+        verify(account).getIsActive();
+        verify(account, atLeast(1)).setIsActive(Mockito.<Boolean>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#updateActiveStatus(Long)}
+     */
+    @Test
+    void testUpdateActiveStatus7() {
+        Account account = mock(Account.class);
+        when(account.getIsActive()).thenReturn(false);
+        doNothing().when(account).setIsActive(Mockito.<Boolean>any());
+        account.setIsActive(true);
+        Optional<Account> ofResult = Optional.of(account);
+        Account account2 = new Account("Ifsc Code");
+        when(accountRepository.save(Mockito.<Account>any())).thenReturn(account2);
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
+        assertSame(account2, accountService.updateActiveStatus(1L));
+        verify(accountRepository).save(Mockito.<Account>any());
+        verify(accountRepository).findById(Mockito.<Long>any());
+        verify(account).getIsActive();
+        verify(account, atLeast(1)).setIsActive(Mockito.<Boolean>any());
+    }
+
+    /**
+     * Method under test: {@link AccountService#updateActiveStatus(Long)}
+     */
+    @Test
+    void testUpdateActiveStatus8() {
+        when(accountRepository.findById(Mockito.<Long>any())).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, () -> accountService.updateActiveStatus(1L));
+        verify(accountRepository).findById(Mockito.<Long>any());
     }
 }
 
