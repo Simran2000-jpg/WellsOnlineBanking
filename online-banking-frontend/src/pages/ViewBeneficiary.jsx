@@ -47,6 +47,8 @@ const ViewBeneficiary = () => {
     };
 
     return (  
+        <>
+        <SidebarComponent/>
         <div className="form-bg my-5 mx-auto">
             <div className="container">
                 <div className="row justify-content-center">
@@ -98,6 +100,7 @@ const ViewBeneficiary = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

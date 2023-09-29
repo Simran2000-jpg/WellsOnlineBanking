@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../styles/Register.css";
+import RegisterService from "../services/RegisterService";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [wasRegisterClicked, setWasRegisterClicked] = useState(false);
   const [accountNumber, setAccountNumber] = useState("");
   const [emailId, setEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -53,23 +52,18 @@ const Register = () => {
       loginPassword,
       transactionPassword,
     };
-    try {
-      const response = await axios.put("http://localhost:8085/register", registrationData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+
+    RegisterService.registerInternetBanking(registrationData).then((response) => {
       if (response.status === 200) {
         setError(false);
         setSuccessMessage(response.data + "\nRedirecting...");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/dashboard/account-details");
         }, 1000);
       } else {
-        setError("Registration failed. Please try again.");
-      }
-    } catch (error) {
-      console.log(error)
-      setError(error.response.data);
-    }
+        console.log(response)
+        setError(response.response.data);
+      }})
   };
 
   return (
@@ -138,20 +132,11 @@ const Register = () => {
                     }
                   />
                 </div>
-                {/* {wasRegisterClicked && (
-                  <>
-                    <h4 className="sub-title">Verification</h4>
-                    <div className="form-group phone-no">
-                      <label>Enter OTP</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                  </>
-                )} */}
                 <div className="text-center mb-4">
                   <button
                     className="my-2 mx-auto btn btn-success"
                     type="submit"
-                    onClick={() => setWasRegisterClicked(true)}
+                    onClick={()=>{}}
                     disabled={!areAllFieldsFilled()}
                   >
                     Register
