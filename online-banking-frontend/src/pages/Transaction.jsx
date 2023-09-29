@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function Transaction() {
     const userId = localStorage.getItem('userId')
+    const navigate = useNavigate();
     const [fromAccount, setFromAccount] = useState('');
     const [toAccount, setToAccount] = useState('');
     const [amount, setAmount] = useState();
@@ -17,7 +19,7 @@ function Transaction() {
     useEffect(() => {
         const fetchToAccountOptions = async () => {
             try {
-                const response = await axios.get('http://localhost:8085/beneficiaries');
+                const response = await axios.get(`http://localhost:8085/beneficiaries/${userId}`);
                 console.log(response);
                 setToAccountOptions(response.data);
             } catch (error) {
@@ -64,6 +66,9 @@ function Transaction() {
             console.log(response);
             setError(false)
             setSuccessMessage("Transaction Successful")
+            setTimeout(() => {
+                navigate("/dashboard/account-statement");
+              }, 1000);
         } catch (error) {
             setError(error.response.data.message)
             console.log(error.response.data.message);
@@ -72,11 +77,6 @@ function Transaction() {
 
     const handleTransaction = (e) => {
         e.preventDefault();
-        console.log(transactionType);
-        console.log('From Account:', fromAccount);
-        console.log('To Account:', toAccount);
-        console.log('Amount:', amount);
-        console.log('Transaction Password:', transactionPassword);
         initiateTransaction();
     };
 

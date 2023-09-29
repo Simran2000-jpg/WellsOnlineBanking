@@ -6,6 +6,7 @@ import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,14 @@ public class BeneficiaryController {
     private UserService userService;
 
     @PostMapping("/beneficiaries/{userId}")
-    public ResponseEntity<Beneficiary> createBeneficiary(@PathVariable long userId, @RequestBody Beneficiary beneficiary) {
+    public ResponseEntity<String> createBeneficiary(@PathVariable long userId, @RequestBody Beneficiary beneficiary) {
         try {
+        	List<Beneficiary> beneficiaries = beneficiaryService.getBeneficiaryByUser(userId);
+        	for (Beneficiary beneficiaryItem : beneficiaries) {
+        	    if (beneficiaryItem.getAccountNo().equals(beneficiary.getAccountNo())) {
+        	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Beneficiary already exists");
+        	    }
+        	}
             User user = userService.getUserById(userId);
 
             beneficiary.setUser(user);
@@ -31,7 +38,7 @@ public class BeneficiaryController {
             Beneficiary b = beneficiaryService.createBeneficiary(beneficiary);
             System.out.println(b.getIfscCode());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(b);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Created Beneficiary Successfully");
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(null);

@@ -20,18 +20,16 @@ function AddBeneficiary() {
                 accountNo: accountNumber,
                 name: beneficiaryName
             });
-            if(response.status == 200){
+            if(response.status == 200 || response.status == 201){
                 setError(false);
                 setSuccessMessage("Added Beneficiary successful");
                 setTimeout(() => {
                     navigate("/dashboard/view-beneficiary");
                   }, 1000);
 
-            }else{
-                //add controller error message in backend
-            }    
+            }   
         } catch (error) {
-            setError("Error adding Beneficiary");
+            setError(error.response.data);
         }
     };
 
