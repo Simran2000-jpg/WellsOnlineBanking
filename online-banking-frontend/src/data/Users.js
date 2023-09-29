@@ -1,6 +1,6 @@
 export const Users = [
   {
-    userId: 1,
+    uid: 1,
     firstName: "Pranava Raman",
     middleName: "",
     lastName: "B M S",

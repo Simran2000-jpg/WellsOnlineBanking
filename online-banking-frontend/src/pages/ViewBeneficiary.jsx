@@ -66,7 +66,6 @@ const ViewBeneficiary = () => {
                     className="btn btn-danger"
                     onClick={() => handleDelete(index)}
                   >
-                    {/* <i class="bi bi-trash"></i> */}
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </td>
