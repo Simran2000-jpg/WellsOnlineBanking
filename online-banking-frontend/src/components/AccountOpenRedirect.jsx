@@ -47,7 +47,7 @@ const AccountOpenRedirect = (props) => {
           justifyContent: "flex-start",
           fontSize: "25px",
           fontFamily: "sans-serif",
-          marginTop: "30px"
+          marginTop: "30px",
         }}
       >
         Temporary Password :{" "}
@@ -64,7 +64,7 @@ const AccountOpenRedirect = (props) => {
             {!isCopied ? (
               <b>
                 <i
-                  class="bi bi-clipboard"
+                  className="bi bi-clipboard"
                   style={{ fontSize: "15px", color: "grey", cursor: "pointer" }}
                 >
                   Copy to Clipboard

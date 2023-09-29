@@ -66,14 +66,22 @@ public class TransactionController {
     @GetMapping("/transactions/accounts/{accountNo}")
     public ResponseEntity<List<Transaction>> getTransactionsByAccount(@PathVariable Long accountNo) {
         List<Transaction> transactions = transactionService.getTransactionsByAccount(accountNo);
-        return ResponseEntity.ok(transactions);
+        if (!transactions.isEmpty()) {
+            return ResponseEntity.ok(transactions);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
     @GetMapping("/transactions/all")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAllTransactions();
-        return ResponseEntity.ok(transactions);
+        if (!transactions.isEmpty()) {
+            return ResponseEntity.ok(transactions);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     //update

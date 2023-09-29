@@ -155,8 +155,13 @@ public class UserController {
     // UPDATE
     @PutMapping("findUser/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
-        User updated = uService.updateUser(userId, updatedUser);
-        return ResponseEntity.ok(updated);
+        try {
+            User updated = uService.updateUser(userId, updatedUser);
+            return ResponseEntity.ok(updated);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("users/{userId}/verify")
