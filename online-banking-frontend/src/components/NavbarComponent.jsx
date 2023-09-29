@@ -72,7 +72,7 @@ const NavbarComponent = () => {
                   to={"/dashboard"}
                   className="text-decoration-none nav-link-styling"
                 >
-                  <i class="bi bi-speedometer2"></i>
+                  <i className="bi bi-speedometer2"></i>
                   <span className="mx-2">Dashboard</span>
                 </NavLink>
               </Nav.Item>
@@ -93,7 +93,7 @@ const NavbarComponent = () => {
                   className="text-decoration-none nav-link-styling"
                   onClick={handleLogout}
                 >
-                  <i class="bi bi-box-arrow-right"></i>
+                  <i className="bi bi-box-arrow-right"></i>
                   <span className="mx-2">Logout</span>
                 </NavLink>
               </Nav.Item>

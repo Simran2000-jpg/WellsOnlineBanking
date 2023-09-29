@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account,Long> {
       @Query("SELECT a FROM Account a WHERE a.user.id = :userId AND a.isActive = true")
-    List<Account> findActiveAccountsForUser(@Param("userId") Long userId);
+      List<Account> findActiveAccountsForUser(@Param("userId") Long userId);
 
       @Query("SELECT a FROM Account a WHERE a.user.id = :userId")
       Optional<List<Account>> findAccountsForUser(@Param("userId") Long userId);

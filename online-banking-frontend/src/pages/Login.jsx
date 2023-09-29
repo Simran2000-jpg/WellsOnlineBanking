@@ -11,7 +11,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     const loginData = {
       phoneNumber,
       password,
@@ -29,7 +29,7 @@ const Login = () => {
     );
 
     localStorage.setItem("userId", userResponse.data.uid);
-    window.dispatchEvent(new Event('storage'))
+    window.dispatchEvent(new Event("storage"));
 
     if (response.data) history("/");
   };
@@ -60,7 +60,7 @@ const Login = () => {
                 </div>
                 <div className="text-center">
                   <button
-                    class="my-2 mx-auto btn btn-success"
+                    className="my-2 mx-auto btn btn-success"
                     type="submit"
                     onClick={handleLogin}
                   >

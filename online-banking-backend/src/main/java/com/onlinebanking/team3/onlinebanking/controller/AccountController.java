@@ -2,6 +2,7 @@ package com.onlinebanking.team3.onlinebanking.controller;
 
 import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
 import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
+import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Transaction;
 import com.onlinebanking.team3.onlinebanking.model.User;
@@ -29,37 +30,51 @@ public class AccountController {
     private TransactionService transactionService;
 
     @PutMapping("/addNewAccount/{userId}")
-    public Account addNewAccount(@PathVariable Long userId) {
+    public ResponseEntity<Account> addNewAccount(@PathVariable Long userId) {
 
-        return accountService.addNewAccount(userId);
+        try{
+            Account newAccount = accountService.addNewAccount(userId);
+            return ResponseEntity.status((HttpStatus.CREATED)).body(newAccount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/accounts/{accountNo}")
-    public Account getParticularAccount(@PathVariable Long accountNo) {
-        Account account = accountService.getAccountById(accountNo);
-        return account;
+    public ResponseEntity<Account> getParticularAccount(@PathVariable Long accountNo) {
+        try {
+            Account account = accountService.getAccountById(accountNo);
+            return ResponseEntity.ok(account);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/accounts/user/{uid}")
-    public List<Account> getUserAccounts(@PathVariable Long uid) {
+    public ResponseEntity<List<Account>> getUserAccounts(@PathVariable Long uid) {
         try {
-            return accountService.getAccountsByUser(uid);
+            List<Account> accounts = accountService.getAccountsByUser(uid);
+            return ResponseEntity.ok(accounts);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return null;
+
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/transactions/accounts/user/{uid}")
-    public List<Transaction> getUsersFirstAccountTransactions(@PathVariable Long uid) {
+    public ResponseEntity<List<Transaction>> getUsersFirstAccountTransactions(@PathVariable Long uid) {
         try {
             List<Account> accounts = accountService.getAccountsByUser(uid);
-            return transactionService.getTransactionsByAccount(accounts.get(0).getAccountNo());
+            List<Transaction> transactions =  transactionService.getTransactionsByAccount(accounts.get(0).getAccountNo());
+            return ResponseEntity.ok(transactions);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.notFound().build();
         }
     }
     

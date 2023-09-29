@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/AccountDetails.css";
-import Logo from '../images/user.jpg'
+import Logo from "../images/user.jpg";
 
 const AccountDetails = () => {
   const [accountNumber, setAccountNumber] = useState("");
@@ -26,7 +26,7 @@ const AccountDetails = () => {
           <div className="row">
             <div className="col-4">
               <div>
-                <img src={Logo} class='img-fluid' />
+                <img src={Logo} className="img-fluid" />
                 <div>
                   <h2>{accountName}</h2>
                 </div>
@@ -34,21 +34,29 @@ const AccountDetails = () => {
             </div>
             <div className="col-4 ">
               <div className="w-30 h-100 bg-light p-4 d-flex flex-column justify-content-center">
-                <div className='my-1'>
-                  <p className=" h6"><b>Date of Birth</b></p>
-                  <p className=''>2023-09-26</p>
+                <div className="my-1">
+                  <p className=" h6">
+                    <b>Date of Birth</b>
+                  </p>
+                  <p className="">2023-09-26</p>
                 </div>
-                <div className='my-1'>
-                  <p className=" h6"><b>Email Address</b></p>
-                  <p className=''>johndoe@gmail.com</p>
+                <div className="my-1">
+                  <p className=" h6">
+                    <b>Email Address</b>
+                  </p>
+                  <p className="">johndoe@gmail.com</p>
                 </div>
-                <div className='my-1'>
-                  <p className=" h6"><b>PAN Number</b></p>
-                  <p className=''>XHTVV6120H</p>
+                <div className="my-1">
+                  <p className=" h6">
+                    <b>PAN Number</b>
+                  </p>
+                  <p className="">XHTVV6120H</p>
                 </div>
-                <div className='my-1'>
-                  <p className=" h6"><b>Phone Number</b></p>
-                  <p className=''>9187243561</p>
+                <div className="my-1">
+                  <p className=" h6">
+                    <b>Phone Number</b>
+                  </p>
+                  <p className="">9187243561</p>
                 </div>
               </div>
             </div>
