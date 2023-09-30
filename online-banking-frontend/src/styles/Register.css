@@ -231,3 +231,11 @@
     margin: 0 auto 10px;
   }
 }
+
+.loginError {
+  color: red;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-style: italic;
+}

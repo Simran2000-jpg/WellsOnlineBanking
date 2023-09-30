@@ -1,33 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../logo.svg";
 
 import "../styles/NavbarComponent.css";
+import { Context } from "../context/Context";
 
 const NavbarComponent = () => {
   const history = useNavigate();
 
-  const [user, setUser] = useState("");
+  const {userId, dispatch} = useContext(Context);
 
-  useEffect(() => {
-    const onStorage = () => {
-      setUser(localStorage.getItem("userId"));
-    };
-    window.addEventListener("storage", onStorage);
+  // useEffect(() => {
+  //   const onStorage = () => {
+  //     setUser(localStorage.getItem("userId"));
+  //   };
+  //   window.addEventListener("storage", onStorage);
 
-    return () => {
-      window.removeEventListener("storage", onStorage);
-    };
-  });
+  //   return () => {
+  //     window.removeEventListener("storage", onStorage);
+  //   };
+  // });
 
-  const handleLogout = async (e) => {
-    e.preventDefault();
-
-    localStorage.removeItem("userId");
-    window.dispatchEvent(new Event("storage"));
-    history("/");
-  };
+  const handleLogout = () => {
+    dispatch({
+        type:"LOGOUT",
+    });
+};
 
   return (
     <>
@@ -44,7 +43,7 @@ const NavbarComponent = () => {
             </Navbar.Brand>
           </NavLink>
           <Nav className="justify-content-end">
-            {user === null && (
+            {userId === null && (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
                   to={"/openaccount"}
@@ -55,7 +54,7 @@ const NavbarComponent = () => {
                 </NavLink>
               </Nav.Item>
             )}
-            {user !== null && (
+            {userId !== null && (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
                   to={"/register"}
@@ -66,7 +65,7 @@ const NavbarComponent = () => {
                 </NavLink>
               </Nav.Item>
             )}
-            {user !== null && (
+            {userId !== null && (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
                   to={"/dashboard/account-details"}
@@ -77,7 +76,7 @@ const NavbarComponent = () => {
                 </NavLink>
               </Nav.Item>
             )}
-            {user === null ? (
+            {userId === null ? (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
                   to={"/login"}

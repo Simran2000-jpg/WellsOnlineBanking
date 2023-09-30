@@ -15,23 +15,24 @@ import UserDetails from "./pages/UserDetails";
 import Transaction from "./pages/Transaction";
 import UserDasboard from "./pages/UserDashboard";
 import SidebarComponent from "./components/SidebarComponent";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddBeneficiary from "./pages/AddBeneficiary";
 import ViewBeneficiary from "./pages/ViewBeneficiary";
+import { Context } from "./context/Context";
 
 function App() {
-  const [user, setUser] = useState("");
+  const {userId} = useContext(Context);
 
-  useEffect(() => {
-    const onStorage = () => {
-      setUser(localStorage.getItem("userId"));
-    };
-    window.addEventListener("storage", onStorage);
+  // useEffect(() => {
+  //   const onStorage = () => {
+  //     setUser(localStorage.getItem("userId"));
+  //   };
+  //   window.addEventListener("storage", onStorage);
 
-    return () => {
-      window.removeEventListener("storage", onStorage);
-    };
-  });
+  //   return () => {
+  //     window.removeEventListener("storage", onStorage);
+  //   };
+  // });
 
   return (
     <>
@@ -39,37 +40,37 @@ function App() {
         <NavbarComponent />
         <div className="App pt-5">
           <Routes>
-            {user === null ? (
+            {userId === null ? (
               <Route path="/openaccount" element={<OpenAccount />}></Route>
             ) : (
               <Route path="/" element={<Home />}></Route>
             )}
 
-            {user === null ? (
+            {userId === null ? (
               <Route path="/login" element={<Login />}></Route>
             ) : (
               <Route path="/" element={<Home />}></Route>
             )}
 
-            {user !== null ? (
+            {userId !== null ? (
               <Route path="/register" element={<Register />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
             )}
 
-            {user !== null ? (
+            {userId !== null ? (
               <Route path="/funds-transfer" element={<Transaction />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
             )}
 
             <Route path="/dashboard" element={<UserDasboard />}></Route>
-            {user !== null ? (
+            {userId !== null ? (
               <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
             ) : (
               <Route path="/login" element={<Login />}></Route>
             )}
-            {user && (
+            {userId && (
               <>
                 <Route
                   path="/dashboard/add-beneficiary"

@@ -1,37 +1,55 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Register.css";
+import { Context } from "../context/Context";
 
 const Login = () => {
   const history = useNavigate();
 
+  const { dispatch, isFetching } = useContext(Context);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    dispatch({
+      type: "LOGIN_START",
+    });
 
     const loginData = {
       phoneNumber,
       password,
     };
-    const response = await axios.post(
-      "http://localhost:8085/loginUser",
-      loginData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
+    try {
+      const response = await axios.post(
+        "http://localhost:8085/loginUser",
+        loginData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-    const userResponse = await axios.get(
-      "http://localhost:8085/users/phone/" + phoneNumber
-    );
+      const userResponse = await axios.get(
+        "http://localhost:8085/users/phone/" + phoneNumber
+      );
 
-    localStorage.setItem("userId", userResponse.data.uid);
-    window.dispatchEvent(new Event("storage"));
+      // localStorage.setItem("userId", userResponse.data.uid);
+      // window.dispatchEvent(new Event("storage"));
 
-    if (response.data) history("/");
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: userResponse.data.uid,
+      });
+
+      if (response.data) history("/");
+    } catch (err) {
+      setError(true);
+      dispatch({
+        type: "LOGIN_FAILURE",
+      });
+    }
   };
 
   return (
@@ -74,6 +92,7 @@ const Login = () => {
                   </a>
                 </span>
               </form>
+              {error && <span className='loginError'>Invalid credentials!</span>}
             </div>
           </div>
         </div>

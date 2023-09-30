@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/ViewBeneficiary.css";
 import SidebarComponent from "../components/SidebarComponent";
+import { Context } from "../context/Context";
 
 const ViewBeneficiary = () => {
     const navigate = useNavigate();
+
+    const {userId, dispatch} = useContext(Context);
     const [beneficiaries, setBeneficiaries] = useState([]);
-    const userId = localStorage.getItem("userId");
 
     const viewBeneficiary = () => {
         const apiUrl = `http://localhost:8085/beneficiaries/${userId}`;

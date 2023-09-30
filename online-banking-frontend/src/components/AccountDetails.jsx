@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../styles/AccountDetails.css";
 import Logo from "../images/user.jpg";
 import AccountService from "../services/AccountService";
+import { Context } from "../context/Context";
 
 const AccountDetails = () => {
-  const userId = localStorage.getItem('userId')
+  const {userId, dispatch} = useContext(Context);
+
   const [accountDetails, setAccountDetails] = useState({
     accountNumber: '',
     accountName: '',

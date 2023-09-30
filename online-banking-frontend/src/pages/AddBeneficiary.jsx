@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { Context } from '../context/Context';
 
 function AddBeneficiary() {
     const navigate = useNavigate();
+
+    const {userId, dispatch} = useContext(Context);
     const [beneficiaryName, setBeneficiaryName] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
     const [confirmAccountNumber, setConfirmAccountNumber] = useState('');
     const [ifscCode, setIfscCode] = useState('');    
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
-    const userId = localStorage.getItem('userId')
 
     const createBeneficiary = async () => {
         try {
