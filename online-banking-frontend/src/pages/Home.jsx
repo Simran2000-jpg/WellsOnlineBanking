@@ -1,21 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Container, Image } from "react-bootstrap";
 import "../styles/Home.css";
+import { Context } from "../context/Context";
 
 const Home = () => {
-  const [user, setUser] = useState("");
-
-  useEffect(() => {
-    setUser(localStorage.getItem("phoneNumber"));
-    const onStorage = () => {
-      setUser(localStorage.getItem("userId"));
-    };
-    window.addEventListener("storage", onStorage);
-
-    return () => {
-      window.removeEventListener("storage", onStorage);
-    };
-  });
+  const {userId, dispatch} = useContext(Context);
 
   return (
     // <div className='landing-page-img'>
@@ -23,7 +12,7 @@ const Home = () => {
 
     <Container className="pt-2">
       <h1 className="display-5">Nexus Bank</h1>
-      {user === null ? <div>Not Logged in</div> : <div>Logged in</div>}
+      {userId ?  <div>Logged in</div> : <div>Not Logged in</div>}
     </Container>
   );
 };

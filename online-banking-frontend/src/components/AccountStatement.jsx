@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Table } from "react-bootstrap";
+import moment from "moment";
 import "../styles/AccountStatement.css";
 import axios from "axios";
 
 const AccountStatement = () => {
   const [user, setUser] = useState(null);
   const [accounts, setAccounts] = useState([]);
-  const [selectedAccount, setSelectedAccount] = useState("");
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [filteredToAccountTransactions, setFilteredToAccountTransactions] =
+    useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [fromAccount, setFromAccount] = useState("");
-  const [toAccount, setToAccount] = useState("");
 
   useEffect(() => {
     setUser(localStorage.getItem("userId"));
@@ -22,39 +23,41 @@ const AccountStatement = () => {
   }, [user]);
 
   const fetchTransactionsByAccountsByUser = async () => {
-    console.log("user transaction : ", user);
-
     const response = await axios.get(
       "http://localhost:8085/transactions/accounts/user/" + user
     );
-    console.log("transactions", response.data);
+    setFilteredTransactions(response.data);
+    setFilteredToAccountTransactions(response.data);
     setTransactions(response.data);
   };
 
   const fetchAccounts = async () => {
-    console.log("user : ", user);
     const response = await axios.get(
       " http://localhost:8085/accounts/user/" + user
     );
-    console.log("account", response.data);
     setAccounts(response.data);
   };
 
-  const fetchTransactions = async () => {
-    console.log("BHEEM");
-    return axios
-      .get(`http://localhost:8085/transactions/accounts/${selectedAccount}`)
-      .then((res) => {
-        setTransactions(res.data);
-        console.log("done bheeeem", transactions)
-      });
+  const fetchTransactions = async (e) => {
+    if (e.target.value === "All From Accounts") {
+      return axios
+        .get("http://localhost:8085/transactions/accounts/user/" + user)
+        .then((res) => {
+          setTransactions(res.data);
+        });
+    } else {
+      return axios
+        .get(`http://localhost:8085/transactions/accounts/${e.target.value}`)
+        .then((res) => {
+          setTransactions(res.data);
+        });
+    }
   };
 
   const fetchBeneficiaries = async () => {
     axios
       .get("http://localhost:8085/beneficiaries/" + user)
       .then((response) => {
-        console.log(response);
         setBeneficiaries(response.data);
       })
       .catch((error) => {
@@ -62,27 +65,47 @@ const AccountStatement = () => {
       });
   };
 
+  const filterToAccount = async (e) => {
+    console.log("toAccount : ", e.target.value);
+    console.log("transactions : ", transactions);
+    console.log("filtered transactions : ", filteredTransactions);
+    if (e.target.value === "All To Accounts") {
+      setFilteredToAccountTransactions([...transactions]);
+    } else {
+      let tempTransactions = transactions.filter(
+        (transaction) =>
+          transaction.toAccount.accountNo.toString() === e.target.value
+      );
+      console.log("temp transactions : ", tempTransactions);
+      setFilteredToAccountTransactions([...tempTransactions]);
+    }
+  };
+
+  const filterDate = async () => {
+    if (startDate && endDate) {
+      let tempTransactions = filteredToAccountTransactions.filter(
+        (transaction) =>
+          moment(transaction.transactionDateTime).format("YYYY-MM-DD") >=
+            startDate &&
+          moment(transaction.transactionDateTime).format("YYYY-MM-DD") <=
+            endDate
+      );
+      setFilteredTransactions([...tempTransactions]);
+    } else {
+      setFilteredTransactions([...filteredToAccountTransactions]);
+    }
+  };
+
   const filterTransactions = async () => {
-    fetchTransactions().then(() => {
-      console.log("toAccount", toAccount);
-      console.log("all", transactions);
-      if (toAccount) {
-        let filteredTransactions = transactions.filter(
-          (transaction) =>
-            transaction.toAccount.accountNo.toString() === toAccount
-        );
-        console.log("filtered", filteredTransactions);
-        setTransactions([...filteredTransactions]);
-        console.log("done", transactions);
-      }
-    });
-    // if (startDate && endDate) {
-    //   filteredTransactions = filteredTransactions.filter(
-    //     (transaction) =>
-    //       transaction.transactionDateTime >= startDate &&
-    //       transaction.date <= endDate
-    //   );
-    // }
+    console.log("before transactions : ", transactions);
+    console.log(
+      "before filtered transactions : ",
+      filteredToAccountTransactions
+    );
+
+    filterDate();
+    console.log("after transactions : ", transactions);
+    console.log("after filtered transactions : ", filteredTransactions);
   };
 
   return (
@@ -96,9 +119,9 @@ const AccountStatement = () => {
           <Form.Control
             as="select"
             onClick={fetchAccounts}
-            onChange={(e) => setSelectedAccount(e.target.value)}
+            onChange={fetchTransactions}
           >
-            <option value="">Select From Account</option>
+            <option value="All From Accounts">All From Accounts</option>
             {accounts.length > 0 &&
               accounts.map((account, index) => (
                 <option key={index} value={account.accountNo}>
@@ -112,9 +135,9 @@ const AccountStatement = () => {
           <Form.Control
             as="select"
             onClick={fetchBeneficiaries}
-            onChange={(e) => setToAccount(e.target.value)}
+            onChange={filterToAccount}
           >
-            <option value="">Select To Account</option>
+            <option value="All To Accounts">All To Accounts</option>
             {beneficiaries.length > 0 &&
               beneficiaries.map((beneficiary, index) => (
                 <option key={index} value={beneficiary.accountNo}>
@@ -168,7 +191,7 @@ const AccountStatement = () => {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction, index) => (
+          {filteredTransactions.map((transaction, index) => (
             <tr key={index}>
               <td>{transaction.transactionDateTime}</td>
               <td>{transaction.fromAccount.accountNo}</td>
@@ -184,24 +207,3 @@ const AccountStatement = () => {
 };
 
 export default AccountStatement;
-
-// useEffect(() => {
-//   setUser(localStorage.getItem("userId"));
-//   if (user) {
-//     fetchAccounts();
-//     fetchTransactions();
-//   }
-// }, [user, accounts]);
-
-// const fetchTransactions = async () => {
-//   console.log("user transaction : ", user);
-//   if (accounts && accounts[0].accountNo) {
-//     console.log("accountNumber transaction", accounts[0].accountNo);
-//     const acc = accounts[0].accountNo;
-//     const response = await axios.get(
-//       `http://localhost:8085/transactions/accounts/${acc}`
-//     );
-//     console.log("transactions", response.data);
-//     setTransactions(response.data);
-//   }
-// };
