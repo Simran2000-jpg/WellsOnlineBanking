@@ -47,9 +47,53 @@ class AdminServices {
     return response.data;
   }
 
+  static async withdrawFromAccount(id, amount, adminTransactionPassword) {
+    const response = await axios
+      .put(
+        API_URL + "account/" + id + "/withdraw",
+        {},
+        {
+          params: {
+            amount: amount,
+            transactionPassword: adminTransactionPassword,
+          },
+          auth: ADMIN_CREDENTIALS,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  static async depositToAccount(id, amount, adminTransactionPassword) {
+    const response = await axios
+      .put(
+        API_URL + "account/" + id + "/deposit",
+        {},
+        {
+          params: {
+            amount: amount,
+            transactionPassword: adminTransactionPassword,
+          },
+          auth: ADMIN_CREDENTIALS,
+        }
+      )
+      .catch((error) => {
+        console.log(error);
+        return error.response;
+      });
+    return response.data;
+  }
+
   static async fetchAccountByUser(id) {
     const response = await axios.get(API_URL + "user/" + id + "/accounts");
-    return response.data;
+    return response;
   }
 }
 

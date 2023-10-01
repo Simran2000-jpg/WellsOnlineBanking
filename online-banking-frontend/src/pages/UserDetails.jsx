@@ -18,15 +18,39 @@ const UserDetails = () => {
   const [showDepositModal, setShowDepositModal] = useState(false);
 
   // Function to handle withdrawal
-  const handleWithdraw = (accountNum, adminPassword, amount) => {
+  const handleWithdraw = async (
+    accountNum,
+    amount,
+    adminTransactionPassword
+  ) => {
     // Perform the withdrawal logic here
+
     console.log("Withdrawal amount:", amount);
+    AdminServices.withdrawFromAccount(
+      accountNum,
+      amount,
+      adminTransactionPassword
+    ).then((res) => {
+      console.log(res);
+      setShowWithdrawModal(false);
+      fetchAccounts();
+    });
   };
 
   // Function to handle deposit
-  const handleDeposit = (accountNum, adminPassword, amount) => {
+  const handleDeposit = (accountNum, amount, adminTransactionPassword) => {
     // Perform the deposit logic here
     console.log("Deposit amount:", amount);
+
+    AdminServices.depositToAccount(
+      accountNum,
+      amount,
+      adminTransactionPassword
+    ).then((res) => {
+      console.log(res);
+      setShowWithdrawModal(false);
+      fetchAccounts();
+    });
   };
 
   const fetchUser = async () => {
@@ -39,10 +63,9 @@ const UserDetails = () => {
 
   const fetchAccounts = async () => {
     AdminServices.fetchAccountByUser(id).then((res) => {
-      console.log(res);
+      console.log(res.data);
 
-      setUser((user) => ({ ...user, account: res }));
-      console.log(user);
+      setUser((user) => ({ ...user, account: res.data }));
     });
   };
 
@@ -189,7 +212,7 @@ const UserDetails = () => {
                 </td>
               </tr>
 
-              {user.account &&
+              {Array.isArray(user.account) &&
                 user.account.map((account) => (
                   <tr>
                     <td colSpan={2}>

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
-const DepositModal = ({ show, onHide, onDeposit }) => {
+const DepositModal = ({ show, account, onHide, onDeposit }) => {
   const [amount, setAmount] = useState("");
+  const [adminTransactionPassword, setAdminTransactionPassword] = useState("");
   useEffect(() => {
     setAmount("");
   }, [onHide]);
@@ -11,7 +12,11 @@ const DepositModal = ({ show, onHide, onDeposit }) => {
   const handleDeposit = () => {
     // Validate and perform the deposit action
     if (parseFloat(amount) > 0) {
-      onDeposit(parseFloat(amount));
+      onDeposit(
+        account.accountNo,
+        parseFloat(amount),
+        adminTransactionPassword
+      );
       onHide();
     }
   };
@@ -23,12 +28,29 @@ const DepositModal = ({ show, onHide, onDeposit }) => {
       </Modal.Header>
       <Modal.Body>
         <div className="form-group">
-          <label>Amount to Deposit:</label>
+          <label>Account Number: </label>
+          <input
+            type="text"
+            className="form-control"
+            value={account.accountNo}
+            readOnly
+            disabled
+          />
+
+          <label>Amount to Withdraw:</label>
           <input
             type="number"
             className="form-control"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+          />
+
+          <label>Admin Transaction Password:</label>
+          <input
+            type="password"
+            className="form-control"
+            value={adminTransactionPassword}
+            onChange={(e) => setAdminTransactionPassword(e.target.value)}
           />
         </div>
       </Modal.Body>

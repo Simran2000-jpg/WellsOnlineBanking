@@ -4,15 +4,20 @@ import Button from "react-bootstrap/Button";
 
 const WithdrawModal = ({ show, account, onHide, onWithdraw }) => {
   const [amount, setAmount] = useState("");
+  const [adminTransactionPassword, setAdminTransactionPassword] = useState("");
   useEffect(() => {
     setAmount("");
+    setAdminTransactionPassword("");
   }, [onHide]);
 
   const handleWithdraw = () => {
     // Validate and perform the withdrawal action
     if (parseFloat(amount) > 0) {
-      onWithdraw(account.accountNo, " ", parseFloat(amount));
-      onHide();
+      onWithdraw(
+        account.accountNo,
+        parseFloat(amount),
+        adminTransactionPassword
+      );
     }
   };
 
@@ -40,7 +45,13 @@ const WithdrawModal = ({ show, account, onHide, onWithdraw }) => {
             onChange={(e) => setAmount(e.target.value)}
           />
 
-          <label>Remarks:</label>
+          <label>Admin Transaction Password:</label>
+          <input
+            type="password"
+            className="form-control"
+            value={adminTransactionPassword}
+            onChange={(e) => setAdminTransactionPassword(e.target.value)}
+          />
         </div>
       </Modal.Body>
       <Modal.Footer>

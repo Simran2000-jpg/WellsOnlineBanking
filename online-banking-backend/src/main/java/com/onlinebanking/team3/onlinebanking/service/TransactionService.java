@@ -83,7 +83,55 @@ public class TransactionService {
         	throw new TransactionException("Incorrect Transaction Password");
         }          
     }
-    
+
+
+    @Transactional
+    public Transaction withdrawMoney(Account account, double amount) {
+
+
+        System.out.println("Inside withdrawMoney in TransactionService");
+        // Create a new transaction
+        Transaction transaction = new Transaction();
+        transaction.setTransactionDateTime(LocalDateTime.now());
+        transaction.setAmount(amount);
+        transaction.setTransactionType("Cash Withdrawal");
+        transaction.setFromAccount(account);
+        transaction.setToAccount(account);
+        transaction.setRemarks("Withdraw from Account");
+
+        // Update account balances
+        account.setBalance(account.getBalance()-amount);
+
+        // Save the transaction and update account balances
+        transactionRepository.save(transaction);
+        accountService.updateAccount(account);
+
+        return transaction;
+    }
+
+    @Transactional
+    public Transaction depositMoney(Account account, double amount) {
+
+        // Create a new transaction
+        Transaction transaction = new Transaction();
+        transaction.setTransactionDateTime(LocalDateTime.now());
+        transaction.setAmount(amount);
+        transaction.setTransactionType("Cash Deposit");
+        transaction.setFromAccount(account);
+        transaction.setToAccount(account);
+        transaction.setRemarks("Deposit to Account");
+
+        // Update account balances
+        account.setBalance(account.getBalance()+amount);
+
+        // Save the transaction and update account balances
+        transactionRepository.save(transaction);
+        accountService.updateAccount(account);
+
+        return transaction;
+    }
+
+
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
