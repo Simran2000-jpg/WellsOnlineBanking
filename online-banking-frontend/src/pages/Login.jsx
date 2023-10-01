@@ -40,16 +40,20 @@ const Login = () => {
         }
       );
 
-      const userResponse = await axios.get(
-        "http://localhost:8085/users/phone/" + phoneNumber
-      );
+      console.log(response);
 
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: userResponse.data.uid,
-      });
-
-      history("/");
+      if (response.status === 200) {
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: response.data.uid,
+        });
+        history("/");
+      } else {
+        setError(true);
+        dispatch({
+          type: "LOGIN_FAILURE",
+        });
+      }
     } catch (err) {
       setError(true);
       dispatch({
