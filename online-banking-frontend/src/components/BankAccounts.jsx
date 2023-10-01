@@ -4,6 +4,7 @@ import "../styles/BankAccounts.css";
 import { NavLink } from "react-router-dom";
 import { Context } from "../context/Context";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const BankAccounts = () => {
   const { userId, dispatch } = useContext(Context);
@@ -16,6 +17,7 @@ const BankAccounts = () => {
         setAccounts(response.data);
       })
       .catch((error) => {
+        toast.error("Error fetching data");
         console.error("Error fetching data: ", error);
       });
   }, []);

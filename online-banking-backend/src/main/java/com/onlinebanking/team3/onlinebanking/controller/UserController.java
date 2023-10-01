@@ -87,8 +87,10 @@ public class UserController {
                 return ResponseEntity.ok(u);
             }
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }  catch (ResourceNotFoundException rfe) {
+            return ResponseEntity.notFound().build();
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }

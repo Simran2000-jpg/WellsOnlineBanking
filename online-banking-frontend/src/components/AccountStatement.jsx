@@ -3,6 +3,7 @@ import { Button, Form, Table } from "react-bootstrap";
 import moment from "moment";
 import "../styles/AccountStatement.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AccountStatement = () => {
   const [user, setUser] = useState(null);
@@ -26,6 +27,9 @@ const AccountStatement = () => {
     const response = await axios.get(
       "http://localhost:8085/transactions/accounts/user/" + user
     );
+    if (response.status !== 200) {
+      toast.error("Error fetching transactions");
+    }
     setFilteredTransactions(response.data);
     setFilteredToAccountTransactions(response.data);
     setTransactions(response.data);
@@ -35,6 +39,10 @@ const AccountStatement = () => {
     const response = await axios.get(
       " http://localhost:8085/accounts/user/" + user
     );
+
+    if (response.status !== 200) {
+      toast.error("Error fetching accounts");
+    }
     setAccounts(response.data);
   };
 
