@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminServices from "../services/AdminServices";
+import { Context } from "../context/Context";
+
 const Admin = () => {
+  const { userId, dispatch } = useContext(Context);
+
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
@@ -25,8 +29,13 @@ const Admin = () => {
   };
 
   useEffect(() => {
+    if (userId !== "admin") {
+      dispatch({
+        type: "LOGOUT",
+      });
+    }
     fetchUsers();
-  }, []);
+  }, [userId]);
 
   return (
     <div className="form-bg my-5 mx-auto container">

@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminServices from "../services/AdminServices";
+import { Context } from "../context/Context";
 
 const UserDetails = () => {
+  const { userId, dispatch } = useContext(Context);
+
   const navigate = useNavigate();
   const id = useParams().id;
   const [user, setUser] = useState({});
@@ -31,8 +34,14 @@ const UserDetails = () => {
     });
   };
   useEffect(() => {
+    if (userId !== "admin") {
+      dispatch({
+        type: "LOGOUT",
+      });
+    }
+
     fetchUser();
-  }, []);
+  }, [userId]);
   return (
     <div className="form-bg my-5 mx-auto container">
       <div className="row justify-content-center">

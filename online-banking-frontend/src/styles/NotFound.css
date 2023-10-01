@@ -1,0 +1,16 @@
+/* styles/NotFound.css */
+
+.not-found {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.not-found h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.not-found p {
+  font-size: 18px;
+  color: #888;
+}

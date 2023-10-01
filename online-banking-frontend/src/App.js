@@ -15,6 +15,7 @@ import UserDasboard from "./pages/UserDashboard";
 import { useContext } from "react";
 import { Context } from "./context/Context";
 import AddAccount from "./pages/AddAccount";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const { userId } = useContext(Context);
@@ -33,6 +34,14 @@ function App() {
             ) : (
               <Route path="/" element={<Home />}></Route>
             )}
+            {userId === "admin" ? (
+              <>
+                <Route path="/admin" element={<Admin />}></Route>
+                <Route path="/user/:id" element={<UserDetails />}></Route>
+              </>
+            ) : (
+              <Route path="/login" element={<Login />}></Route>
+            )}
 
             {userId ? (
               <>
@@ -41,19 +50,14 @@ function App() {
                   path="/dashboard/:xyz"
                   element={<UserDasboard />}
                 ></Route>
-                <Route
-                  path="/create-account"
-                  element={<AddAccount />}
-                ></Route>
+                <Route path="/create-account" element={<AddAccount />}></Route>
               </>
             ) : (
               <Route path="/login" element={<Login />}></Route>
             )}
 
-            <Route path="/admin" element={<Admin />}></Route>
-            <Route path="/user/:id" element={<UserDetails />}></Route>
-
             <Route path="/" element={<Home />}></Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
         <Footer />

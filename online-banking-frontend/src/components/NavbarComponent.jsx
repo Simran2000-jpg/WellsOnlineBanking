@@ -9,26 +9,33 @@ import { Context } from "../context/Context";
 const NavbarComponent = () => {
   const history = useNavigate();
 
-  const {userId, dispatch} = useContext(Context);
+  const { userId, dispatch } = useContext(Context);
 
   const handleLogout = () => {
+    window.location.href = "/login";
     dispatch({
-        type:"LOGOUT",
+      type: "LOGOUT",
     });
-};
+  };
 
   return (
     <>
-      <Navbar fixed="top" bg="light">
+      <Navbar
+        className={
+          userId === "admin" ? "navbar-styling-admin bg-dark" : "navbar-styling"
+        }
+        fixed="top"
+        bg="light"
+      >
         <Container>
           <NavLink
             to={"/"}
-            className={"text-decoration-none"}
+            className={"text-decoration-none nav-item-styling"}
             style={{ marginLeft: "-85px" }}
           >
             <Navbar.Brand>
               <img alt="" src={Logo} width="40" height="30" />
-              Nexus Bank
+              <span className="nav-link-styling">Nexus Bank</span>
             </Navbar.Brand>
           </NavLink>
           <Nav className="justify-content-end">
@@ -43,7 +50,7 @@ const NavbarComponent = () => {
                 </NavLink>
               </Nav.Item>
             )}
-            {userId && (
+            {userId && userId !== "admin" && (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
                   to={"/create-account"}
@@ -54,7 +61,7 @@ const NavbarComponent = () => {
                 </NavLink>
               </Nav.Item>
             )}
-            {userId !== null && (
+            {userId !== null && userId !== "admin" && (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
                   to={"/dashboard/account-details"}
@@ -62,6 +69,17 @@ const NavbarComponent = () => {
                 >
                   <i className="bi bi-speedometer2"></i>
                   <span className="mx-2">Dashboard</span>
+                </NavLink>
+              </Nav.Item>
+            )}
+            {userId !== null && userId === "admin" && (
+              <Nav.Item className="my-2 mx-2 nav-item-styling">
+                <NavLink
+                  to={"/admin"}
+                  className="text-decoration-none nav-link-styling"
+                >
+                  <i className="bi bi-speedometer2"></i>
+                  <span className="mx-2">Admin Dashboard</span>
                 </NavLink>
               </Nav.Item>
             )}

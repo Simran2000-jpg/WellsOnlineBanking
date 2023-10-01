@@ -14,3 +14,19 @@
 .nav-item-styling:hover .nav-link-styling {
   color: #0cd674;
 }
+
+.navbar-styling-admin {
+  box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
+  color: #fff !important;
+}
+.navbar-styling-admin .nav-item-styling {
+  text-decoration: none;
+  padding: 5px 10px;
+  color: #fff !important;
+}
+.navbar-styling-admin .nav-link-styling {
+  color: #fff !important;
+}
+.navbar-styling-admin .nav-item-styling:hover {
+  box-shadow: 0px 0px 4px 2px rgb(255, 255, 255);
+}
