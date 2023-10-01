@@ -3,7 +3,6 @@ package com.onlinebanking.team3.onlinebanking.controller;
 import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
 import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
 import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
-import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.User;
@@ -11,22 +10,13 @@ import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.AddressService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
-import org.apache.tomcat.util.codec.binary.Base64;
-
-import ch.qos.logback.core.model.Model;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +53,7 @@ public class UserController {
             User registeredUser = uService.registerUser(user);
 
             Address mailingAddress = user.getResidentialAddress();
-            Account account = new Account("NX1845", mailingAddress, 1000, true, user);
+            Account account = new Account("Savings Account", "NX1845", mailingAddress, 1000, true, user);
 
             Account registeredAccount = accountService.createAccount(account);
 
@@ -76,7 +66,6 @@ public class UserController {
             // TODO: handle exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An Error Occurred: " + e.getMessage().substring(0, 100));
-
         }
     }
 
@@ -120,15 +109,6 @@ public class UserController {
 
 		}
     }
-
-
-
-//    @PostMapping("/{userId}/beneficiaries")
-//    public Beneficiary createBeneficiary(@PathVariable Long userId, @RequestBody Beneficiary beneficiary) {
-//        User user = uService.getUserById(userId);
-//        beneficiary.setUser(user);
-
- 
 
     @GetMapping("/users/{uid}")
     public User getUserById(@PathVariable Long uid) {

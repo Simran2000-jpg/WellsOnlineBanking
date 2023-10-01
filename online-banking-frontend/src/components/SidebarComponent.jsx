@@ -33,6 +33,11 @@ const SidebarComponent = () => {
             <i className="bi bi-currency-exchange"></i> Funds Transfer
           </NavLink>
         </li>
+        <li>
+          <NavLink to={`/${path}/internet-banking`}>
+          <i className="bi bi-person-fill-add"></i> Internet Banking
+          </NavLink>
+        </li>
       </ul>
     </div>
   );

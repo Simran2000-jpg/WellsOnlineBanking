@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Register from "./components/Register";
 import OpenAccount from "./pages/OpenAccount";
 import Admin from "./pages/Admin";
 import UserDetails from "./pages/UserDetails";
@@ -19,20 +19,10 @@ import { useContext, useEffect, useState } from "react";
 import AddBeneficiary from "./pages/AddBeneficiary";
 import ViewBeneficiary from "./pages/ViewBeneficiary";
 import { Context } from "./context/Context";
+import AddAccount from "./pages/AddAccount";
 
 function App() {
-  const {userId} = useContext(Context);
-
-  // useEffect(() => {
-  //   const onStorage = () => {
-  //     setUser(localStorage.getItem("userId"));
-  //   };
-  //   window.addEventListener("storage", onStorage);
-
-  //   return () => {
-  //     window.removeEventListener("storage", onStorage);
-  //   };
-  // });
+  const { userId } = useContext(Context);
 
   return (
     <>
@@ -41,46 +31,28 @@ function App() {
         <div className="App pt-5">
           <Routes>
             {userId === null ? (
-              <Route path="/openaccount" element={<OpenAccount />}></Route>
-            ) : (
-              <Route path="/" element={<Home />}></Route>
-            )}
-
-            {userId === null ? (
-              <Route path="/login" element={<Login />}></Route>
-            ) : (
-              <Route path="/" element={<Home />}></Route>
-            )}
-
-            {userId !== null ? (
-              <Route path="/register" element={<Register />}></Route>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
-
-            {userId !== null ? (
-              <Route path="/funds-transfer" element={<Transaction />}></Route>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
-
-            <Route path="/dashboard" element={<UserDasboard />}></Route>
-            {userId !== null ? (
-              <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
-            {userId && (
               <>
+                <Route path="/openaccount" element={<OpenAccount />}></Route>
+                <Route path="/login" element={<Login />}></Route>
+              </>
+            ) : (
+              <Route path="/" element={<Home />}></Route>
+            )}
+
+            {userId ? (
+              <>
+                <Route path="/dashboard" element={<UserDasboard />}></Route>
                 <Route
-                  path="/dashboard/add-beneficiary"
-                  element={<AddBeneficiary />}
+                  path="/dashboard/:xyz"
+                  element={<UserDasboard />}
                 ></Route>
                 <Route
-                  path="/dashboard/view-beneficiary"
-                  element={<ViewBeneficiary />}
+                  path="/create-account"
+                  element={<AddAccount />}
                 ></Route>
               </>
+            ) : (
+              <Route path="/login" element={<Login />}></Route>
             )}
 
             <Route path="/admin" element={<Admin />}></Route>

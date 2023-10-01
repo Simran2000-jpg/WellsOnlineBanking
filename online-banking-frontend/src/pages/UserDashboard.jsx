@@ -5,10 +5,10 @@ import SidebarComponent from '../components/SidebarComponent'
 import AccountDetails from '../components/AccountDetails'
 import AccountStatement from '../components/AccountStatement'
 import { useLocation } from 'react-router-dom'
-import Home from './Home'
 import Transaction from './Transaction'
 import AddBeneficiary from './AddBeneficiary'
 import ViewBeneficiary from './ViewBeneficiary'
+import Register from '../components/Register'
 
 const UserDasboard = () => {
     const location = useLocation();
@@ -25,6 +25,7 @@ const UserDasboard = () => {
                 (path[2] === "funds-transfer") ? <Transaction/> :
                 (path[2] === "add-beneficiary") ? <AddBeneficiary/> :
                 (path[2] === "view-beneficiary") ? <ViewBeneficiary/> :
+                (path[2] === "internet-banking") ? <Register/> :
                 ""
             }
         </Container>

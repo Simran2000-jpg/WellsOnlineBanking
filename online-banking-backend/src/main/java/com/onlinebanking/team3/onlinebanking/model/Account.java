@@ -21,6 +21,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long accountNo;
 
+    private String accountType;
+
     private @NonNull String ifscCode;
 
     private Boolean isActive;
@@ -41,7 +43,8 @@ public class Account {
 //    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 //    private List<Transaction> transactions = new ArrayList<>();
 
-    public Account(@NonNull String ifscCode, Address mailingAddress, double balance,Boolean isActive, User user) {
+    public Account(String accountType, @NonNull String ifscCode, Address mailingAddress, double balance,Boolean isActive, User user) {
+        this.accountType = accountType;
         this.ifscCode = ifscCode;
         this.mailingAddress = mailingAddress;
         this.balance = balance;
