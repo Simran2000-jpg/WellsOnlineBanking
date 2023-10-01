@@ -8,16 +8,11 @@ import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./components/Register";
 import OpenAccount from "./pages/OpenAccount";
 import Admin from "./pages/Admin";
 import UserDetails from "./pages/UserDetails";
-import Transaction from "./pages/Transaction";
 import UserDasboard from "./pages/UserDashboard";
-import SidebarComponent from "./components/SidebarComponent";
-import { useContext, useEffect, useState } from "react";
-import AddBeneficiary from "./pages/AddBeneficiary";
-import ViewBeneficiary from "./pages/ViewBeneficiary";
+import { useContext } from "react";
 import { Context } from "./context/Context";
 import AddAccount from "./pages/AddAccount";
 

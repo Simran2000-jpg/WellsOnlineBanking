@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../styles/Register.css";
-import "../styles/SidebarComponent.css"; // Create a new CSS file for the sidebar styles
+import "../styles/SidebarComponent.css"; 
 
 const SidebarComponent = () => {
   const location = useLocation();

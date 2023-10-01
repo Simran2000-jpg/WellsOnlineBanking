@@ -1,8 +1,7 @@
 import React from "react";
 
 const OccupationDetailsForm = (props) => {
-  const { formFieldValues, handleFormValueChange, formFieldErrorValues } =
-    props;
+  const { formFieldValues, handleFormValueChange, formFieldErrorValues } = props;
   return (
     <>
       <div className="d-flex justify-content-start mb-2">

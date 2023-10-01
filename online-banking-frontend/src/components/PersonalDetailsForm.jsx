@@ -8,7 +8,7 @@ const PersonalDetailsForm = (props) => {
       <div className="d-flex justify-content-start mb-2">
         <h4 className="sub-title">Personal Details</h4>
       </div>
-      {/* <p className='h6'>Dummy Data</p> */}
+      
       <form className="form-horizontal" style={{ marginTop: "30px" }}>
         <div className="container">
           <div className="row">

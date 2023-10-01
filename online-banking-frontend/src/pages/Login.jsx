@@ -35,15 +35,12 @@ const Login = () => {
         "http://localhost:8085/users/phone/" + phoneNumber
       );
 
-      // localStorage.setItem("userId", userResponse.data.uid);
-      // window.dispatchEvent(new Event("storage"));
-
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: userResponse.data.uid,
       });
 
-      if (response.data) history("/");
+      history("/");
     } catch (err) {
       setError(true);
       dispatch({
@@ -85,12 +82,6 @@ const Login = () => {
                     Login
                   </button>
                 </div>
-                <span className="user-login mt-4">
-                  Haven't registered for NetBanking yet? Click Here to{" "}
-                  <a href="#">
-                    <NavLink to={"/register"}>Register</NavLink>
-                  </a>
-                </span>
               </form>
               {error && <span className='loginError'>Invalid credentials!</span>}
             </div>
