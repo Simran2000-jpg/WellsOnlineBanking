@@ -34,7 +34,8 @@ const BankAccounts = () => {
                 Account Number: {account.accountNo}
               </Card.Subtitle>
               <Card.Text>
-                <strong>Balance:</strong> <i class="bi bi-currency-rupee"></i>
+                <strong>Balance:</strong>{" "}
+                <i className="bi bi-currency-rupee"></i>
                 {account.balance.toFixed(2)}
               </Card.Text>
               <Button variant="primary">
