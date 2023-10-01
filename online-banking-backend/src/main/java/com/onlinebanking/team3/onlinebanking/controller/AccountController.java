@@ -153,4 +153,52 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
+    @PutMapping("/account/{accountId}/withdraw")
+    public ResponseEntity<?> withdrawMoneyFromAccount(@RequestHeader(name = "Authorization") String authentication,
+                                                      @PathVariable Long accountId,
+                                                      @RequestParam double amount,
+                                                      @RequestParam String transactionPassword){
+        System.out.println("inside WithdrawMoneyFromAcoount: AccountController");
+        try{
+            AdminAuthentication.authenticateAdminCredentials(authentication);
+            if(!transactionPassword.equals("adminTransaction")){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Transaction Password not correct");
+            }
+            Account account = accountService.getAccountById(accountId);
+            if((account.getBalance() - amount) < 0){
+                return ResponseEntity.badRequest().body("Not enough money to withdraw");
+            }
+            transactionService.withdrawMoney(account, amount);
+            return ResponseEntity.ok("Money Withdraw Successful");
+        } catch (UnauthorizedAccessException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("The user is not authorized to withdraw money");
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+    }
+
+    @PutMapping("/account/{accountId}/deposit")
+    public ResponseEntity<?> depositMoneyToAccount(@RequestHeader(name = "Authorization") String authentication,
+                                                      @PathVariable Long accountId,
+                                                      @RequestParam String transactionPassword,
+                                                      @RequestParam Double amount){
+        try{
+            AdminAuthentication.authenticateAdminCredentials(authentication);
+            if(!transactionPassword.equals("adminTransaction")){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Transaction Password not correct");
+            }
+            Account account = accountService.getAccountById(accountId);
+            transactionService.depositMoney(account, amount);
+            return ResponseEntity.ok("Money Deposit Successful");
+        } catch (UnauthorizedAccessException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("The user is not authorized to deposit money");
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+    }
 }
