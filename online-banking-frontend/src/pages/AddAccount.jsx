@@ -6,19 +6,20 @@ import { Context } from "../context/Context";
 import { useNavigate } from "react-router-dom";
 
 const AddAccount = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { userId, dispatch } = useContext(Context);
 
   const [accountType, setAccountType] = useState("");
   const [transactionPassword, setTransactionPassword] = useState("");
-  const [confirmTransactionPassword, setConfirmTransactionPassword] = useState("");
+  const [confirmTransactionPassword, setConfirmTransactionPassword] =
+    useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,14 +40,14 @@ const AddAccount = () => {
       .post(
         "http://localhost:8085/createAnotherNewAccount/" + userId,
         { address, city, state, pincode },
-        {params: {accountType, transactionPassword}},
+        { params: { accountType, transactionPassword } }
       )
       .then((res, err) => {
         setSuccess(true);
         setSuccessMessage("Created New Account successfully");
         setTimeout(() => {
-            navigate("/");
-          }, 1000);
+          navigate("/");
+        }, 1000);
       })
       .catch((err) => {
         setError("Error occured in creating account");
@@ -58,7 +59,11 @@ const AddAccount = () => {
     <div className="add-account-form">
       <h2 className="form-title">Create New Account</h2>
       <Form onSubmit={handleSubmit}>
-      {success && <div className="alert alert-success"><label>{successMessage}</label></div>}
+        {success && (
+          <div className="alert alert-success">
+            <label>{successMessage}</label>
+          </div>
+        )}
         <Form.Group controlId="accountType" className="form-group">
           <Form.Label>Account Type</Form.Label>
           <Form.Control

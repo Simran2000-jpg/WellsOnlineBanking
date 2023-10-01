@@ -12,7 +12,7 @@ const Home = () => {
     // </div>
 
     <Container className="pt-2">
-      <h1 className="display-5">Nexus Bank</h1>
+      <h1 className="display-15" style={{marginTop: "20px"}}>Thanks for choosing Nexus Bank :)</h1>
       {userId ?  <BankAccounts/> : <div>Not Logged in</div>}
     </Container>
   );

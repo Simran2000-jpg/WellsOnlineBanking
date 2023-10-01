@@ -72,7 +72,7 @@ const Register = () => {
         <div className="row justify-content-center">
           <div className="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
             <div className="form-container">
-              <h3 className="title">Register</h3>
+              <h3 className="title">Register for Internet Banking</h3>
               {successMessage && <div className="alert alert-success"><label>{successMessage}</label></div>}
               {error && <div className="alert alert-danger"><label>{error}</label></div>}
               <form className="form-horizontal" onSubmit={handleRegister}>
@@ -142,14 +142,6 @@ const Register = () => {
                     Register
                   </button>
                 </div>
-                {/* <span className="user-login ">
-                  Already registered for NetBanking? Click Here to {" "}
-                  <a href="#">
-                    <NavLink to={'/login'}>
-                      Login
-                    </NavLink>
-                  </a>
-                </span> */}
               </form>
             </div>
           </div>

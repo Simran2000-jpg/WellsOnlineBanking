@@ -57,17 +57,6 @@ const NavbarComponent = () => {
             {userId !== null && (
               <Nav.Item className="my-2 mx-2 nav-item-styling">
                 <NavLink
-                  to={"/register"}
-                  className="text-decoration-none nav-link-styling"
-                >
-                  <i className="bi bi-person-fill-add"></i>
-                  <span className="mx-2">Register Internet Banking</span>
-                </NavLink>
-              </Nav.Item>
-            )}
-            {userId !== null && (
-              <Nav.Item className="my-2 mx-2 nav-item-styling">
-                <NavLink
                   to={"/dashboard/account-details"}
                   className="text-decoration-none nav-link-styling"
                 >

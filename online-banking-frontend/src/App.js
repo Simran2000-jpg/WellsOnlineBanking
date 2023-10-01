@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Register from "./components/Register";
 import OpenAccount from "./pages/OpenAccount";
 import Admin from "./pages/Admin";
 import UserDetails from "./pages/UserDetails";
@@ -23,17 +23,6 @@ import AddAccount from "./pages/AddAccount";
 
 function App() {
   const { userId } = useContext(Context);
-
-  // useEffect(() => {
-  //   const onStorage = () => {
-  //     setUser(localStorage.getItem("userId"));
-  //   };
-  //   window.addEventListener("storage", onStorage);
-
-  //   return () => {
-  //     window.removeEventListener("storage", onStorage);
-  //   };
-  // });
 
   return (
     <>
@@ -52,7 +41,6 @@ function App() {
 
             {userId ? (
               <>
-                <Route path="/register" element={<Register />}></Route>
                 <Route path="/dashboard" element={<UserDasboard />}></Route>
                 <Route
                   path="/dashboard/:xyz"
@@ -62,15 +50,6 @@ function App() {
                   path="/create-account"
                   element={<AddAccount />}
                 ></Route>
-                <Route
-                  path="/dashboard/add-beneficiary"
-                  element={<AddBeneficiary />}
-                ></Route>
-                <Route
-                  path="/dashboard/view-beneficiary"
-                  element={<ViewBeneficiary />}
-                ></Route>
-                <Route path="/funds-transfer" element={<Transaction />}></Route>
               </>
             ) : (
               <Route path="/login" element={<Login />}></Route>
