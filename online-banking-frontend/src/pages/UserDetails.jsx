@@ -3,12 +3,31 @@ import { useNavigate, useParams } from "react-router-dom";
 import AdminServices from "../services/AdminServices";
 import { Context } from "../context/Context";
 
+import WithdrawModal from "../components/WithdrawModal";
+import DepositModal from "../components/DepositModal";
+
 const UserDetails = () => {
   const { userId, dispatch } = useContext(Context);
 
   const navigate = useNavigate();
   const id = useParams().id;
   const [user, setUser] = useState({});
+  const [activeAccount, setActiveAccount] = useState({});
+
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+
+  // Function to handle withdrawal
+  const handleWithdraw = (accountNum, adminPassword, amount) => {
+    // Perform the withdrawal logic here
+    console.log("Withdrawal amount:", amount);
+  };
+
+  // Function to handle deposit
+  const handleDeposit = (accountNum, adminPassword, amount) => {
+    // Perform the deposit logic here
+    console.log("Deposit amount:", amount);
+  };
 
   const fetchUser = async () => {
     AdminServices.fetchUserById(id).then((res) => {
@@ -44,9 +63,9 @@ const UserDetails = () => {
   }, [userId]);
   return (
     <div className="form-bg my-5 mx-auto container">
-      <div className="row justify-content-center">
-        <div className="col-md-6 col-12 ">
-          <div className="form-container">
+      <div className="justify-content-center">
+        <div className="form-container row">
+          <div className="col-md-8 col-12">
             <h2 className="title">USER DETAILS</h2>
             <table className="table table-striped">
               <tbody>
@@ -150,57 +169,6 @@ const UserDetails = () => {
                         </td>
                       )}
                     </tr>
-                    <tr>
-                      <td className="property text-center" colSpan={2}>
-                        <h3>Accounts</h3>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        {user.account &&
-                          user.account.map((account) => (
-                            <div
-                              className="card text-center"
-                              key={account.accountNo}
-                            >
-                              <div className="card-body">
-                                <h5 className="card-title">
-                                  Account Number: {account.accountNo}
-                                </h5>
-                                {account.isActive ? (
-                                  <button
-                                    className="btn btn-success"
-                                    onClick={() => {
-                                      changeActiveStatusAccount(
-                                        account.accountNo
-                                      );
-                                    }}
-                                  >
-                                    Active
-                                  </button>
-                                ) : (
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() => {
-                                      changeActiveStatusAccount(
-                                        account.accountNo
-                                      );
-                                    }}
-                                  >
-                                    Inactive
-                                  </button>
-                                )}
-                                <p className="card-text">
-                                  IFSC Code: {account.ifscCode}
-                                </p>
-                                <p className="card-text">
-                                  Balance: {account.balance}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                      </td>
-                    </tr>
                   </>
                 )}
               </tbody>
@@ -213,8 +181,95 @@ const UserDetails = () => {
               Back
             </button>
           </div>
+          <div className="col-md-4 col-12">
+            <table className="table table-striped">
+              <tr>
+                <td className="property text-center">
+                  <h3>Accounts</h3>
+                </td>
+              </tr>
+
+              {user.account &&
+                user.account.map((account) => (
+                  <tr>
+                    <td colSpan={2}>
+                      <div className="card text-center" key={account.accountNo}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            Account Number: {account.accountNo}
+                          </h5>
+                          {account.isActive ? (
+                            <button
+                              className="btn btn-success"
+                              onClick={() => {
+                                changeActiveStatusAccount(account.accountNo);
+                              }}
+                            >
+                              Active
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                changeActiveStatusAccount(account.accountNo);
+                              }}
+                            >
+                              Inactive
+                            </button>
+                          )}
+                          <p className="card-text">
+                            IFSC Code: {account.ifscCode}
+                          </p>
+                          <p className="card-text">
+                            Balance: {account.balance}
+                          </p>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                              setActiveAccount(account);
+                              setShowWithdrawModal(true);
+                            }}
+                          >
+                            Withdraw Money
+                          </button>{" "}
+                          &nbsp;
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                              setActiveAccount(account);
+                              setShowDepositModal(true);
+                            }}
+                          >
+                            Deposit Money
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </table>
+          </div>
         </div>
       </div>
+      <WithdrawModal
+        show={showWithdrawModal}
+        account={activeAccount}
+        onHide={() => {
+          setActiveAccount({});
+          setShowWithdrawModal(false);
+        }}
+        onWithdraw={handleWithdraw}
+      />
+
+      <DepositModal
+        show={showDepositModal}
+        account={activeAccount}
+        onHide={() => {
+          setActiveAccount({});
+          setShowDepositModal(false);
+        }}
+        onDeposit={handleDeposit}
+      />
     </div>
   );
 };
