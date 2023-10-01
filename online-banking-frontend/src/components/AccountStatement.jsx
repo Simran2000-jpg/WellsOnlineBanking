@@ -151,24 +151,26 @@ const AccountStatement = () => {
       {/* Filter and sort options */}
       <Form>
         <div style={{ display: "inline-flex", width: "100%" }}>
-          <Form.Group>
-            <Form.Label>Start Date:</Form.Label>
-            <Form.Control
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{ marginLeft: "0px", width: "380px" }}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>End Date:</Form.Label>
-            <Form.Control
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{ width: "380px" }}
-            />
-          </Form.Group>
+          <div style={{ marginLeft: "0px", width: "50%" }}>
+            <Form.Group>
+              <Form.Label>Start Date:</Form.Label>
+              <Form.Control
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </Form.Group>
+          </div>
+          <div style={{ width: "50%" }}>
+            <Form.Group>
+              <Form.Label>End Date:</Form.Label>
+              <Form.Control
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </Form.Group>
+          </div>
         </div>
         <Button
           variant="primary"

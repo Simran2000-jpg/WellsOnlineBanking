@@ -19,9 +19,10 @@ import { useContext, useEffect, useState } from "react";
 import AddBeneficiary from "./pages/AddBeneficiary";
 import ViewBeneficiary from "./pages/ViewBeneficiary";
 import { Context } from "./context/Context";
+import AddAccount from "./pages/AddAccount";
 
 function App() {
-  const {userId} = useContext(Context);
+  const { userId } = useContext(Context);
 
   // useEffect(() => {
   //   const onStorage = () => {
@@ -41,37 +42,26 @@ function App() {
         <div className="App pt-5">
           <Routes>
             {userId === null ? (
-              <Route path="/openaccount" element={<OpenAccount />}></Route>
-            ) : (
-              <Route path="/" element={<Home />}></Route>
-            )}
-
-            {userId === null ? (
-              <Route path="/login" element={<Login />}></Route>
-            ) : (
-              <Route path="/" element={<Home />}></Route>
-            )}
-
-            {userId !== null ? (
-              <Route path="/register" element={<Register />}></Route>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
-
-            {userId !== null ? (
-              <Route path="/funds-transfer" element={<Transaction />}></Route>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
-
-            <Route path="/dashboard" element={<UserDasboard />}></Route>
-            {userId !== null ? (
-              <Route path="/dashboard/:xyz" element={<UserDasboard />}></Route>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
-            {userId && (
               <>
+                <Route path="/openaccount" element={<OpenAccount />}></Route>
+                <Route path="/login" element={<Login />}></Route>
+              </>
+            ) : (
+              <Route path="/" element={<Home />}></Route>
+            )}
+
+            {userId ? (
+              <>
+                <Route path="/register" element={<Register />}></Route>
+                <Route path="/dashboard" element={<UserDasboard />}></Route>
+                <Route
+                  path="/dashboard/:xyz"
+                  element={<UserDasboard />}
+                ></Route>
+                <Route
+                  path="/create-account"
+                  element={<AddAccount />}
+                ></Route>
                 <Route
                   path="/dashboard/add-beneficiary"
                   element={<AddBeneficiary />}
@@ -80,7 +70,10 @@ function App() {
                   path="/dashboard/view-beneficiary"
                   element={<ViewBeneficiary />}
                 ></Route>
+                <Route path="/funds-transfer" element={<Transaction />}></Route>
               </>
+            ) : (
+              <Route path="/login" element={<Login />}></Route>
             )}
 
             <Route path="/admin" element={<Admin />}></Route>

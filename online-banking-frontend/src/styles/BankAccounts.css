@@ -1,0 +1,24 @@
+/* BankAccountPage.css */
+
+.bank-account-page {
+    padding: 20px;
+  }
+  
+  .page-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .account-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .account-card {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+  }
+  

@@ -53,7 +53,7 @@ class AccountTest {
         user.setResidentialAddress(residentialAddress);
         user.setSourceOfIncome("Source Of Income");
         user.setUid(1L);
-        Account actualAccount = new Account("Ifsc Code", mailingAddress, 10.0d, true, user);
+        Account actualAccount = new Account("accountType", "Ifsc Code", mailingAddress, 10.0d, true, user);
 
         assertSame(user, actualAccount.getUser());
         assertEquals(10.0d, actualAccount.getBalance());
@@ -116,7 +116,7 @@ class AccountTest {
         user.setResidentialAddress(residentialAddress);
         user.setSourceOfIncome("Source Of Income");
         user.setUid(1L);
-        new Account(null, mailingAddress, 10.0d, true, user);
+        new Account(null, null, mailingAddress, 10.0d, true, user);
 
     }
 

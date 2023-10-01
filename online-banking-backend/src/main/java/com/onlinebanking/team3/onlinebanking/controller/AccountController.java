@@ -4,14 +4,17 @@ import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
 import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
 import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
 import com.onlinebanking.team3.onlinebanking.model.Account;
+import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.Transaction;
 import com.onlinebanking.team3.onlinebanking.model.User;
 import com.onlinebanking.team3.onlinebanking.service.AccountService;
+import com.onlinebanking.team3.onlinebanking.service.AddressService;
 import com.onlinebanking.team3.onlinebanking.service.TransactionService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +30,9 @@ public class AccountController {
     private UserService userService;
 
     @Autowired
+    private AddressService addressService;
+
+    @Autowired
     private TransactionService transactionService;
 
     @PutMapping("/addNewAccount/{userId}")
@@ -38,6 +44,28 @@ public class AccountController {
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/createAnotherNewAccount/{userId}")
+    public ResponseEntity<String> createAnotherNewAccount(@RequestBody Address address, @RequestParam String accountType, @RequestParam String transactionPassword, @PathVariable Long userId) {
+        try{
+            Address newAddress = new Address(address.getAddress(), address.getCity(), address.getState(), address.getPincode());
+            Address registeredAddress = addressService.saveAddress(address);
+
+            User user = userService.getUserById(userId);
+            Account newAccount = new Account(accountType, "NX1845", registeredAddress, 1000, true, user);
+            newAccount.setTransactionPassword(transactionPassword);
+            Account registeredAccount = accountService.createAccount(newAccount);
+
+            if (registeredAccount != null)
+                return ResponseEntity.ok("Account creation Successful");
+            else
+                return ResponseEntity.badRequest().body("Account creation Failed");
+        }catch (Exception e) {
+            // TODO: handle exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An Error Occurred: " + e.getMessage().substring(0, 100));
         }
     }
 
@@ -91,9 +119,6 @@ public class AccountController {
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-
-
-
     }
 
     @GetMapping("/accounts")

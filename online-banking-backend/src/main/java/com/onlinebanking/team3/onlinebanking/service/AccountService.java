@@ -51,7 +51,7 @@ public class AccountService {
     }
     public Account addNewAccount(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with ID "+userId + " not found"));
-        Account account = new Account("NX1845", user.getResidentialAddress(), 1000, true, user);
+        Account account = new Account("Savings Account", "NX1845", user.getResidentialAddress(), 1000, true, user);
 
         // newAccount.setMailingAddress(mailingAddress);
         return accountRepository.save(account);
@@ -73,6 +73,4 @@ public class AccountService {
             throw new UserNotFoundException("Account with ID " + accountId + " not found");
         }
     }
-
-
 }

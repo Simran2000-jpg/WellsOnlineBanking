@@ -11,17 +11,6 @@ const NavbarComponent = () => {
 
   const {userId, dispatch} = useContext(Context);
 
-  // useEffect(() => {
-  //   const onStorage = () => {
-  //     setUser(localStorage.getItem("userId"));
-  //   };
-  //   window.addEventListener("storage", onStorage);
-
-  //   return () => {
-  //     window.removeEventListener("storage", onStorage);
-  //   };
-  // });
-
   const handleLogout = () => {
     dispatch({
         type:"LOGOUT",
@@ -51,6 +40,17 @@ const NavbarComponent = () => {
                 >
                   <i className="bi bi-bank"></i>
                   <span className="mx-2">Open an Account</span>
+                </NavLink>
+              </Nav.Item>
+            )}
+            {userId && (
+              <Nav.Item className="my-2 mx-2 nav-item-styling">
+                <NavLink
+                  to={"/create-account"}
+                  className="text-decoration-none nav-link-styling"
+                >
+                  <i className="bi bi-person"></i>
+                  <span className="mx-2">Create New Account</span>
                 </NavLink>
               </Nav.Item>
             )}

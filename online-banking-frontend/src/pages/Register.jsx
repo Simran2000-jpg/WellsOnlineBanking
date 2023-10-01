@@ -142,14 +142,14 @@ const Register = () => {
                     Register
                   </button>
                 </div>
-                <span className="user-login ">
+                {/* <span className="user-login ">
                   Already registered for NetBanking? Click Here to {" "}
                   <a href="#">
                     <NavLink to={'/login'}>
                       Login
                     </NavLink>
                   </a>
-                </span>
+                </span> */}
               </form>
             </div>
           </div>
