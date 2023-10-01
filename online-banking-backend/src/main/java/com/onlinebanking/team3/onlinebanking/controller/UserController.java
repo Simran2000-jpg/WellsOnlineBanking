@@ -85,16 +85,12 @@ public class UserController {
 
     @PutMapping("/register")
     public ResponseEntity<String> registerInternetBanking(@RequestParam String emailId,
-            @RequestParam Long accountNumber, @RequestParam String loginPassword,
-            @RequestParam String transactionPassword) {
+            @RequestParam Long accountNumber, @RequestParam String transactionPassword) {
         try {
             Account account = accountService.getAccountById(accountNumber);
             User user = uService.getUserById(account.getUser().getUid());
 
             if (account.getUser().getEmailId().equals(emailId)) {
-                user.setLoginPassword(loginPassword);
-                User updatedUser = uService.registerUser(user);
-
                 account.setTransactionPassword(transactionPassword);
                 Account updatedAccount = accountService.createAccount(account);
                 return ResponseEntity.ok("Registration Successful");
