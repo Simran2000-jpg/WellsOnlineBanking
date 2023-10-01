@@ -1,7 +1,9 @@
 package com.onlinebanking.team3.onlinebanking.controller;
 
+import com.onlinebanking.team3.onlinebanking.model.Account;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.User;
+import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class BeneficiaryController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AccountService accountService;
+
     @PostMapping("/beneficiaries/{userId}")
     public ResponseEntity<String> createBeneficiary(@PathVariable long userId, @RequestBody Beneficiary beneficiary) {
         try {
@@ -30,15 +35,32 @@ public class BeneficiaryController {
         	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Beneficiary already exists");
         	    }
         	}
-            User user = userService.getUserById(userId);
 
-            beneficiary.setUser(user);
-            System.out.println(user.getAadharNumber());
+            if(beneficiary.getIfscCode().equals("NX1845")) {
+                Account beneficiaryAccount = accountService.getAccountById(Long.parseLong(beneficiary.getAccountNo()));
 
-            Beneficiary b = beneficiaryService.createBeneficiary(beneficiary);
-            System.out.println(b.getIfscCode());
+                if(!(beneficiaryAccount.getTransactionPassword() == null)) {
+                    User beneficiaryUser = userService.getUserById(beneficiaryAccount.getUser().getUid());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Created Beneficiary Successfully");
+                    if (beneficiaryUser.getKyc()) {
+                        User user = userService.getUserById(userId);
+                        beneficiary.setUser(user);
+                        Beneficiary b = beneficiaryService.createBeneficiary(beneficiary);
+
+                        return ResponseEntity.status(HttpStatus.CREATED).body("Created Beneficiary Successfully");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The beneficiary is not a verified user");
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The beneficiary not registered for Internet Banking");
+                }
+            } else {
+                User user = userService.getUserById(userId);
+                beneficiary.setUser(user);
+                Beneficiary b = beneficiaryService.createBeneficiary(beneficiary);
+
+                return ResponseEntity.status(HttpStatus.CREATED).body("Created Beneficiary Successfully");
+            }
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(null);

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserService from "../services/UserService";
 
 function Transaction() {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
+
+  const [kyc, setKyc] = useState(false);
   const [fromAccount, setFromAccount] = useState("");
   const [toAccount, setToAccount] = useState("");
   const [amount, setAmount] = useState();
@@ -17,12 +20,16 @@ function Transaction() {
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
+    UserService.getUserDetails(userId).then((response) => {
+      setKyc(response.kyc);
+    });
+
     const fetchToAccountOptions = async () => {
       try {
         const response = await axios.get(
           `http://localhost:8085/beneficiaries/${userId}`
         );
-        console.log(response);
+        console.log("to : ", response);
         setToAccountOptions(response.data);
       } catch (error) {
         setError("Error fetching account options:");
@@ -35,7 +42,7 @@ function Transaction() {
         const response = await axios.get(
           `http://localhost:8085/active/${userId}`
         );
-        console.log(response);
+        console.log("from : ", response);
         setFromAccountOptions(response.data);
       } catch (error) {
         setError("Error fetching account options:");
@@ -92,104 +99,109 @@ function Transaction() {
         <div className="row justify-content-center">
           <div className="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
             <div className="form-container">
-              <h3 className="title">Transaction</h3>
-              <form className="form-vertical" onSubmit={handleTransaction}>
-                <div className="form-group">
-                  {successMessage && (
-                    <div className="alert alert-success">
-                      <label>{successMessage}</label>
-                    </div>
-                  )}
-                  {error && (
-                    <div className="alert alert-danger">
-                      <label>{error}</label>
-                    </div>
-                  )}
+              {kyc ? (
+                <h3 className="title">Transaction</h3>
+              ) : (
+                <h3 className="title" style={{ color: "red" }}>
+                  Contact Admin for KYC verificaion
+                </h3>
+              )}
+              {kyc && (
+                <form className="form-vertical" onSubmit={handleTransaction}>
+                  <div className="form-group">
+                    {successMessage && (
+                      <div className="alert alert-success">
+                        <label>{successMessage}</label>
+                      </div>
+                    )}
+                    {error && (
+                      <div className="alert alert-danger">
+                        <label>{error}</label>
+                      </div>
+                    )}
 
-                  <label>Transaction Type*</label>
-                  <select
-                    value={transactionType}
-                    className="form-select form-control"
-                    onChange={(e) => setTransactionType(e.target.value)}
-                  >
-                    <option value="IMPS">IMPS</option>
-                    <option value="NEFT">NEFT</option>
-                    <option value="RTGS">RTGS</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>From Account*</label>
-                  {/* <input
-                                        className="form-control"
-                                        type="text"
-                                        value={fromAccount}
-                                        onChange={(e) => setFromAccount(e.target.value)}
-                                    /> */}
-                  <select
-                    className="form-select form-control"
-                    value={fromAccount}
-                    onChange={(e) => setFromAccount(e.target.value)}
-                  >
-                    <option value="">Select From Account</option>
-                    {fromAccountOptions.map((option) => (
-                      <option key={option.bid} value={option.bid}>
-                        {option.accountNo}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>To Account*</label>
-                  <select
-                    className="form-select form-control"
-                    value={toAccount}
-                    onChange={(e) => setToAccount(e.target.value)}
-                  >
-                    <option value="">Select To Account</option>
-                    {toAccountOptions.map((option) => (
-                      <option key={option.bid} value={option.bid}>
-                        {option.accountNo}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Amount*</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Transaction Password*</label>
-                  <input
-                    className="form-control"
-                    type="password"
-                    value={transactionPassword}
-                    onChange={(e) => setTransactionPassword(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Remarks</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    value={remarks}
-                    onChange={(e) => setRemarks(e.target.value)}
-                  />
-                </div>
-                <div className="text-center mb-4">
-                  <button
-                    className="my-4 mx-auto btn btn-success"
-                    type="submit"
-                    disabled={!areAllFieldsFilled()}
-                  >
-                    Initiate Transaction
-                  </button>
-                </div>
-              </form>
+                    <label>Transaction Type*</label>
+                    <select
+                      value={transactionType}
+                      className="form-select form-control"
+                      onChange={(e) => setTransactionType(e.target.value)}
+                    >
+                      <option value="IMPS">IMPS</option>
+                      <option value="NEFT">NEFT</option>
+                      <option value="RTGS">RTGS</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>From Account*</label>
+                    <select
+                      className="form-select form-control"
+                      value={fromAccount}
+                      onChange={(e) => setFromAccount(e.target.value)}
+                    >
+                      <option value="">Select From Account</option>
+                      {fromAccountOptions.map(
+                        (option) =>
+                          option.transactionPassword && (
+                            <option key={option.bid} value={option.bid}>
+                              {option.accountNo}
+                            </option>
+                          )
+                      )}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>To Account*</label>
+                    <select
+                      className="form-select form-control"
+                      value={toAccount}
+                      onChange={(e) => setToAccount(e.target.value)}
+                    >
+                      <option value="">Select To Account</option>
+                      {toAccountOptions.map((option) => (
+                        <option key={option.bid} value={option.bid}>
+                          {option.accountNo}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Amount*</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Transaction Password*</label>
+                    <input
+                      className="form-control"
+                      type="password"
+                      value={transactionPassword}
+                      onChange={(e) => setTransactionPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Remarks</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      value={remarks}
+                      onChange={(e) => setRemarks(e.target.value)}
+                    />
+                  </div>
+                  <div className="text-center mb-4">
+                    <button
+                      className="my-4 mx-auto btn btn-success"
+                      type="submit"
+                      disabled={!areAllFieldsFilled()}
+                    >
+                      Initiate Transaction
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>

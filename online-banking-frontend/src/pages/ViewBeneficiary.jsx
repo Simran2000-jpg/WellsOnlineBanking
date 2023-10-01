@@ -6,11 +6,14 @@ import axios from "axios";
 import "../styles/ViewBeneficiary.css";
 import SidebarComponent from "../components/SidebarComponent";
 import { Context } from "../context/Context";
+import UserService from "../services/UserService";
 
 const ViewBeneficiary = () => {
   const navigate = useNavigate();
 
   const { userId, dispatch } = useContext(Context);
+
+  const [kyc, setKyc] = useState(false);
   const [beneficiaries, setBeneficiaries] = useState([]);
 
   const viewBeneficiary = () => {
@@ -28,6 +31,9 @@ const ViewBeneficiary = () => {
 
   useEffect(() => {
     viewBeneficiary();
+    UserService.getUserDetails(userId).then((response) => {
+      setKyc(response.kyc);
+    });
   }, []);
 
   const routeAddBeneficiary = () => {
@@ -58,46 +64,56 @@ const ViewBeneficiary = () => {
           <div className="row justify-content-center">
             <div className="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
               <div className="form-container">
-                <h3 className="title">View Beneficiary</h3>
-                <div className="text-center">
-                  <button
-                    className="my-1 btn btn-primary"
-                    onClick={routeAddBeneficiary}
-                  >
-                    Add Beneficiary
-                  </button>
-                </div>
-                {beneficiaries.length > 0 ? (
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Beneficiary Name</th>
-                        <th>IFSC Code</th>
-                        <th>Account Number</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {beneficiaries.map((beneficiary, index) => (
-                        <tr key={index}>
-                          <td>{beneficiary.name}</td>
-                          <td>{beneficiary.ifscCode}</td>
-                          <td>{beneficiary.accountNo}</td>
-                          <td>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => handleDelete(index)}
-                            >
-                              {/* <i className="bi bi-trash"></i> */}
-                              <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                {kyc ? (
+                  <h3 className="title">View Beneficiary</h3>
                 ) : (
-                  <h3>No Beneficiary Added</h3>
+                  <h3 className="title" style={{ color: "red" }}>
+                    Contact Admin for KYC verification
+                  </h3>
+                )}
+                {kyc && (
+                  <>
+                    <div className="text-center">
+                      <button
+                        className="my-1 btn btn-primary"
+                        onClick={routeAddBeneficiary}
+                      >
+                        Add Beneficiary
+                      </button>
+                    </div>
+                    {beneficiaries.length > 0 ? (
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th>Beneficiary Name</th>
+                            <th>IFSC Code</th>
+                            <th>Account Number</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {beneficiaries.map((beneficiary, index) => (
+                            <tr key={index}>
+                              <td>{beneficiary.name}</td>
+                              <td>{beneficiary.ifscCode}</td>
+                              <td>{beneficiary.accountNo}</td>
+                              <td>
+                                <button
+                                  className="btn btn-danger"
+                                  onClick={() => handleDelete(index)}
+                                >
+                                  {/* <i class="bi bi-trash"></i> */}
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <h3>No Beneficiary Added</h3>
+                    )}
+                  </>
                 )}
               </div>
             </div>

@@ -6,6 +6,7 @@ import "../styles/Register.css";
 import "../styles/SidebarComponent.css";
 import AccountService from "../services/AccountService";
 import { Context } from "../context/Context";
+import UserService from "../services/UserService";
 
 const SidebarComponent = () => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const SidebarComponent = () => {
 
   const { userId, dispatch } = useContext(Context);
 
+  const [kyc, setKyc] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState({
     accountNo: 0,
     balance: 0,
@@ -22,6 +24,9 @@ const SidebarComponent = () => {
   });
 
   const fetchData = () => {
+    UserService.getUserDetails(userId).then((response) => {
+      setKyc(response.kyc);
+    });
     AccountService.getAccountDetails(userId).then((response) => {
       if (response.length == 0) {
         console.log("No data found");
@@ -47,22 +52,22 @@ const SidebarComponent = () => {
             <i className="bi bi-person"></i> Account Details
           </NavLink>
         </li>
-        <li>
+        {kyc && <li>
           <NavLink to={`/${path[1]}/view-beneficiary`}>
             <i className="bi bi-card-list"></i> Manage Beneficiary
           </NavLink>
-        </li>
-        <li>
+        </li>}
+        {kyc && <li>
           <NavLink to={`/${path[1]}/account-statement`}>
             <i className="bi bi-file-text"></i> Account Statement
           </NavLink>
-        </li>
-        <li>
+        </li>}
+        {kyc && <li>
           <NavLink to={`/${path[1]}/funds-transfer`}>
             <i className="bi bi-currency-exchange"></i> Funds Transfer
           </NavLink>
-        </li>
-        {path[3] && (!selectedAccount.transactionPassword) && (
+        </li>}
+        {kyc && path[3] && (!selectedAccount.transactionPassword) && (
           <li>
             <NavLink to={`/${path[1]}/internet-banking`}>
               <i className="bi bi-person-fill-add"></i> Internet banking
