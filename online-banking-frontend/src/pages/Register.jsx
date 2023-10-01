@@ -32,7 +32,6 @@ const Register = () => {
 
   const fetchData = () => {
     UserService.getUserDetails(userId).then((response) => {
-      console.log(response);
       setKyc(response.kyc);
     });
     AccountService.getAccountDetails(userId).then((response) => {
@@ -108,7 +107,7 @@ const Register = () => {
                   ) : (
                     <>
                       <div style={{ color: "red" }}>
-                        Contact Admin for KYC verification first
+                        Contact Admin for KYC verification
                       </div>
                     </>
                   )
