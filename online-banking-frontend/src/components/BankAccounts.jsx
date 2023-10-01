@@ -39,7 +39,7 @@ const BankAccounts = () => {
               </Card.Text>
               <Button variant="primary">
                 <NavLink
-                  to={"/dashboard/account-details"}
+                  to={`/dashboard/account-details/${account.accountNo}`}
                   style={{ color: "white", textDecoration: "none" }}
                 >
                   <i className="bi bi-person"></i> View Account

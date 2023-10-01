@@ -8,13 +8,12 @@ import { useLocation } from 'react-router-dom'
 import Transaction from './Transaction'
 import AddBeneficiary from './AddBeneficiary'
 import ViewBeneficiary from './ViewBeneficiary'
-import Register from '../components/Register'
+import Register from '../pages/Register'
 
 const UserDasboard = () => {
     const location = useLocation();
 
     const path = location.pathname.split("/");
-    console.log(path);
 
     return (
         <Container className='pt-2'>

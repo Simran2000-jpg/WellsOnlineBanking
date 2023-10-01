@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <Container
-      className="pt-2 landing-page-img"
+      className={userId ? "pt-2" : "pt-2 landing-page-img"}
     >
       <h1 className="display-15" style={{ marginTop: "20px" }}>
         Thanks for choosing Nexus Bank :)

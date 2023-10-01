@@ -50,6 +50,10 @@ function App() {
                   path="/dashboard/:xyz"
                   element={<UserDasboard />}
                 ></Route>
+                <Route
+                  path="/dashboard/:xyz/:abc"
+                  element={<UserDasboard />}
+                ></Route>
                 <Route path="/create-account" element={<AddAccount />}></Route>
               </>
             ) : (
