@@ -22,12 +22,12 @@ const BankAccounts = () => {
 
   return (
     <div className="bank-account-page">
-      <h2 className="page-title">My Bank Accounts</h2>
+      <h2 className="page-title text-light">My Bank Accounts</h2>
       <div className="account-cards">
         {accounts.map((account) => (
           <Card key={account.id} className="account-card">
             <Card.Body>
-              <Card.Title style={{marginBottom: "20px"}}>
+              <Card.Title style={{ marginBottom: "20px" }}>
                 {account.accountType ? account.accountType : "Bank Account"}
               </Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
