@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import UserService from "../services/UserService";
+import BeneficiaryService from "../services/BeneficiaryService";
+import AccountService from "../services/AccountService";
+import TransactionService from "../services/TransactionService";
 
 function Transaction() {
   const userId = localStorage.getItem("userId");
@@ -24,33 +26,26 @@ function Transaction() {
       setKyc(response.kyc);
     });
 
-    const fetchToAccountOptions = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8085/beneficiaries/${userId}`
-        );
-        console.log("to : ", response);
+    BeneficiaryService.viewBeneficiary(userId).then((response) => {
+      if(response.status === 200){
         setToAccountOptions(response.data);
-      } catch (error) {
-        setError("Error fetching account options:");
-        console.error("Error fetching account options:", error);
       }
-    };
+      else{
+        setError("Error fetching account options:");
+      }
+    })
 
-    const fetchFromAccountOptions = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8085/active/${userId}`
-        );
-        console.log("from : ", response);
+    AccountService.getAllFromAccounts(userId).then((response) => {
+      console.log(response)
+      if(response.status === 200){
         setFromAccountOptions(response.data);
-      } catch (error) {
+      }
+      else{
         setError("Error fetching account options:");
         console.error("Error fetching account options:", error);
       }
-    };
-    fetchToAccountOptions();
-    fetchFromAccountOptions();
+    })
+
   }, []);
 
   const areAllFieldsFilled = () => {
@@ -63,29 +58,24 @@ function Transaction() {
   };
 
   const initiateTransaction = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8085/transactions/${fromAccount}/${toAccount}`,
-        {
-          amount: amount,
-          transactionType: transactionType,
-          transactionPassword: transactionPassword,
-          remarks: remarks,
-        },
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      console.log(response);
-      setError(false);
-      setSuccessMessage("Transaction Successful");
-      setTimeout(() => {
-        navigate("/dashboard/account-statement");
-      }, 1000);
-    } catch (error) {
-      setError(error.response.data.message);
-      console.log(error.response.data.message);
+    var transactionDetails = {
+      amount: amount,
+      transactionType: transactionType,
+      transactionPassword: transactionPassword,
+      remarks: remarks,
     }
+    TransactionService.initiateTransaction(fromAccount, toAccount, transactionDetails).then((response) => {
+      if(response.status === 200){
+        setError(false);
+        setSuccessMessage("Transaction Successful");
+        setTimeout(() => {
+          navigate("/dashboard/account-statement");
+        }, 1000);
+      }
+      else{
+        setError(response.response.data.message);
+      }
+    })
   };
 
   const handleTransaction = (e) => {
@@ -142,7 +132,7 @@ function Transaction() {
                       {fromAccountOptions.map(
                         (option) =>
                           option.transactionPassword && (
-                            <option key={option.bid} value={option.bid}>
+                            <option key={option.bid} value={option.accountNo}>
                               {option.accountNo}
                             </option>
                           )
@@ -158,7 +148,7 @@ function Transaction() {
                     >
                       <option value="">Select To Account</option>
                       {toAccountOptions.map((option) => (
-                        <option key={option.bid} value={option.bid}>
+                        <option key={option.bid} value={option.accountNo}>
                           {option.accountNo}
                         </option>
                       ))}
