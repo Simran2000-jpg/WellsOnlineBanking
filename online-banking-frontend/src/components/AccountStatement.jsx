@@ -33,7 +33,7 @@ const AccountStatement = () => {
 
   const fetchTransactionsByAccountsByUser = async () => {
     const response = await axios.get(
-      "http://localhost:8085/transactions/accounts/user/" + user
+      "http://localhost:8085/transactions/allAccounts/user/" + user
     );
     if (response.status !== 200) {
       toast.error("Error fetching transactions");
@@ -60,8 +60,9 @@ const AccountStatement = () => {
   const fetchTransactions = async (e) => {
     if (e.target.value === "All From Accounts") {
       return axios
-        .get("http://localhost:8085/transactions/accounts/user/" + user)
+        .get("http://localhost:8085/transactions/allAccounts/user/" + user)
         .then((res) => {
+          console.log(res);
           setTransactions(res.data);
         });
     } else {

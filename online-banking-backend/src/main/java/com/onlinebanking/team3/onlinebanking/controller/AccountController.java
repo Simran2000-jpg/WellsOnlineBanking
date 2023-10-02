@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -119,7 +120,25 @@ public class AccountController {
     public ResponseEntity<List<Transaction>> getUsersFirstAccountTransactions(@PathVariable Long uid) {
         try {
             List<Account> accounts = accountService.getAccountsByUser(uid);
+    
             List<Transaction> transactions =  transactionService.getTransactionsByAccount(accounts.get(0).getAccountNo());
+            return ResponseEntity.ok(transactions);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/transactions/allAccounts/user/{uid}")
+    public ResponseEntity<List<Transaction>> getUsersAllAccountTransactions(@PathVariable Long uid) {
+        try {
+            List<Account> accounts = accountService.getAccountsByUser(uid);
+            List<Transaction> transactions = new ArrayList<Transaction>();
+            for(Account account: accounts) {
+            	transactions.addAll(transactionService.getTransactionsByAccount(account.getAccountNo()));
+            }
+//            List<Transaction> transactions =  transactionService.getTransactionsByAccount(accounts.get(0).getAccountNo());
             return ResponseEntity.ok(transactions);
         }
         catch (Exception e) {
