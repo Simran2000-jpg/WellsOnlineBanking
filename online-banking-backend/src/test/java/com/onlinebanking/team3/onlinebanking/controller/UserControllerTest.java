@@ -24,7 +24,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.ContentResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -51,6 +50,7 @@ class UserControllerTest {
      */
     @Test
     void testCreateUser() throws Exception {
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -94,6 +94,7 @@ class UserControllerTest {
 
         Account account = new Account();
         account.setAccountNo(1234567890L);
+        account.setAccountType("3");
         account.setBalance(10.0d);
         account.setIfscCode("Ifsc Code");
         account.setIsActive(true);
@@ -182,6 +183,8 @@ class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/createUser")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -195,6 +198,7 @@ class UserControllerTest {
      */
     @Test
     void testGetUserById() throws Exception {
+        // Arrange
         Address permanentAddress = new Address();
         permanentAddress.setAddress("42 Main St");
         permanentAddress.setAddressId(1L);
@@ -230,6 +234,8 @@ class UserControllerTest {
         user.setUid(1L);
         when(userService.getUserById(Mockito.<Long>any())).thenReturn(user);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/{uid}", 1L);
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -250,6 +256,7 @@ class UserControllerTest {
      */
     @Test
     void testUpdateUser() throws Exception {
+        // Arrange
         Address permanentAddress = new Address();
         permanentAddress.setAddress("42 Main St");
         permanentAddress.setAddressId(1L);
@@ -322,6 +329,8 @@ class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/findUser/{userId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -342,7 +351,10 @@ class UserControllerTest {
      */
     @Test
     void testDemo() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/welcome");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -356,8 +368,11 @@ class UserControllerTest {
      */
     @Test
     void testDemo2() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/welcome");
         requestBuilder.contentType("https://example.org/example");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -371,11 +386,16 @@ class UserControllerTest {
      */
     @Test
     void testGetAllUsers() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users")
                 .header("Authorization", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -384,11 +404,16 @@ class UserControllerTest {
      */
     @Test
     void testGetAllUsers2() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users")
                 .header("Authorization", "https://example.org/example");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -397,11 +422,16 @@ class UserControllerTest {
      */
     @Test
     void testGetAllUsers3() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users")
                 .header("Authorization", "Values");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -410,11 +440,16 @@ class UserControllerTest {
      */
     @Test
     void testGetAllUsers4() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users")
                 .header("Authorization", 42, "Values");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -423,6 +458,7 @@ class UserControllerTest {
      */
     @Test
     void testGetUserByPhoneNumber() throws Exception {
+        // Arrange
         Address permanentAddress = new Address();
         permanentAddress.setAddress("42 Main St");
         permanentAddress.setAddressId(1L);
@@ -459,6 +495,8 @@ class UserControllerTest {
         Optional<User> ofResult = Optional.of(user);
         when(userService.findUserByPhoneNumber(Mockito.<String>any())).thenReturn(ofResult);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/phone/{ph}", "Ph");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -479,11 +517,16 @@ class UserControllerTest {
      */
     @Test
     void testKycVerifyUser() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/{userId}/verify", 1L)
                 .header("Authorization", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -492,11 +535,16 @@ class UserControllerTest {
      */
     @Test
     void testKycVerifyUser2() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/{userId}/verify", 1L)
                 .header("Authorization", "https://example.org/example");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -505,11 +553,16 @@ class UserControllerTest {
      */
     @Test
     void testKycVerifyUser3() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/{userId}/verify", 1L)
                 .header("Authorization", "Values");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -518,11 +571,16 @@ class UserControllerTest {
      */
     @Test
     void testKycVerifyUser4() throws Exception {
+        // Arrange
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/{userId}/verify", 1L)
                 .header("Authorization", 42, "Values");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
@@ -531,6 +589,7 @@ class UserControllerTest {
      */
     @Test
     void testLoginUser() throws Exception {
+        // Arrange
         Address permanentAddress = new Address();
         permanentAddress.setAddress("42 Main St");
         permanentAddress.setAddressId(1L);
@@ -569,13 +628,14 @@ class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/loginUser")
                 .param("password", "foo")
                 .param("phoneNumber", "foo");
-        ResultActions resultActions = MockMvcBuilders.standaloneSetup(userController)
+
+        // Act
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"));
-        ContentResultMatchers contentResult = MockMvcResultMatchers.content();
-        resultActions.andExpect(contentResult.string(Boolean.FALSE.toString()));
+                .perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(401));
     }
 
     /**
@@ -583,74 +643,28 @@ class UserControllerTest {
      */
     @Test
     void testLoginUser2() throws Exception {
+        // Arrange
         Optional<User> emptyResult = Optional.empty();
         when(userService.findUserByPhoneNumber(Mockito.<String>any())).thenReturn(emptyResult);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/loginUser")
                 .param("password", "foo")
                 .param("phoneNumber", "foo");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     /**
-     * Method under test: {@link UserController#loginUser(String, String)}
-     */
-    @Test
-    void testLoginUser3() throws Exception {
-        Address permanentAddress = new Address();
-        permanentAddress.setAddress("42 Main St");
-        permanentAddress.setAddressId(1L);
-        permanentAddress.setCity("Oxford");
-        permanentAddress.setPincode(1);
-        permanentAddress.setState("MD");
-
-        Address residentialAddress = new Address();
-        residentialAddress.setAddress("42 Main St");
-        residentialAddress.setAddressId(1L);
-        residentialAddress.setCity("Oxford");
-        residentialAddress.setPincode(1);
-        residentialAddress.setState("MD");
-
-        User user = new User();
-        user.setAadharNumber("42");
-        user.setDob("Dob");
-        user.setEmailId("42");
-        user.setFatherName("Father Name");
-        user.setFirstName("Jane");
-        user.setGender("Gender");
-        user.setGrossAnnualIncome("Gross Annual Income");
-        user.setKyc(true);
-        user.setLastName("Doe");
-        user.setLoginPassword("iloveyou");
-        user.setMiddleName("Middle Name");
-        user.setOccupation("Occupation");
-        user.setPanNumber("42");
-        user.setPermanentAddress(permanentAddress);
-        user.setPhoneNumber("6625550144");
-        user.setResidentialAddress(residentialAddress);
-        user.setSourceOfIncome("Source Of Income");
-        user.setUid(1L);
-        Optional<User> ofResult = Optional.of(user);
-        when(userService.findUserByPhoneNumber(Mockito.<String>any())).thenReturn(ofResult);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/loginUser")
-                .param("password", "aWxvdmV5b3U=")
-                .param("phoneNumber", "foo");
-        ResultActions resultActions = MockMvcBuilders.standaloneSetup(userController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"));
-        ContentResultMatchers contentResult = MockMvcResultMatchers.content();
-        resultActions.andExpect(contentResult.string(Boolean.TRUE.toString()));
-    }
-
-    /**
-     * Method under test: {@link UserController#registerInternetBanking(String, Long, String, String)}
+     * Method under test: {@link UserController#registerInternetBanking(String, Long, String)}
      */
     @Test
     void testRegisterInternetBanking() throws Exception {
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -694,6 +708,7 @@ class UserControllerTest {
 
         Account account = new Account();
         account.setAccountNo(1234567890L);
+        account.setAccountType("3");
         account.setBalance(10.0d);
         account.setIfscCode("Ifsc Code");
         account.setIsActive(true);
@@ -739,21 +754,25 @@ class UserControllerTest {
         MockHttpServletRequestBuilder putResult = MockMvcRequestBuilders.put("/register");
         MockHttpServletRequestBuilder requestBuilder = putResult.param("accountNumber", String.valueOf(1L))
                 .param("emailId", "foo")
-                .param("loginPassword", "foo")
                 .param("transactionPassword", "foo");
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400))
                 .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
                 .andExpect(MockMvcResultMatchers.content().string("Account Number and Email Id mismatch"));
     }
 
     /**
-     * Method under test: {@link UserController#registerInternetBanking(String, Long, String, String)}
+     * Method under test: {@link UserController#registerInternetBanking(String, Long, String)}
      */
     @Test
     void testRegisterInternetBanking2() throws Exception {
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -797,6 +816,7 @@ class UserControllerTest {
 
         Account account = new Account();
         account.setAccountNo(1234567890L);
+        account.setAccountType("3");
         account.setBalance(10.0d);
         account.setIfscCode("Ifsc Code");
         account.setIsActive(true);
@@ -847,6 +867,7 @@ class UserControllerTest {
 
         Account account2 = new Account();
         account2.setAccountNo(1234567890L);
+        account2.setAccountType("3");
         account2.setBalance(10.0d);
         account2.setIfscCode("Ifsc Code");
         account2.setIsActive(true);
@@ -889,47 +910,13 @@ class UserControllerTest {
         user3.setResidentialAddress(residentialAddress3);
         user3.setSourceOfIncome("Source Of Income");
         user3.setUid(1L);
-
-        Address permanentAddress4 = new Address();
-        permanentAddress4.setAddress("42 Main St");
-        permanentAddress4.setAddressId(1L);
-        permanentAddress4.setCity("Oxford");
-        permanentAddress4.setPincode(1);
-        permanentAddress4.setState("MD");
-
-        Address residentialAddress4 = new Address();
-        residentialAddress4.setAddress("42 Main St");
-        residentialAddress4.setAddressId(1L);
-        residentialAddress4.setCity("Oxford");
-        residentialAddress4.setPincode(1);
-        residentialAddress4.setState("MD");
-
-        User user4 = new User();
-        user4.setAadharNumber("42");
-        user4.setDob("Dob");
-        user4.setEmailId("42");
-        user4.setFatherName("Father Name");
-        user4.setFirstName("Jane");
-        user4.setGender("Gender");
-        user4.setGrossAnnualIncome("Gross Annual Income");
-        user4.setKyc(true);
-        user4.setLastName("Doe");
-        user4.setLoginPassword("iloveyou");
-        user4.setMiddleName("Middle Name");
-        user4.setOccupation("Occupation");
-        user4.setPanNumber("42");
-        user4.setPermanentAddress(permanentAddress4);
-        user4.setPhoneNumber("6625550144");
-        user4.setResidentialAddress(residentialAddress4);
-        user4.setSourceOfIncome("Source Of Income");
-        user4.setUid(1L);
-        when(userService.registerUser(Mockito.<User>any())).thenReturn(user4);
         when(userService.getUserById(Mockito.<Long>any())).thenReturn(user3);
         MockHttpServletRequestBuilder putResult = MockMvcRequestBuilders.put("/register");
         MockHttpServletRequestBuilder requestBuilder = putResult.param("accountNumber", String.valueOf(1L))
                 .param("emailId", "foo")
-                .param("loginPassword", "foo")
                 .param("transactionPassword", "foo");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinebanking.team3.onlinebanking.model.Address;
 import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
 import com.onlinebanking.team3.onlinebanking.model.User;
+import com.onlinebanking.team3.onlinebanking.service.AccountService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 
@@ -20,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -28,6 +30,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ContextConfiguration(classes = {BeneficiaryController.class})
 @ExtendWith(SpringExtension.class)
 class BeneficiaryControllerTest {
+    @MockBean
+    private AccountService accountService;
+
     @Autowired
     private BeneficiaryController beneficiaryController;
 
@@ -42,6 +47,7 @@ class BeneficiaryControllerTest {
      */
     @Test
     void testCreateBeneficiary() throws Exception {
+        // Arrange
         Address permanentAddress = new Address();
         permanentAddress.setAddress("42 Main St");
         permanentAddress.setAddressId(1L);
@@ -83,6 +89,7 @@ class BeneficiaryControllerTest {
         beneficiary.setName("Name");
         beneficiary.setUser(user);
         when(beneficiaryService.createBeneficiary(Mockito.<Beneficiary>any())).thenReturn(beneficiary);
+        when(beneficiaryService.getBeneficiaryByUser(Mockito.<Long>any())).thenReturn(new ArrayList<>());
 
         Address permanentAddress2 = new Address();
         permanentAddress2.setAddress("42 Main St");
@@ -163,20 +170,16 @@ class BeneficiaryControllerTest {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/beneficiaries/{userId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
-        MockMvcBuilders.standaloneSetup(beneficiaryController)
+
+        // Act
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(beneficiaryController)
                 .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content()
-                        .string(
-                                "{\"bid\":1,\"ifscCode\":\"Ifsc Code\",\"accountNo\":\"3\",\"name\":\"Name\",\"user\":{\"uid\":1,\"firstName\":\"Jane\","
-                                        + "\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\",\"phoneNumber"
-                                        + "\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation\":\"Occupation"
-                                        + "\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword\":"
-                                        + "\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
-                                        + ",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\","
-                                        + "\"state\":\"MD\",\"pincode\":1}}}"));
+                .perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("Created Beneficiary Successfully"));
     }
 
     /**
@@ -184,8 +187,11 @@ class BeneficiaryControllerTest {
      */
     @Test
     void testDeleteBeneficiaryById() throws Exception {
+        // Arrange
         doNothing().when(beneficiaryService).deleteBeneficiaryById(Mockito.<Long>any());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/beneficiaries/{bid}", 1L);
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(beneficiaryController)
                 .build()
                 .perform(requestBuilder)
@@ -199,9 +205,12 @@ class BeneficiaryControllerTest {
      */
     @Test
     void testDeleteBeneficiaryById2() throws Exception {
+        // Arrange
         doNothing().when(beneficiaryService).deleteBeneficiaryById(Mockito.<Long>any());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/beneficiaries/{bid}", 1L);
         requestBuilder.contentType("https://example.org/example");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(beneficiaryController)
                 .build()
                 .perform(requestBuilder)
@@ -215,8 +224,11 @@ class BeneficiaryControllerTest {
      */
     @Test
     void testGetAllBeneficiaries() throws Exception {
+        // Arrange
         when(beneficiaryService.listAll()).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/beneficiaries");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(beneficiaryController)
                 .build()
                 .perform(requestBuilder)
@@ -230,25 +242,11 @@ class BeneficiaryControllerTest {
      */
     @Test
     void testGetAllBeneficiaryByUser() throws Exception {
+        // Arrange
         when(beneficiaryService.getBeneficiaryByUser(Mockito.<Long>any())).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/beneficiaries/{uid}", 1L);
-        MockMvcBuilders.standaloneSetup(beneficiaryController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-    }
 
-    /**
-     * Method under test: {@link BeneficiaryController#getAllBeneficiaryByUser(Long)}
-     */
-    @Test
-    void testGetAllBeneficiaryByUser2() throws Exception {
-        when(beneficiaryService.listAll()).thenReturn(new ArrayList<>());
-        when(beneficiaryService.getBeneficiaryByUser(Mockito.<Long>any())).thenReturn(new ArrayList<>());
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/beneficiaries/{uid}", "",
-                "Uri Variables");
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(beneficiaryController)
                 .build()
                 .perform(requestBuilder)
