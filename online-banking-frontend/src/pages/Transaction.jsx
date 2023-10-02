@@ -27,25 +27,22 @@ function Transaction() {
     });
 
     BeneficiaryService.viewBeneficiary(userId).then((response) => {
-      if(response.status === 200){
+      if (response.status === 200) {
         setToAccountOptions(response.data);
-      }
-      else{
+      } else {
         setError("Error fetching account options:");
       }
-    })
+    });
 
     AccountService.getAllFromAccounts(userId).then((response) => {
-      console.log(response)
-      if(response.status === 200){
+      console.log(response);
+      if (response.status === 200) {
         setFromAccountOptions(response.data);
-      }
-      else{
+      } else {
         setError("Error fetching account options:");
         console.error("Error fetching account options:", error);
       }
-    })
-
+    });
   }, []);
 
   const areAllFieldsFilled = () => {
@@ -63,19 +60,22 @@ function Transaction() {
       transactionType: transactionType,
       transactionPassword: transactionPassword,
       remarks: remarks,
-    }
-    TransactionService.initiateTransaction(fromAccount, toAccount, transactionDetails).then((response) => {
-      if(response.status === 200){
+    };
+    TransactionService.initiateTransaction(
+      fromAccount,
+      toAccount,
+      transactionDetails
+    ).then((response) => {
+      if (response.status === 200) {
         setError(false);
         setSuccessMessage("Transaction Successful");
         setTimeout(() => {
           navigate("/dashboard/account-statement");
         }, 1000);
-      }
-      else{
+      } else {
         setError(response.response.data.message);
       }
-    })
+    });
   };
 
   const handleTransaction = (e) => {
@@ -147,11 +147,14 @@ function Transaction() {
                       onChange={(e) => setToAccount(e.target.value)}
                     >
                       <option value="">Select To Account</option>
-                      {toAccountOptions.map((option) => (
-                        <option key={option.bid} value={option.accountNo}>
-                          {option.accountNo}
-                        </option>
-                      ))}
+                      {toAccountOptions.map(
+                        (option) =>
+                          option.ifscCode === "NX1845" && (
+                            <option key={option.bid} value={option.accountNo}>
+                              {option.accountNo}
+                            </option>
+                          )
+                      )}
                     </select>
                   </div>
                   <div className="form-group">

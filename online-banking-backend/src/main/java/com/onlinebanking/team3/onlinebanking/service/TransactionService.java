@@ -43,19 +43,14 @@ public class TransactionService {
         String encodedPassword = encoder.encodeToString(normalString.getBytes(StandardCharsets.UTF_8) );
         
         if(encodedPassword.equals(fromAccount.getTransactionPassword())) {
-        	//check if it's from same bank
-        	if(toAccount.getIfscCode().equals("NX1845")) { 
-            	// Check if the sender has enough balance
-            	double fromAccountBalance = fromAccount.getBalance();
-    	        if (fromAccountBalance-amount < 0) {
-    	            throw new TransactionException("Insufficient balance in the sender's account.");
-    	        }
-    	        else {
-    	        	
-    	        }
+
+            // Check if the sender has enough balance
+            double fromAccountBalance = fromAccount.getBalance();
+            if (fromAccountBalance-amount < 0) {
+                throw new TransactionException("Insufficient balance in the sender's account.");
             }
             else {
-            	// from different bank not in accounts table but in beneficiary table
+
             }
         	
             // Create a new transaction
