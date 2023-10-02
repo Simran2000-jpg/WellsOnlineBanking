@@ -37,7 +37,7 @@ const DepositModal = ({ show, account, onHide, onDeposit }) => {
             disabled
           />
 
-          <label>Amount to Withdraw:</label>
+          <label>Amount to Deposit:</label>
           <input
             type="number"
             className="form-control"
