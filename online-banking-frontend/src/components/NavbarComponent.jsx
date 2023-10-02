@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../logo.svg";
+// import Logo from "../logo.svg";
+import Logo from "../nexus_bank_logo.png";
 
 import "../styles/NavbarComponent.css";
 import { Context } from "../context/Context";
+import { toast } from "react-toastify";
 
 const NavbarComponent = () => {
   const history = useNavigate();
@@ -35,7 +37,9 @@ const NavbarComponent = () => {
           >
             <Navbar.Brand>
               <img alt="" src={Logo} width="40" height="30" />
-              <span className="nav-link-styling">Nexus Bank</span>
+              <span className="nav-link-styling m-3 text-bold text-dark">
+                Nexus Bank
+              </span>
             </Navbar.Brand>
           </NavLink>
           <Nav className="justify-content-end">

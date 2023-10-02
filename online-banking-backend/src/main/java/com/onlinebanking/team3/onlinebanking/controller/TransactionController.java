@@ -46,12 +46,7 @@ public class TransactionController {
 //        double amount = transaction.getAmount();
 
         return transactionService.transferFunds(fromId,toId,transactionType,amount,remarks,transactionPassword);
-
-
-
     }
-
-
 
     @GetMapping("transactions/{transactionId}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable Long transactionId) {
@@ -72,7 +67,6 @@ public class TransactionController {
             return ResponseEntity.notFound().build();
         }
     }
-
 
     @GetMapping("/transactions/all")
     public ResponseEntity<List<Transaction>> getAllTransactions() {

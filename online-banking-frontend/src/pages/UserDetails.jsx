@@ -252,6 +252,7 @@ const UserDetails = () => {
                               setActiveAccount(account);
                               setShowWithdrawModal(true);
                             }}
+                            disabled={account.isActive ? false : true}
                           >
                             Withdraw Money
                           </button>{" "}
@@ -262,6 +263,7 @@ const UserDetails = () => {
                               setActiveAccount(account);
                               setShowDepositModal(true);
                             }}
+                            disabled={account.isActive ? false : true}
                           >
                             Deposit Money
                           </button>

@@ -1,7 +1,94 @@
-.landing-page-img {
+/* .landing-page-img {
     width: 100%;
     min-height: 95vh;
     background-image: url(/src/images/landing_page_image.jpg);
     background-size: contain;
     background-repeat: round;
+} */
+/* Home.css */
+
+.home-container {
+  text-align: center;
+  background-color: #f7f7f7;
+  padding-bottom: 40px;
 }
+
+.header {
+  background-image: url(/src/images/landing_page_image.jpg);
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 150px 0;
+}
+
+.header-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.feature {
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+}
+
+.feature i {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #00adf2;
+}
+
+.feature h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.cta {
+  background-color: #00adf2;
+  color: #fff;
+  padding: 60px 0;
+}
+
+.cta h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.cta p {
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Additional styles can be added as needed */

@@ -233,19 +233,17 @@ const OpenAccount = () => {
       return;
     }
     setError("");
-    generatePassword();
-    setFormFieldValues({
-      ...formFieldValues,
-      loginPassword: generatedPassword,
-    });
-
-    console.log(formFieldValues);
+    let tempPassword = generatePassword();
+    let formFieldValuesCopy = formFieldValues;
+    formFieldValuesCopy.loginPassword = tempPassword;
+    setFormFieldValues(formFieldValuesCopy);
 
     axios
       .post("http://localhost:8085/createUser", {
-        ...formFieldValues,
+        ...formFieldValuesCopy,
       })
       .then((res, err) => {
+        console.log(res);
         setStepNumber(4);
         setSuccess(true);
         return;
@@ -271,6 +269,7 @@ const OpenAccount = () => {
     }
 
     setGeneratedPassword(newPassword);
+    return newPassword;
   };
 
   const nextOrSubmitButtonHandler = () => {

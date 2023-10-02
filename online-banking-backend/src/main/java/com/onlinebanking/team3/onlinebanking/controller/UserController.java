@@ -22,6 +22,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,6 +52,8 @@ public class UserController {
     public ResponseEntity<String> createUser(@Validated @RequestBody User user) {
         try {
 
+            System.out.println(user.toString());
+
             Address residentialAddress = user.getResidentialAddress();
             Address permanentAddress = user.getPermanentAddress();
 
@@ -76,31 +80,37 @@ public class UserController {
     }
 
     @PostMapping(value = "/loginUser")
-    public Boolean loginUser(@RequestParam String phoneNumber, @RequestParam String password)
-            throws ResourceNotFoundException {
-        Boolean isLoggedIn = false;
+    public ResponseEntity<User> loginUser(@RequestParam String phoneNumber, @RequestParam String password) {
 
-        User u = uService.findUserByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("No User Enrolled With This Number ::"));
+        try {
+            User u = uService.findUserByPhoneNumber(phoneNumber)
+                    .orElseThrow(() -> new ResourceNotFoundException("No User Enrolled With This Number ::"));
 
-        if (password.equals(u.getLoginPassword()))
-            isLoggedIn = true;
+            Base64.Encoder encoder = Base64.getEncoder();
+            String encodedString = encoder.encodeToString( // encrypt password in database field
+                    password.getBytes(StandardCharsets.UTF_8));
+            if (encodedString.equals(u.getLoginPassword())) {
+                return ResponseEntity.ok(u);
+            }
 
-        return isLoggedIn;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }  catch (ResourceNotFoundException rfe) {
+            return ResponseEntity.notFound().build();
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
+
+
 
     @PutMapping("/register")
     public ResponseEntity<String> registerInternetBanking(@RequestParam String emailId,
-            @RequestParam Long accountNumber, @RequestParam String loginPassword,
-            @RequestParam String transactionPassword) {
+            @RequestParam Long accountNumber, @RequestParam String transactionPassword) {
         try {
             Account account = accountService.getAccountById(accountNumber);
             User user = uService.getUserById(account.getUser().getUid());
 
             if (account.getUser().getEmailId().equals(emailId)) {
-                user.setLoginPassword(loginPassword);
-                User updatedUser = uService.registerUser(user);
-
                 account.setTransactionPassword(transactionPassword);
                 Account updatedAccount = accountService.createAccount(account);
                 return ResponseEntity.ok("Registration Successful");
@@ -123,7 +133,9 @@ public class UserController {
 
     @GetMapping("/users/phone/{ph}")
     public Optional<User> getUserByPhoneNumber(@PathVariable String ph) {
-        return uService.findUserByPhoneNumber(ph);
+        Optional<User> user =  uService.findUserByPhoneNumber(ph);
+        System.out.println("User = " + user.get());
+        return user;
     }
 
     @GetMapping("/users")

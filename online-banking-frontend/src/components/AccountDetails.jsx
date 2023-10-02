@@ -17,6 +17,7 @@ const AccountDetails = () => {
     accountNo: 0,
     balance: 0,
     ifscCode: "",
+    transactionPassword: null,
     isActive: false,
   });
   const [userDetails, setUserDetails] = useState({
@@ -82,7 +83,6 @@ const AccountDetails = () => {
         kyc: response.kyc,
       });
       AccountService.getAccountDetails(userId).then((response) => {
-        console.log(response);
         if (response.length == 0) {
           console.log("No data found");
           return;

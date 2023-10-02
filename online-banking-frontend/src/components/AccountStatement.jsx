@@ -3,9 +3,13 @@ import { Button, Form, Table } from "react-bootstrap";
 import moment from "moment";
 import "../styles/AccountStatement.css";
 import axios from "axios";
+import { toast } from "react-toastify";
+import UserService from "../services/UserService";
 
 const AccountStatement = () => {
   const [user, setUser] = useState(null);
+
+  const [kyc, setKyc] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
@@ -18,6 +22,9 @@ const AccountStatement = () => {
   useEffect(() => {
     setUser(localStorage.getItem("userId"));
     if (user) {
+      UserService.getUserDetails(user).then((response) => {
+        setKyc(response.kyc);
+      });
       fetchTransactionsByAccountsByUser();
     }
   }, [user]);
@@ -26,6 +33,9 @@ const AccountStatement = () => {
     const response = await axios.get(
       "http://localhost:8085/transactions/accounts/user/" + user
     );
+    if (response.status !== 200) {
+      toast.error("Error fetching transactions");
+    }
     setFilteredTransactions(response.data);
     setFilteredToAccountTransactions(response.data);
     setTransactions(response.data);
@@ -35,6 +45,10 @@ const AccountStatement = () => {
     const response = await axios.get(
       " http://localhost:8085/accounts/user/" + user
     );
+
+    if (response.status !== 200) {
+      toast.error("Error fetching accounts");
+    }
     setAccounts(response.data);
   };
 
@@ -110,100 +124,113 @@ const AccountStatement = () => {
 
   return (
     <div className="account-statement-container">
-      <h2 className="account-statement-title">Account Statement</h2>
+      {kyc ? (
+        <h2 className="account-statement-title">Account Statement</h2>
+      ) : (
+        <h2 className="account-statement-title" style={{ color: "red" }}>
+          Contact admin for KYC verifiation
+        </h2>
+      )}
 
       {/* Account selection */}
-      <Form>
-        <Form.Group>
-          <Form.Label>From Account:</Form.Label>
-          <Form.Control
-            as="select"
-            onClick={fetchAccounts}
-            onChange={fetchTransactions}
-          >
-            <option value="All From Accounts">All From Accounts</option>
-            {accounts.length > 0 &&
-              accounts.map((account, index) => (
-                <option key={index} value={account.accountNo}>
-                  {account.accountNo}
-                </option>
-              ))}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>To Account:</Form.Label>
-          <Form.Control
-            as="select"
-            onClick={fetchBeneficiaries}
-            onChange={filterToAccount}
-          >
-            <option value="All To Accounts">All To Accounts</option>
-            {beneficiaries.length > 0 &&
-              beneficiaries.map((beneficiary, index) => (
-                <option key={index} value={beneficiary.accountNo}>
-                  {beneficiary.accountNo}
-                </option>
-              ))}
-          </Form.Control>
-        </Form.Group>
-      </Form>
-
-      {/* Filter and sort options */}
-      <Form>
-        <div style={{ display: "inline-flex", width: "100%" }}>
-          <div style={{ marginLeft: "0px", width: "50%" }}>
+      {kyc && (
+        <>
+          <Form>
             <Form.Group>
-              <Form.Label>Start Date:</Form.Label>
+              <Form.Label>From Account:</Form.Label>
               <Form.Control
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
+                as="select"
+                onClick={fetchAccounts}
+                onChange={fetchTransactions}
+              >
+                <option value="All From Accounts">All From Accounts</option>
+                {accounts.length > 0 &&
+                  accounts.map(
+                    (account, index) =>
+                      account.transactionPassword && (
+                        <option key={index} value={account.accountNo}>
+                          {account.accountNo}
+                        </option>
+                      )
+                  )}
+              </Form.Control>
             </Form.Group>
-          </div>
-          <div style={{ width: "50%" }}>
             <Form.Group>
-              <Form.Label>End Date:</Form.Label>
+              <Form.Label>To Account:</Form.Label>
               <Form.Control
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+                as="select"
+                onClick={fetchBeneficiaries}
+                onChange={filterToAccount}
+              >
+                <option value="All To Accounts">All To Accounts</option>
+                {beneficiaries.length > 0 &&
+                  beneficiaries.map((beneficiary, index) => (
+                    <option key={index} value={beneficiary.accountNo}>
+                      {beneficiary.accountNo}
+                    </option>
+                  ))}
+              </Form.Control>
             </Form.Group>
-          </div>
-        </div>
-        <Button
-          variant="primary"
-          onClick={filterTransactions}
-          style={{ marginTop: "10px" }}
-        >
-          Submit
-        </Button>
-      </Form>
+          </Form>
 
-      {/* Transaction table */}
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>From Account</th>
-            <th>To Account</th>
-            <th>Description</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredTransactions.map((transaction, index) => (
-            <tr key={index}>
-              <td>{transaction.transactionDateTime}</td>
-              <td>{transaction.fromAccount.accountNo}</td>
-              <td>{transaction.toAccount.accountNo}</td>
-              <td>{transaction.remarks}</td>
-              <td>{transaction.amount}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+          {/* Filter and sort options */}
+          <Form>
+            <div style={{ display: "inline-flex", width: "100%" }}>
+              <div style={{ marginLeft: "0px", width: "50%" }}>
+                <Form.Group>
+                  <Form.Label>Start Date:</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </Form.Group>
+              </div>
+              <div style={{ width: "50%" }}>
+                <Form.Group>
+                  <Form.Label>End Date:</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </Form.Group>
+              </div>
+            </div>
+            <Button
+              variant="primary"
+              onClick={filterTransactions}
+              style={{ marginTop: "10px" }}
+            >
+              Submit
+            </Button>
+          </Form>
+
+          {/* Transaction table */}
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>From Account</th>
+                <th>To Account</th>
+                <th>Description</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTransactions.map((transaction, index) => (
+                <tr key={index}>
+                  <td>{transaction.transactionDateTime}</td>
+                  <td>{transaction.fromAccount.accountNo}</td>
+                  <td>{transaction.toAccount.accountNo}</td>
+                  <td>{transaction.remarks}</td>
+                  <td>{transaction.amount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </>
+      )}
     </div>
   );
 };

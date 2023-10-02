@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Register.css";
 import { Context } from "../context/Context";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const history = useNavigate();
@@ -29,6 +30,7 @@ const Login = () => {
           type: "LOGIN_SUCCESS",
           payload: "admin",
         });
+        toast("🧑🏻‍💻Logged in as Admin");
         return history("/admin");
       }
 
@@ -40,18 +42,35 @@ const Login = () => {
         }
       );
 
-      const userResponse = await axios.get(
-        "http://localhost:8085/users/phone/" + phoneNumber
-      );
+      console.log(response);
 
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: userResponse.data.uid,
-      });
+      if (response.status === 200) {
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: response.data.uid,
+        });
+        toast.success("Logged in successfully");
 
-      history("/");
+        if (response.data.kyc === false) {
+          toast.info(
+            "KYC is still pending, contact admin for verification as you won't be able to use all the functionality"
+          );
+        }
+        history("/");
+      } else {
+        setError(true);
+        dispatch({
+          type: "LOGIN_FAILURE",
+        });
+      }
     } catch (err) {
       setError(true);
+      console.error(err);
+      if (err.response.status === 404) {
+        toast.error("User not found");
+      } else if (err.response.status === 401) {
+        toast("🥷🏻 Invalid credentials");
+      }
       dispatch({
         type: "LOGIN_FAILURE",
       });
