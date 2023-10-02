@@ -107,7 +107,7 @@ public class UserController {
             String encodedString = encoder.encodeToString( // encrypt password in database field
                     oldLoginPassword.getBytes(StandardCharsets.UTF_8));
             if (encodedString.equals(u.getLoginPassword())) {
-                u.setLoginPassword(newLoginPassword);
+                u.setLoginPasswordWithoutEncoding(newLoginPassword);
                 User updatedUser = uService.updateUser(uid, u);
                 return ResponseEntity.ok(u);
             } else {

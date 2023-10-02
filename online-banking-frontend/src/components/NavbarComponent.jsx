@@ -14,10 +14,10 @@ const NavbarComponent = () => {
   const { userId, dispatch } = useContext(Context);
 
   const handleLogout = () => {
-    window.location.href = "/login";
     dispatch({
       type: "LOGOUT",
     });
+    window.location.href = "/";
   };
 
   return (

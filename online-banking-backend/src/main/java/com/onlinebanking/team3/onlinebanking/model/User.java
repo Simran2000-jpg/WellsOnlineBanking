@@ -220,6 +220,10 @@ public class User {
         this.loginPassword = encodedString;
     }
 
+    public void setLoginPasswordWithoutEncoding(String loginPassword) {
+        this.loginPassword = loginPassword;
+    }
+
     public Boolean getKyc() {
         return kyc;
     }

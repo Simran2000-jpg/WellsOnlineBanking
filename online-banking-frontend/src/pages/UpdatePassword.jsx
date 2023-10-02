@@ -21,7 +21,7 @@ const UpdatePassword = () => {
     return passwordPattern.test(password);
   };
 
-  const handleLogin = async (e) => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
     if (loginPassword !== confirmLoginPassword) {
       setError("Login password and confirm login password do not match.");
@@ -109,9 +109,9 @@ const UpdatePassword = () => {
                   <button
                     className="my-2 mx-auto btn btn-success"
                     type="submit"
-                    onClick={handleLogin}
+                    onClick={handleUpdatePassword}
                   >
-                    Login
+                    Update Login Password
                   </button>
                 </div>
               </form>

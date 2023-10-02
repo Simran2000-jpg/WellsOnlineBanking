@@ -31,39 +31,49 @@ function App() {
         <NavbarComponent />
         <div className="App pt-5">
           <Routes>
-            {userId === null ? (
-              <>
-                <Route path="/openaccount" element={<OpenAccount />}></Route>
-                <Route path="/login" element={<Login />}></Route>
-                <Route path="/login/newUser" element={<Login />}></Route>
-              </>
-            ) : (
-              <Route path="/" element={<Home />}></Route>
-            )}
-            {userId === "admin" && (
-              <>
-                <Route path="/admin" element={<Admin />}></Route>
-                <Route path="/user/:id" element={<UserDetails />}></Route>
-              </>
-            )}
+            <Route
+              path="/openaccount"
+              element={userId === null ? <OpenAccount /> : <Home />}
+            ></Route>
+            <Route
+              path="/login"
+              element={userId === null ? <Login /> : <Home />}
+            ></Route>
+            <Route
+              path="/login/newUser"
+              element={userId === null ? <Login /> : <Home />}
+            ></Route>
 
-            {userId !== null ? (
-              <>
-              <Route path="/update-password" element={<UpdatePassword />}></Route>
-                <Route path="/dashboard" element={<UserDasboard />}></Route>
-                <Route
-                  path="/dashboard/:xyz"
-                  element={<UserDasboard />}
-                ></Route>
-                <Route
-                  path="/dashboard/:xyz/:abc"
-                  element={<UserDasboard />}
-                ></Route>
-                <Route path="/create-account" element={<AddAccount />}></Route>
-              </>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
-            )}
+            <Route
+              path="/admin"
+              element={userId === "admin" ? <Admin /> : <Home />}
+            ></Route>
+            <Route
+              path="/user/:id"
+              element={userId === "admin" ? <UserDetails /> : <Home />}
+            ></Route>
+
+            <Route
+              path="/update-password"
+              element={userId !== null ? <UpdatePassword /> : <Login />}
+            ></Route>
+            <Route
+              path="/dashboard"
+              element={userId !== null ? <UserDasboard /> : <Login />}
+            ></Route>
+            <Route
+              path="/dashboard/:xyz"
+              element={userId !== null ? <UserDasboard /> : <Login />}
+            ></Route>
+            <Route
+              path="/dashboard/:xyz/:abc"
+              element={userId !== null ? <UserDasboard /> : <Login />}
+            ></Route>
+            <Route
+              path="/create-account"
+              element={userId !== null ? <AddAccount /> : <Login />}
+            ></Route>
+
             <Route path="/" element={<Home />}></Route>
             <Route path="/dashboard/internet-banking" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
