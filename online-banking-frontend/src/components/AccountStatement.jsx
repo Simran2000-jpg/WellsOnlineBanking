@@ -11,6 +11,7 @@ const AccountStatement = () => {
 
   const [kyc, setKyc] = useState(false);
   const [accounts, setAccounts] = useState([]);
+  const [fromAccounts, setFromAccounts] = useState([]);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -26,6 +27,7 @@ const AccountStatement = () => {
         setKyc(response.kyc);
       });
       fetchTransactionsByAccountsByUser();
+      fetchAccounts();
     }
   }, [user]);
 
@@ -50,6 +52,9 @@ const AccountStatement = () => {
       toast.error("Error fetching accounts");
     }
     setAccounts(response.data);
+    response.data.map((account) => {
+      setFromAccounts((fromAccounts) => [...fromAccounts, account.accountNo]);
+    });
   };
 
   const fetchTransactions = async (e) => {
@@ -213,6 +218,7 @@ const AccountStatement = () => {
                 <th>Date</th>
                 <th>From Account</th>
                 <th>To Account</th>
+                <th>Transaction Type</th>
                 <th>Description</th>
                 <th>Amount</th>
               </tr>
@@ -220,11 +226,37 @@ const AccountStatement = () => {
             <tbody>
               {filteredTransactions.map((transaction, index) => (
                 <tr key={index}>
-                  <td>{transaction.transactionDateTime}</td>
-                  <td>{transaction.fromAccount.accountNo}</td>
-                  <td>{transaction.toAccount.accountNo}</td>
-                  <td>{transaction.remarks}</td>
-                  <td>{transaction.amount}</td>
+                  <td style={{color: "gray"}}>{transaction.transactionDateTime}</td>
+                  <td>
+                    {transaction.transactionType === "Cash Deposit" ? (
+                      <div style={{ color: "blue" }}>Nexus Bank</div>
+                    ) : (
+                      transaction.fromAccount.accountNo
+                    )}
+                  </td>
+                  <td>
+                    {transaction.transactionType === "Cash Withdrawal" ? (
+                      <div style={{ color: "blue" }}>Nexus Bank</div>
+                    ) : (
+                      transaction.toAccount.accountNo
+                    )}
+                  </td>
+                  <td style={{color: "gray"}}>{transaction.transactionType}</td>
+                  <td style={{color: "purple"}}>{transaction.remarks}</td>
+                  <td>
+                    <span
+                      style={{
+                        color:
+                          fromAccounts.includes(
+                            transaction.toAccount.accountNo
+                          ) && transaction.transactionType !== "Cash Withdrawal"
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      {transaction.amount}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
