@@ -90,13 +90,4 @@ public class UserService {
         }
     }
     
-    public boolean createPasswordResetToken(String email, String token) {
-        // Implement logic to store the token for the user (e.g., in a database).
-        return true; // Return true if token creation is successful.
-    }
-
-    public boolean isResetTokenValid(String email, String token) {
-        // Implement logic to validate the token (e.g., check if it exists in the database).
-        return true; // Return true if the token is valid.
-    }
 }

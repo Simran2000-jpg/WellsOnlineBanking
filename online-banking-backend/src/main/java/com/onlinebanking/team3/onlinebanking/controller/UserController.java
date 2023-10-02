@@ -11,14 +11,10 @@ import com.onlinebanking.team3.onlinebanking.service.AddressService;
 import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
 import com.onlinebanking.team3.onlinebanking.service.UserService;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
