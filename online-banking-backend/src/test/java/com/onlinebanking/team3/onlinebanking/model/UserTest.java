@@ -50,6 +50,7 @@ class UserTest {
      */
     @Test
     void testConstructor() {
+        // Arrange and Act
         User actualUser = new User();
         actualUser.setAadharNumber("42");
         actualUser.setDob("Dob");
@@ -95,6 +96,8 @@ class UserTest {
         String actualPhoneNumber = actualUser.getPhoneNumber();
         Address actualResidentialAddress = actualUser.getResidentialAddress();
         String actualSourceOfIncome = actualUser.getSourceOfIncome();
+
+        // Assert that nothing has changed
         assertEquals("42", actualAadharNumber);
         assertEquals("Dob", actualDob);
         assertEquals("42", actualEmailId);
@@ -118,6 +121,7 @@ class UserTest {
      */
     @Test
     void testConstructor2() {
+        // Arrange
         Address residentialAddress = new Address();
         residentialAddress.setAddress("42 Main St");
         residentialAddress.setAddressId(1L);
@@ -131,10 +135,13 @@ class UserTest {
         permanentAddress.setCity("Oxford");
         permanentAddress.setPincode(1);
         permanentAddress.setState("MD");
+
+        // Act
         User actualUser = new User(1L, "Jane", "Middle Name", "Doe", "6625550144", "42", "42", "42", "Dob", "Occupation",
                 "Source Of Income", "Gross Annual Income", "Gender", "iloveyou", true, "Father Name", residentialAddress,
                 permanentAddress);
 
+        // Assert
         assertEquals("42", actualUser.getAadharNumber());
         assertEquals(1L, actualUser.getUid());
         assertEquals("Source Of Income", actualUser.getSourceOfIncome());
@@ -160,8 +167,13 @@ class UserTest {
      */
     @Test
     void testSetLoginPassword() {
+        // Arrange
         User user = new User();
+
+        // Act
         user.setLoginPassword("iloveyou");
+
+        // Assert
         assertEquals("aWxvdmV5b3U=", user.getLoginPassword());
     }
 
@@ -170,6 +182,7 @@ class UserTest {
      */
     @Test
     void testGetKyc() {
+        // Arrange, Act and Assert
         assertFalse((new User()).getKyc());
     }
 
@@ -178,6 +191,7 @@ class UserTest {
      */
     @Test
     void testGetKyc2() {
+        // Arrange
         Address permanentAddress = new Address();
         permanentAddress.setAddress("42 Main St");
         permanentAddress.setAddressId(1L);
@@ -211,6 +225,8 @@ class UserTest {
         user.setResidentialAddress(residentialAddress);
         user.setSourceOfIncome("Source Of Income");
         user.setUid(1L);
+
+        // Act and Assert
         assertTrue(user.getKyc());
     }
 
@@ -219,8 +235,13 @@ class UserTest {
      */
     @Test
     void testSetKyc() {
+        // Arrange
         User user = new User();
+
+        // Act
         user.setKyc(true);
+
+        // Assert
         assertTrue(user.getKyc());
     }
 }

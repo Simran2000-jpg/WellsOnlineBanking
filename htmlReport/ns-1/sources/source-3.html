@@ -1,0 +1,206 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TransactionController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.onlinebanking.team3.onlinebanking.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: TransactionController (com.onlinebanking.team3.onlinebanking.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TransactionController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85%
+  </span>
+  <span class="absValue">
+    (17/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.onlinebanking.team3.onlinebanking.controller;
+&nbsp;
+&nbsp;import com.onlinebanking.team3.onlinebanking.exception.TransactionNotFoundException;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Account;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Beneficiary;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Transaction;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.AccountService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.TransactionService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@CrossOrigin(origins=&quot;http://localhost:3000&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class TransactionController {</b>
+&nbsp;    @Autowired
+&nbsp;    TransactionService transactionService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    AccountService accountService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    BeneficiaryService beneficiaryService;
+&nbsp;
+&nbsp;    @PostMapping(&quot;/transactions/{fromId}/{toId}&quot;)
+&nbsp;    public Transaction createTransaction(@PathVariable Long fromId,
+&nbsp;                                                         @PathVariable Long toId,
+&nbsp;                                                         @RequestParam String transactionType,
+&nbsp;                                                         @RequestParam double amount,
+&nbsp;                                                         @RequestParam String remarks,
+&nbsp;                                                         @RequestParam String transactionPassword
+&nbsp;                                                         ) {
+&nbsp;//        Account fromAccount = accountService.getAccountById(fromId);
+&nbsp;//        Account toAccount = accountService.getAccountById(toId);
+&nbsp;//
+&nbsp;//        transaction.setToAccount(toAccount);
+&nbsp;//        transaction.setFromAccount(fromAccount);
+&nbsp;//
+&nbsp;//        Transaction t = transactionService.createTransaction(transaction);
+&nbsp;//
+&nbsp;//        return ResponseEntity.ok(t);
+&nbsp;//        double amount = transaction.getAmount();
+&nbsp;
+<b class="fc">&nbsp;        return transactionService.transferFunds(fromId,toId,transactionType,amount,remarks,transactionPassword);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;transactions/{transactionId}&quot;)
+&nbsp;    public ResponseEntity&lt;Transaction&gt; getTransactionById(@PathVariable Long transactionId) {
+<b class="fc">&nbsp;        Transaction transaction = transactionService.getTransactionById(transactionId);</b>
+<b class="fc">&nbsp;        if (transaction != null) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(transaction);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;//
+&nbsp;    @GetMapping(&quot;/transactions/accounts/{accountNo}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Transaction&gt;&gt; getTransactionsByAccount(@PathVariable Long accountNo) {
+<b class="fc">&nbsp;        List&lt;Transaction&gt; transactions = transactionService.getTransactionsByAccount(accountNo);</b>
+<b class="fc">&nbsp;        if (!transactions.isEmpty()) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(transactions);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/transactions/all&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Transaction&gt;&gt; getAllTransactions() {
+<b class="fc">&nbsp;        List&lt;Transaction&gt; transactions = transactionService.getAllTransactions();</b>
+<b class="fc">&nbsp;        if (!transactions.isEmpty()) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(transactions);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //update
+&nbsp;    @PutMapping(&quot;/{transactionId}&quot;)
+&nbsp;    public ResponseEntity&lt;Transaction&gt; updateTransaction(
+&nbsp;            @PathVariable Long transactionId,
+&nbsp;            @RequestBody Transaction updatedTransaction
+&nbsp;    ) {
+<b class="nc">&nbsp;        Transaction updated = transactionService.updateTransaction(transactionId, updatedTransaction);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(updated);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //delete
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/{transactionId}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; deleteTransaction(@PathVariable Long transactionId) {
+&nbsp;        try {
+<b class="fc">&nbsp;            transactionService.deleteTransaction(transactionId);</b>
+<b class="fc">&nbsp;            return ResponseEntity.noContent().build();</b>
+<b class="fc">&nbsp;        } catch (TransactionNotFoundException e) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-02 13:33</div>
+</div>
+</body>
+</html>

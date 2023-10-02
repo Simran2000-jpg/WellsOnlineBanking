@@ -11,8 +11,10 @@ class BeneficiaryTest {
      */
     @Test
     void testConstructor() {
+        // Arrange and Act
         Beneficiary actualBeneficiary = new Beneficiary("Ifsc Code", "3", "Name");
 
+        // Assert
         assertEquals("3", actualBeneficiary.getAccountNo());
         assertEquals("Name", actualBeneficiary.getName());
         assertEquals("Ifsc Code", actualBeneficiary.getIfscCode());
@@ -32,6 +34,7 @@ class BeneficiaryTest {
         //       at com.onlinebanking.team3.onlinebanking.model.Beneficiary.<init>(Beneficiary.java:34)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange and Act
         new Beneficiary("foo", null, null);
 
     }
@@ -50,6 +53,7 @@ class BeneficiaryTest {
         //       at com.onlinebanking.team3.onlinebanking.model.Beneficiary.<init>(Beneficiary.java:34)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange and Act
         new Beneficiary("foo", "foo", null);
 
     }

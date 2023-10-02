@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 
 class AccountTest {
     /**
-     * Method under test: {@link Account#Account(String, Address, double, Boolean, User)}
+     * Method under test: {@link Account#Account(String, String, Address, double, Boolean, User)}
      */
     @Test
     void testConstructor() {
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -53,17 +54,21 @@ class AccountTest {
         user.setResidentialAddress(residentialAddress);
         user.setSourceOfIncome("Source Of Income");
         user.setUid(1L);
-        Account actualAccount = new Account("accountType", "Ifsc Code", mailingAddress, 10.0d, true, user);
 
+        // Act
+        Account actualAccount = new Account("3", "Ifsc Code", mailingAddress, 10.0d, true, user);
+
+        // Assert
         assertSame(user, actualAccount.getUser());
-        assertEquals(10.0d, actualAccount.getBalance());
-        assertTrue(actualAccount.getIsActive());
-        assertSame(mailingAddress, actualAccount.getMailingAddress());
+        assertEquals("3", actualAccount.getAccountType());
         assertEquals("Ifsc Code", actualAccount.getIfscCode());
+        assertTrue(actualAccount.getIsActive());
+        assertEquals(10.0d, actualAccount.getBalance());
+        assertSame(mailingAddress, actualAccount.getMailingAddress());
     }
 
     /**
-     * Method under test: {@link Account#Account(String, Address, double, Boolean, User)}
+     * Method under test: {@link Account#Account(String, String, Address, double, Boolean, User)}
      */
     @Test
     @Disabled("TODO: Complete this test")
@@ -73,9 +78,10 @@ class AccountTest {
         //   Diffblue Cover tried to run the arrange/act section, but the method under
         //   test threw
         //   java.lang.NullPointerException: ifscCode is marked non-null but is null
-        //       at com.onlinebanking.team3.onlinebanking.model.Account.<init>(Account.java:44)
+        //       at com.onlinebanking.team3.onlinebanking.model.Account.<init>(Account.java:46)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -116,7 +122,9 @@ class AccountTest {
         user.setResidentialAddress(residentialAddress);
         user.setSourceOfIncome("Source Of Income");
         user.setUid(1L);
-        new Account(null, null, mailingAddress, 10.0d, true, user);
+
+        // Act
+        new Account("foo", null, mailingAddress, 10.0d, true, user);
 
     }
 
@@ -125,8 +133,13 @@ class AccountTest {
      */
     @Test
     void testSetTransactionPassword() {
+        // Arrange
         Account account = new Account();
+
+        // Act
         account.setTransactionPassword("iloveyou");
+
+        // Assert
         assertEquals("aWxvdmV5b3U=", account.getTransactionPassword());
     }
 }

@@ -1,0 +1,308 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > AccountController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.onlinebanking.team3.onlinebanking.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: AccountController (com.onlinebanking.team3.onlinebanking.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AccountController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (48/80)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.onlinebanking.team3.onlinebanking.controller;
+&nbsp;
+&nbsp;import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
+&nbsp;import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
+&nbsp;import com.onlinebanking.team3.onlinebanking.exception.UserNotFoundException;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Account;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Address;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Transaction;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.User;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.AccountService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.AddressService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.TransactionService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.UserService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.validation.annotation.Validated;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@CrossOrigin(&quot;*&quot;)
+<b class="fc">&nbsp;public class AccountController {</b>
+&nbsp;    @Autowired
+&nbsp;    private AccountService accountService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserService userService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private AddressService addressService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private TransactionService transactionService;
+&nbsp;
+&nbsp;    @PutMapping(&quot;/addNewAccount/{userId}&quot;)
+&nbsp;    public ResponseEntity&lt;Account&gt; addNewAccount(@PathVariable Long userId) {
+&nbsp;
+&nbsp;        try{
+<b class="fc">&nbsp;            Account newAccount = accountService.addNewAccount(userId);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status((HttpStatus.CREATED)).body(newAccount);</b>
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/createAnotherNewAccount/{userId}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; createAnotherNewAccount(@RequestBody Address address, @RequestParam String accountType, @RequestParam String transactionPassword, @PathVariable Long userId) {
+&nbsp;        try{
+<b class="fc">&nbsp;            Address newAddress = new Address(address.getAddress(), address.getCity(), address.getState(), address.getPincode());</b>
+<b class="fc">&nbsp;            Address registeredAddress = addressService.saveAddress(address);</b>
+&nbsp;
+<b class="fc">&nbsp;            User user = userService.getUserById(userId);</b>
+<b class="fc">&nbsp;            Account newAccount = new Account(accountType, &quot;NX1845&quot;, registeredAddress, 1000, true, user);</b>
+<b class="fc">&nbsp;            newAccount.setTransactionPassword(transactionPassword);</b>
+<b class="fc">&nbsp;            Account registeredAccount = accountService.createAccount(newAccount);</b>
+&nbsp;
+<b class="fc">&nbsp;            if (registeredAccount != null)</b>
+<b class="fc">&nbsp;                return ResponseEntity.ok(&quot;Account creation Successful&quot;);</b>
+&nbsp;            else
+<b class="nc">&nbsp;                return ResponseEntity.badRequest().body(&quot;Account creation Failed&quot;);</b>
+<b class="nc">&nbsp;        }catch (Exception e) {</b>
+&nbsp;            // TODO: handle exception
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</b>
+<b class="nc">&nbsp;                    .body(&quot;An Error Occurred: &quot; + e.getMessage().substring(0, 100));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/accounts/{accountNo}&quot;)
+&nbsp;    public ResponseEntity&lt;Account&gt; getParticularAccount(@PathVariable Long accountNo) {
+&nbsp;        try {
+<b class="fc">&nbsp;            Account account = accountService.getAccountById(accountNo);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(account);</b>
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/accounts/user/{uid}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Account&gt;&gt; getUserAccounts(@PathVariable Long uid) {
+&nbsp;        try {
+<b class="fc">&nbsp;            List&lt;Account&gt; accounts = accountService.getAccountsByUser(uid);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(accounts);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (Exception e) {</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/transactions/accounts/user/{uid}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Transaction&gt;&gt; getUsersFirstAccountTransactions(@PathVariable Long uid) {
+&nbsp;        try {
+<b class="fc">&nbsp;            List&lt;Account&gt; accounts = accountService.getAccountsByUser(uid);</b>
+<b class="fc">&nbsp;            List&lt;Transaction&gt; transactions =  transactionService.getTransactionsByAccount(accounts.get(0).getAccountNo());</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(transactions);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        catch (Exception e) {</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    
+&nbsp;    @GetMapping(&quot;/user/{uid}/accounts&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Account&gt;&gt; getAccountsForUserId(@PathVariable Long uid){
+&nbsp;        try {
+<b class="fc">&nbsp;            Optional&lt;List&lt;Account&gt;&gt; accounts = accountService.getAccountsForUser(uid);</b>
+&nbsp;
+<b class="fc">&nbsp;            if (accounts.isPresent()) {</b>
+<b class="fc">&nbsp;                return ResponseEntity.ok(accounts.get());</b>
+&nbsp;            }
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</b>
+&nbsp;
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/accounts&quot;)
+&nbsp;    public List&lt;Account&gt; getAllAccounts() {
+&nbsp;        try {
+<b class="fc">&nbsp;            return accountService.listAll();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (Exception e) {</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/active/{userId}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Account&gt;&gt; getActiveAccountsForUser(@PathVariable Long userId) {
+<b class="fc">&nbsp;        List&lt;Account&gt; activeAccounts = accountService.getActiveAccountsForUser(userId);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(activeAccounts);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/account/{accountId}/active&quot;)
+&nbsp;    public ResponseEntity&lt;Account&gt; updateActiveState(@RequestHeader(name = &quot;Authorization&quot;) String authentication,
+&nbsp;                                                     @PathVariable Long accountId){
+&nbsp;        try {
+<b class="fc">&nbsp;            System.out.println(&quot;Inside change active status&quot;);</b>
+<b class="fc">&nbsp;            AdminAuthentication.authenticateAdminCredentials(authentication);</b>
+<b class="nc">&nbsp;            Account updated = accountService.updateActiveStatus(accountId);</b>
+&nbsp;
+<b class="nc">&nbsp;            return ResponseEntity.ok(updated);</b>
+&nbsp;
+<b class="fc">&nbsp;        } catch (UnauthorizedAccessException e) {</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/account/{accountId}/withdraw&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; withdrawMoneyFromAccount(@RequestHeader(name = &quot;Authorization&quot;) String authentication,
+&nbsp;                                                      @PathVariable Long accountId,
+&nbsp;                                                      @RequestParam double amount,
+&nbsp;                                                      @RequestParam String transactionPassword){
+<b class="fc">&nbsp;        System.out.println(&quot;inside WithdrawMoneyFromAcoount: AccountController&quot;);</b>
+&nbsp;        try{
+<b class="fc">&nbsp;            AdminAuthentication.authenticateAdminCredentials(authentication);</b>
+<b class="nc">&nbsp;            if(!transactionPassword.equals(&quot;adminTransaction&quot;)){</b>
+<b class="nc">&nbsp;                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;Transaction Password not correct&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            Account account = accountService.getAccountById(accountId);</b>
+<b class="nc">&nbsp;            if((account.getBalance() - amount) &lt; 0){</b>
+<b class="nc">&nbsp;                return ResponseEntity.badRequest().body(&quot;Not enough money to withdraw&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            transactionService.withdrawMoney(account, amount);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(&quot;Money Withdraw Successful&quot;);</b>
+<b class="fc">&nbsp;        } catch (UnauthorizedAccessException e) {</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;The user is not authorized to withdraw money&quot;);</b>
+<b class="fc">&nbsp;        } catch (Exception e){</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(&quot;Something went wrong&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/account/{accountId}/deposit&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; depositMoneyToAccount(@RequestHeader(name = &quot;Authorization&quot;) String authentication,
+&nbsp;                                                      @PathVariable Long accountId,
+&nbsp;                                                      @RequestParam String transactionPassword,
+&nbsp;                                                      @RequestParam Double amount){
+&nbsp;        try{
+<b class="fc">&nbsp;            AdminAuthentication.authenticateAdminCredentials(authentication);</b>
+<b class="nc">&nbsp;            if(!transactionPassword.equals(&quot;adminTransaction&quot;)){</b>
+<b class="nc">&nbsp;                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;Transaction Password not correct&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            Account account = accountService.getAccountById(accountId);</b>
+<b class="nc">&nbsp;            transactionService.depositMoney(account, amount);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(&quot;Money Deposit Successful&quot;);</b>
+<b class="fc">&nbsp;        } catch (UnauthorizedAccessException e) {</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;The user is not authorized to deposit money&quot;);</b>
+<b class="fc">&nbsp;        } catch (Exception e){</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(&quot;Something went wrong&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-02 13:33</div>
+</div>
+</body>
+</html>

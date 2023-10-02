@@ -1,0 +1,282 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > UserController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.onlinebanking.team3.onlinebanking.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: UserController (com.onlinebanking.team3.onlinebanking.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.3%
+  </span>
+  <span class="absValue">
+    (44/60)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.onlinebanking.team3.onlinebanking.controller;
+&nbsp;
+&nbsp;import com.onlinebanking.team3.onlinebanking.config.AdminAuthentication;
+&nbsp;import com.onlinebanking.team3.onlinebanking.exception.ResourceNotFoundException;
+&nbsp;import com.onlinebanking.team3.onlinebanking.exception.UnauthorizedAccessException;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Account;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.Address;
+&nbsp;import com.onlinebanking.team3.onlinebanking.model.User;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.AccountService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.AddressService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.BeneficiaryService;
+&nbsp;import com.onlinebanking.team3.onlinebanking.service.UserService;
+&nbsp;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.validation.annotation.Validated;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.nio.charset.StandardCharsets;
+&nbsp;import java.util.Base64;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@CrossOrigin(origins=&quot;http://localhost:3000&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class UserController {</b>
+&nbsp;    @Autowired
+&nbsp;    private UserService uService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private AccountService accountService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private BeneficiaryService beneficiaryService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private AddressService addressService;
+&nbsp;
+&nbsp;    @GetMapping(&quot;/welcome&quot;)
+&nbsp;    public String demo() {
+<b class="fc">&nbsp;        return &quot;Welcome User&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/createUser&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; createUser(@Validated @RequestBody User user) {
+&nbsp;        try {
+&nbsp;
+<b class="fc">&nbsp;            System.out.println(user.toString());</b>
+&nbsp;
+<b class="fc">&nbsp;            Address residentialAddress = user.getResidentialAddress();</b>
+<b class="fc">&nbsp;            Address permanentAddress = user.getPermanentAddress();</b>
+&nbsp;
+<b class="fc">&nbsp;            Address registeredResidentialAddress = addressService.saveAddress(residentialAddress);</b>
+<b class="fc">&nbsp;            Address registeredPermanentAddress = addressService.saveAddress(permanentAddress);</b>
+&nbsp;
+<b class="fc">&nbsp;            User registeredUser = uService.registerUser(user);</b>
+&nbsp;
+<b class="fc">&nbsp;            Address mailingAddress = user.getResidentialAddress();</b>
+<b class="fc">&nbsp;            Account account = new Account(&quot;Savings Account&quot;, &quot;NX1845&quot;, mailingAddress, 1000, true, user);</b>
+&nbsp;
+<b class="fc">&nbsp;            Account registeredAccount = accountService.createAccount(account);</b>
+&nbsp;
+<b class="fc">&nbsp;            if (registeredUser != null)</b>
+<b class="fc">&nbsp;                return ResponseEntity.ok(&quot;Registration Successful&quot;);</b>
+&nbsp;            else
+<b class="nc">&nbsp;                return ResponseEntity.badRequest().body(&quot;Registration Failed&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+&nbsp;            // TODO: handle exception
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</b>
+<b class="nc">&nbsp;                    .body(&quot;An Error Occurred: &quot; + e.getMessage().substring(0, 100));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(value = &quot;/loginUser&quot;)
+&nbsp;    public ResponseEntity&lt;User&gt; loginUser(@RequestParam String phoneNumber, @RequestParam String password) {
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            User u = uService.findUserByPhoneNumber(phoneNumber)</b>
+<b class="fc">&nbsp;                    .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;No User Enrolled With This Number ::&quot;));</b>
+&nbsp;
+<b class="fc">&nbsp;            Base64.Encoder encoder = Base64.getEncoder();</b>
+<b class="fc">&nbsp;            String encodedString = encoder.encodeToString( // encrypt password in database field</b>
+<b class="fc">&nbsp;                    password.getBytes(StandardCharsets.UTF_8));</b>
+<b class="fc">&nbsp;            if (encodedString.equals(u.getLoginPassword())) {</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(u);</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);</b>
+<b class="fc">&nbsp;        }  catch (ResourceNotFoundException rfe) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+<b class="nc">&nbsp;        }catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest().body(null);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    @PutMapping(&quot;/register&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; registerInternetBanking(@RequestParam String emailId,
+&nbsp;            @RequestParam Long accountNumber, @RequestParam String transactionPassword) {
+&nbsp;        try {
+<b class="fc">&nbsp;            Account account = accountService.getAccountById(accountNumber);</b>
+<b class="fc">&nbsp;            User user = uService.getUserById(account.getUser().getUid());</b>
+&nbsp;
+<b class="fc">&nbsp;            if (account.getUser().getEmailId().equals(emailId)) {</b>
+<b class="fc">&nbsp;                account.setTransactionPassword(transactionPassword);</b>
+<b class="fc">&nbsp;                Account updatedAccount = accountService.createAccount(account);</b>
+<b class="fc">&nbsp;                return ResponseEntity.ok(&quot;Registration Successful&quot;);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                return ResponseEntity.badRequest().body(&quot;Account Number and Email Id mismatch&quot;);</b>
+&nbsp;            }
+&nbsp;        	
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+&nbsp;			// TODO: handle exception
+<b class="nc">&nbsp;			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</b>
+<b class="nc">&nbsp;                    .body(&quot;An Error Occurred: &quot;+e.getMessage());</b>
+&nbsp;
+&nbsp;		}
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/users/{uid}&quot;)
+&nbsp;    public User getUserById(@PathVariable Long uid) {
+<b class="fc">&nbsp;        return uService.getUserById(uid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/users/phone/{ph}&quot;)
+&nbsp;    public Optional&lt;User&gt; getUserByPhoneNumber(@PathVariable String ph) {
+<b class="fc">&nbsp;        Optional&lt;User&gt; user =  uService.findUserByPhoneNumber(ph);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;User = &quot; + user.get());</b>
+<b class="fc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/users&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;User&gt;&gt; getAllUsers(@RequestHeader(name = &quot;Authorization&quot;) String authentication) {
+&nbsp;        try {
+<b class="fc">&nbsp;            AdminAuthentication.authenticateAdminCredentials(authentication);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(uService.listAll());</b>
+&nbsp;
+<b class="fc">&nbsp;        } catch (UnauthorizedAccessException e) {</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // UPDATE
+&nbsp;    @PutMapping(&quot;findUser/{userId}&quot;)
+&nbsp;    public ResponseEntity&lt;User&gt; updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
+&nbsp;        try {
+<b class="fc">&nbsp;            User updated = uService.updateUser(userId, updatedUser);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(updated);</b>
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;users/{userId}/verify&quot;)
+&nbsp;    public ResponseEntity&lt;User&gt; kycVerifyUser(@RequestHeader(name = &quot;Authorization&quot;) String authentication,
+&nbsp;            @PathVariable Long userId) {
+&nbsp;        try {
+<b class="fc">&nbsp;            System.out.println(&quot;Inside KYC&quot;);</b>
+<b class="fc">&nbsp;            AdminAuthentication.authenticateAdminCredentials(authentication);</b>
+<b class="nc">&nbsp;            User updated = uService.kycVerifyUser(userId);</b>
+&nbsp;
+<b class="nc">&nbsp;            return ResponseEntity.ok(updated);</b>
+&nbsp;
+<b class="fc">&nbsp;        } catch (UnauthorizedAccessException e) {</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-02 13:33</div>
+</div>
+</body>
+</html>

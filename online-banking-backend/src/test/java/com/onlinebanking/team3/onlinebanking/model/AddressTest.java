@@ -11,8 +11,10 @@ class AddressTest {
      */
     @Test
     void testConstructor() {
+        // Arrange and Act
         Address actualAddress = new Address("42 Main St", "Oxford", "MD", 1);
 
+        // Assert
         assertEquals("42 Main St", actualAddress.getAddress());
         assertEquals("MD", actualAddress.getState());
         assertEquals(1, actualAddress.getPincode());
@@ -33,6 +35,7 @@ class AddressTest {
         //       at com.onlinebanking.team3.onlinebanking.model.Address.<init>(Address.java:20)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange and Act
         new Address(null, null, null, 1);
 
     }
@@ -51,6 +54,7 @@ class AddressTest {
         //       at com.onlinebanking.team3.onlinebanking.model.Address.<init>(Address.java:20)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange and Act
         new Address("foo", null, null, 1);
 
     }
@@ -69,6 +73,7 @@ class AddressTest {
         //       at com.onlinebanking.team3.onlinebanking.model.Address.<init>(Address.java:20)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange and Act
         new Address("foo", "foo", null, 1);
 
     }

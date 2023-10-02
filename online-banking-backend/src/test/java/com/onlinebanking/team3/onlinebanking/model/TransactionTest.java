@@ -16,9 +16,11 @@ class TransactionTest {
      */
     @Test
     void testConstructor() {
+        // Arrange and Act
         Transaction actualTransaction = new Transaction(LocalDate.of(1970, 1, 1).atStartOfDay(), 10.0d, "Transaction Type",
                 "Remarks");
 
+        // Assert
         assertEquals(10.0d, actualTransaction.getAmount());
         assertEquals("Transaction Type", actualTransaction.getTransactionType());
         assertEquals("00:00", actualTransaction.getTransactionDateTime().toLocalTime().toString());
@@ -39,6 +41,7 @@ class TransactionTest {
         //       at com.onlinebanking.team3.onlinebanking.model.Transaction.<init>(Transaction.java:33)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange and Act
         new Transaction(null, 10.0d, "foo", "foo");
 
     }
@@ -65,7 +68,10 @@ class TransactionTest {
      */
     @Test
     void testSetAmount() {
+        // Arrange
         Transaction transaction = new Transaction();
+
+        // Act
         transaction.setAmount(10.0d);
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
@@ -106,6 +112,7 @@ class TransactionTest {
         user.setUid(1L);
         Account fromAccount = new Account();
         fromAccount.setAccountNo(1234567890L);
+        fromAccount.setAccountType("3");
         fromAccount.setBalance(10.0d);
         fromAccount.setIfscCode("Ifsc Code");
         fromAccount.setIsActive(true);
@@ -154,6 +161,7 @@ class TransactionTest {
         user2.setUid(1L);
         Account toAccount = new Account();
         toAccount.setAccountNo(1234567890L);
+        toAccount.setAccountType("3");
         toAccount.setBalance(10.0d);
         toAccount.setIfscCode("Ifsc Code");
         toAccount.setIsActive(true);
@@ -171,6 +179,8 @@ class TransactionTest {
         Account actualToAccount = transaction.getToAccount();
         LocalDateTime actualTransactionDateTime = transaction.getTransactionDateTime();
         String actualTransactionType = transaction.getTransactionType();
+
+        // Assert that nothing has changed
         assertEquals(10.0d, actualAmount);
         assertSame(fromAccount, actualFromAccount);
         assertEquals(1L, actualId.longValue());

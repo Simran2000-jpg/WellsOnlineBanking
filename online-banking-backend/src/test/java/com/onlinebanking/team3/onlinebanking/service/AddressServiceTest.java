@@ -28,6 +28,7 @@ class AddressServiceTest {
      */
     @Test
     void testSaveAddress() {
+        // Arrange
         Address address = new Address();
         address.setAddress("42 Main St");
         address.setAddressId(1L);
@@ -42,6 +43,8 @@ class AddressServiceTest {
         address2.setCity("Oxford");
         address2.setPincode(1);
         address2.setState("MD");
+
+        // Act and Assert
         assertSame(address, addressService.saveAddress(address2));
         verify(addressRepository).save(Mockito.<Address>any());
     }
