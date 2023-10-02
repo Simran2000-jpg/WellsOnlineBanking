@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Context } from "../context/Context";
 import UserService from "../services/UserService";
+import BeneficiaryService from "../services/BeneficiaryService";
 
 function AddBeneficiary() {
   const navigate = useNavigate();
@@ -24,25 +25,44 @@ function AddBeneficiary() {
   });
 
   const createBeneficiary = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8085/beneficiaries/${userId}`,
-        {
-          ifscCode: ifscCode,
-          accountNo: accountNumber,
-          name: beneficiaryName,
-        }
-      );
-      if (response.status == 200 || response.status == 201) {
-        setError(false);
-        setSuccessMessage("Added Beneficiary successful");
-        setTimeout(() => {
-          navigate("/dashboard/view-beneficiary");
-        }, 1000);
-      }
-    } catch (error) {
-      setError(error.response.data);
+    var beneficiaryData = {
+        ifscCode: ifscCode,
+        accountNo: accountNumber,
+        name: beneficiaryName,
     }
+    BeneficiaryService.addBeneficiary(userId, beneficiaryData).then((response) => {
+        if (response.status == 200 || response.status == 201) {
+            setError(false);
+            setSuccessMessage("Added Beneficiary successful");
+            setTimeout(() => {
+              navigate("/dashboard/view-beneficiary");
+            }, 1000);
+        }
+        else{
+            setError(response.response.data);
+        }
+    })
+
+    // try {
+    //   const response = await axios.post(
+    //     `http://localhost:8085/beneficiaries/${userId}`,
+    //     {
+    //       ifscCode: ifscCode,
+    //       accountNo: accountNumber,
+    //       name: beneficiaryName,
+    //     }
+    //   );
+    //   console.log(response);
+    //   if (response.status == 200 || response.status == 201) {
+    //     setError(false);
+    //     setSuccessMessage("Added Beneficiary successful");
+    //     setTimeout(() => {
+    //       navigate("/dashboard/view-beneficiary");
+    //     }, 1000);
+    //   }
+    // } catch (error) {
+    //   setError(error.response.data);
+    // }
   };
 
   const handleAddBeneficiary = (e) => {
