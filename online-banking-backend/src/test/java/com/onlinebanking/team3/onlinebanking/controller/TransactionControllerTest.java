@@ -54,6 +54,7 @@ class TransactionControllerTest {
      */
     @Test
     void testGetTransactionById() throws Exception {
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -97,6 +98,7 @@ class TransactionControllerTest {
 
         Account fromAccount = new Account();
         fromAccount.setAccountNo(1234567890L);
+        fromAccount.setAccountType("3");
         fromAccount.setBalance(10.0d);
         fromAccount.setIfscCode("Ifsc Code");
         fromAccount.setIsActive(true);
@@ -147,6 +149,7 @@ class TransactionControllerTest {
 
         Account toAccount = new Account();
         toAccount.setAccountNo(1234567890L);
+        toAccount.setAccountType("3");
         toAccount.setBalance(10.0d);
         toAccount.setIfscCode("Ifsc Code");
         toAccount.setIsActive(true);
@@ -164,6 +167,8 @@ class TransactionControllerTest {
         transaction.setTransactionType("Transaction Type");
         when(transactionService.getTransactionById(Mockito.<Long>any())).thenReturn(transaction);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/transactions/{transactionId}", 1L);
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(transactionController)
                 .build()
                 .perform(requestBuilder)
@@ -172,23 +177,23 @@ class TransactionControllerTest {
                 .andExpect(MockMvcResultMatchers.content()
                         .string(
                                 "{\"id\":1,\"transactionDateTime\":\"1970-01-01 00:00:00\",\"amount\":10.0,\"transactionType\":\"Transaction"
-                                        + " Type\",\"remarks\":\"Remarks\",\"toAccount\":{\"accountNo\":1234567890,\"ifscCode\":\"Ifsc Code\",\"isActive\":true"
-                                        + ",\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1},"
-                                        + "\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":\"Jane\",\"middleName\":\"Middle"
-                                        + " Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\",\"phoneNumber\":\"6625550144\",\"emailId"
-                                        + "\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation\":\"Occupation\",\"sourceOfIncome\":\"Source"
-                                        + " Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword\":\"aWxvdmV5b3U=\",\"kyc\":true,"
-                                        + "\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}"
-                                        + ",\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}}"
-                                        + "},\"fromAccount\":{\"accountNo\":1234567890,\"ifscCode\":\"Ifsc Code\",\"isActive\":true,\"mailingAddress\":{"
-                                        + "\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1},\"balance\":10.0,"
-                                        + "\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":\"Jane\",\"middleName\":\"Middle"
-                                        + " Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\",\"phoneNumber\":\"6625550144\",\"emailId"
-                                        + "\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation\":\"Occupation\",\"sourceOfIncome\":\"Source"
-                                        + " Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword\":\"aWxvdmV5b3U=\",\"kyc\":true,"
-                                        + "\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}"
-                                        + ",\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}}"
-                                        + "}}"));
+                                        + " Type\",\"remarks\":\"Remarks\",\"toAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}},\"fromAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}}}"));
     }
 
     /**
@@ -196,37 +201,26 @@ class TransactionControllerTest {
      */
     @Test
     void testGetTransactionsByAccount() throws Exception {
+        // Arrange
         when(transactionService.getTransactionsByAccount(Mockito.<Long>any())).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/transactions/accounts/{accountNo}",
                 1234567890L);
-        MockMvcBuilders.standaloneSetup(transactionController)
+
+        // Act
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(transactionController)
                 .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
+                .perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     /**
-     * Method under test: {@link TransactionController#getAllTransactions()}
+     * Method under test: {@link TransactionController#getTransactionsByAccount(Long)}
      */
     @Test
-    void testGetAllTransactions() throws Exception {
-        when(transactionService.getAllTransactions()).thenReturn(new ArrayList<>());
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/transactions/all");
-        MockMvcBuilders.standaloneSetup(transactionController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-    }
-
-    /**
-     * Method under test: {@link TransactionController#createTransaction(Long, Long, String, double, String, String)}
-     */
-    @Test
-    void testCreateTransaction() throws Exception {
+    void testGetTransactionsByAccount2() throws Exception {
+        // Arrange
         Address mailingAddress = new Address();
         mailingAddress.setAddress("42 Main St");
         mailingAddress.setAddressId(1L);
@@ -270,6 +264,7 @@ class TransactionControllerTest {
 
         Account fromAccount = new Account();
         fromAccount.setAccountNo(1234567890L);
+        fromAccount.setAccountType("3");
         fromAccount.setBalance(10.0d);
         fromAccount.setIfscCode("Ifsc Code");
         fromAccount.setIsActive(true);
@@ -320,6 +315,326 @@ class TransactionControllerTest {
 
         Account toAccount = new Account();
         toAccount.setAccountNo(1234567890L);
+        toAccount.setAccountType("3");
+        toAccount.setBalance(10.0d);
+        toAccount.setIfscCode("Ifsc Code");
+        toAccount.setIsActive(true);
+        toAccount.setMailingAddress(mailingAddress2);
+        toAccount.setTransactionPassword("iloveyou");
+        toAccount.setUser(user2);
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(10.0d);
+        transaction.setFromAccount(fromAccount);
+        transaction.setId(1L);
+        transaction.setRemarks("Remarks");
+        transaction.setToAccount(toAccount);
+        transaction.setTransactionDateTime(LocalDate.of(1970, 1, 1).atStartOfDay());
+        transaction.setTransactionType("Transaction Type");
+
+        ArrayList<Transaction> transactionList = new ArrayList<>();
+        transactionList.add(transaction);
+        when(transactionService.getTransactionsByAccount(Mockito.<Long>any())).thenReturn(transactionList);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/transactions/accounts/{accountNo}",
+                1234567890L);
+
+        // Act and Assert
+        MockMvcBuilders.standaloneSetup(transactionController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "[{\"id\":1,\"transactionDateTime\":\"1970-01-01 00:00:00\",\"amount\":10.0,\"transactionType\":\"Transaction"
+                                        + " Type\",\"remarks\":\"Remarks\",\"toAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}},\"fromAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}}}]"));
+    }
+
+    /**
+     * Method under test: {@link TransactionController#getAllTransactions()}
+     */
+    @Test
+    void testGetAllTransactions() throws Exception {
+        // Arrange
+        when(transactionService.getAllTransactions()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/transactions/all");
+
+        // Act
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(transactionController)
+                .build()
+                .perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    /**
+     * Method under test: {@link TransactionController#getAllTransactions()}
+     */
+    @Test
+    void testGetAllTransactions2() throws Exception {
+        // Arrange
+        Address mailingAddress = new Address();
+        mailingAddress.setAddress("42 Main St");
+        mailingAddress.setAddressId(1L);
+        mailingAddress.setCity("Oxford");
+        mailingAddress.setPincode(1);
+        mailingAddress.setState("MD");
+
+        Address permanentAddress = new Address();
+        permanentAddress.setAddress("42 Main St");
+        permanentAddress.setAddressId(1L);
+        permanentAddress.setCity("Oxford");
+        permanentAddress.setPincode(1);
+        permanentAddress.setState("MD");
+
+        Address residentialAddress = new Address();
+        residentialAddress.setAddress("42 Main St");
+        residentialAddress.setAddressId(1L);
+        residentialAddress.setCity("Oxford");
+        residentialAddress.setPincode(1);
+        residentialAddress.setState("MD");
+
+        User user = new User();
+        user.setAadharNumber("42");
+        user.setDob("Dob");
+        user.setEmailId("42");
+        user.setFatherName("Father Name");
+        user.setFirstName("Jane");
+        user.setGender("Gender");
+        user.setGrossAnnualIncome("Gross Annual Income");
+        user.setKyc(true);
+        user.setLastName("Doe");
+        user.setLoginPassword("iloveyou");
+        user.setMiddleName("Middle Name");
+        user.setOccupation("Occupation");
+        user.setPanNumber("42");
+        user.setPermanentAddress(permanentAddress);
+        user.setPhoneNumber("6625550144");
+        user.setResidentialAddress(residentialAddress);
+        user.setSourceOfIncome("Source Of Income");
+        user.setUid(1L);
+
+        Account fromAccount = new Account();
+        fromAccount.setAccountNo(1234567890L);
+        fromAccount.setAccountType("3");
+        fromAccount.setBalance(10.0d);
+        fromAccount.setIfscCode("Ifsc Code");
+        fromAccount.setIsActive(true);
+        fromAccount.setMailingAddress(mailingAddress);
+        fromAccount.setTransactionPassword("iloveyou");
+        fromAccount.setUser(user);
+
+        Address mailingAddress2 = new Address();
+        mailingAddress2.setAddress("42 Main St");
+        mailingAddress2.setAddressId(1L);
+        mailingAddress2.setCity("Oxford");
+        mailingAddress2.setPincode(1);
+        mailingAddress2.setState("MD");
+
+        Address permanentAddress2 = new Address();
+        permanentAddress2.setAddress("42 Main St");
+        permanentAddress2.setAddressId(1L);
+        permanentAddress2.setCity("Oxford");
+        permanentAddress2.setPincode(1);
+        permanentAddress2.setState("MD");
+
+        Address residentialAddress2 = new Address();
+        residentialAddress2.setAddress("42 Main St");
+        residentialAddress2.setAddressId(1L);
+        residentialAddress2.setCity("Oxford");
+        residentialAddress2.setPincode(1);
+        residentialAddress2.setState("MD");
+
+        User user2 = new User();
+        user2.setAadharNumber("42");
+        user2.setDob("Dob");
+        user2.setEmailId("42");
+        user2.setFatherName("Father Name");
+        user2.setFirstName("Jane");
+        user2.setGender("Gender");
+        user2.setGrossAnnualIncome("Gross Annual Income");
+        user2.setKyc(true);
+        user2.setLastName("Doe");
+        user2.setLoginPassword("iloveyou");
+        user2.setMiddleName("Middle Name");
+        user2.setOccupation("Occupation");
+        user2.setPanNumber("42");
+        user2.setPermanentAddress(permanentAddress2);
+        user2.setPhoneNumber("6625550144");
+        user2.setResidentialAddress(residentialAddress2);
+        user2.setSourceOfIncome("Source Of Income");
+        user2.setUid(1L);
+
+        Account toAccount = new Account();
+        toAccount.setAccountNo(1234567890L);
+        toAccount.setAccountType("3");
+        toAccount.setBalance(10.0d);
+        toAccount.setIfscCode("Ifsc Code");
+        toAccount.setIsActive(true);
+        toAccount.setMailingAddress(mailingAddress2);
+        toAccount.setTransactionPassword("iloveyou");
+        toAccount.setUser(user2);
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(10.0d);
+        transaction.setFromAccount(fromAccount);
+        transaction.setId(1L);
+        transaction.setRemarks("Remarks");
+        transaction.setToAccount(toAccount);
+        transaction.setTransactionDateTime(LocalDate.of(1970, 1, 1).atStartOfDay());
+        transaction.setTransactionType("Transaction Type");
+
+        ArrayList<Transaction> transactionList = new ArrayList<>();
+        transactionList.add(transaction);
+        when(transactionService.getAllTransactions()).thenReturn(transactionList);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/transactions/all");
+
+        // Act and Assert
+        MockMvcBuilders.standaloneSetup(transactionController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "[{\"id\":1,\"transactionDateTime\":\"1970-01-01 00:00:00\",\"amount\":10.0,\"transactionType\":\"Transaction"
+                                        + " Type\",\"remarks\":\"Remarks\",\"toAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}},\"fromAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}}}]"));
+    }
+
+    /**
+     * Method under test: {@link TransactionController#createTransaction(Long, Long, String, double, String, String)}
+     */
+    @Test
+    void testCreateTransaction() throws Exception {
+        // Arrange
+        Address mailingAddress = new Address();
+        mailingAddress.setAddress("42 Main St");
+        mailingAddress.setAddressId(1L);
+        mailingAddress.setCity("Oxford");
+        mailingAddress.setPincode(1);
+        mailingAddress.setState("MD");
+
+        Address permanentAddress = new Address();
+        permanentAddress.setAddress("42 Main St");
+        permanentAddress.setAddressId(1L);
+        permanentAddress.setCity("Oxford");
+        permanentAddress.setPincode(1);
+        permanentAddress.setState("MD");
+
+        Address residentialAddress = new Address();
+        residentialAddress.setAddress("42 Main St");
+        residentialAddress.setAddressId(1L);
+        residentialAddress.setCity("Oxford");
+        residentialAddress.setPincode(1);
+        residentialAddress.setState("MD");
+
+        User user = new User();
+        user.setAadharNumber("42");
+        user.setDob("Dob");
+        user.setEmailId("42");
+        user.setFatherName("Father Name");
+        user.setFirstName("Jane");
+        user.setGender("Gender");
+        user.setGrossAnnualIncome("Gross Annual Income");
+        user.setKyc(true);
+        user.setLastName("Doe");
+        user.setLoginPassword("iloveyou");
+        user.setMiddleName("Middle Name");
+        user.setOccupation("Occupation");
+        user.setPanNumber("42");
+        user.setPermanentAddress(permanentAddress);
+        user.setPhoneNumber("6625550144");
+        user.setResidentialAddress(residentialAddress);
+        user.setSourceOfIncome("Source Of Income");
+        user.setUid(1L);
+
+        Account fromAccount = new Account();
+        fromAccount.setAccountNo(1234567890L);
+        fromAccount.setAccountType("3");
+        fromAccount.setBalance(10.0d);
+        fromAccount.setIfscCode("Ifsc Code");
+        fromAccount.setIsActive(true);
+        fromAccount.setMailingAddress(mailingAddress);
+        fromAccount.setTransactionPassword("iloveyou");
+        fromAccount.setUser(user);
+
+        Address mailingAddress2 = new Address();
+        mailingAddress2.setAddress("42 Main St");
+        mailingAddress2.setAddressId(1L);
+        mailingAddress2.setCity("Oxford");
+        mailingAddress2.setPincode(1);
+        mailingAddress2.setState("MD");
+
+        Address permanentAddress2 = new Address();
+        permanentAddress2.setAddress("42 Main St");
+        permanentAddress2.setAddressId(1L);
+        permanentAddress2.setCity("Oxford");
+        permanentAddress2.setPincode(1);
+        permanentAddress2.setState("MD");
+
+        Address residentialAddress2 = new Address();
+        residentialAddress2.setAddress("42 Main St");
+        residentialAddress2.setAddressId(1L);
+        residentialAddress2.setCity("Oxford");
+        residentialAddress2.setPincode(1);
+        residentialAddress2.setState("MD");
+
+        User user2 = new User();
+        user2.setAadharNumber("42");
+        user2.setDob("Dob");
+        user2.setEmailId("42");
+        user2.setFatherName("Father Name");
+        user2.setFirstName("Jane");
+        user2.setGender("Gender");
+        user2.setGrossAnnualIncome("Gross Annual Income");
+        user2.setKyc(true);
+        user2.setLastName("Doe");
+        user2.setLoginPassword("iloveyou");
+        user2.setMiddleName("Middle Name");
+        user2.setOccupation("Occupation");
+        user2.setPanNumber("42");
+        user2.setPermanentAddress(permanentAddress2);
+        user2.setPhoneNumber("6625550144");
+        user2.setResidentialAddress(residentialAddress2);
+        user2.setSourceOfIncome("Source Of Income");
+        user2.setUid(1L);
+
+        Account toAccount = new Account();
+        toAccount.setAccountNo(1234567890L);
+        toAccount.setAccountType("3");
         toAccount.setBalance(10.0d);
         toAccount.setIfscCode("Ifsc Code");
         toAccount.setIsActive(true);
@@ -342,6 +657,8 @@ class TransactionControllerTest {
                 .param("remarks", "foo")
                 .param("transactionPassword", "foo")
                 .param("transactionType", "foo");
+
+        // Act and Assert
         MockMvcBuilders.standaloneSetup(transactionController)
                 .build()
                 .perform(requestBuilder)
@@ -350,23 +667,23 @@ class TransactionControllerTest {
                 .andExpect(MockMvcResultMatchers.content()
                         .string(
                                 "{\"id\":1,\"transactionDateTime\":\"1970-01-01 00:00:00\",\"amount\":10.0,\"transactionType\":\"Transaction"
-                                        + " Type\",\"remarks\":\"Remarks\",\"toAccount\":{\"accountNo\":1234567890,\"ifscCode\":\"Ifsc Code\",\"isActive\":true"
-                                        + ",\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1},"
-                                        + "\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":\"Jane\",\"middleName\":\"Middle"
-                                        + " Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\",\"phoneNumber\":\"6625550144\",\"emailId"
-                                        + "\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation\":\"Occupation\",\"sourceOfIncome\":\"Source"
-                                        + " Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword\":\"aWxvdmV5b3U=\",\"kyc\":true,"
-                                        + "\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}"
-                                        + ",\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}}"
-                                        + "},\"fromAccount\":{\"accountNo\":1234567890,\"ifscCode\":\"Ifsc Code\",\"isActive\":true,\"mailingAddress\":{"
-                                        + "\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1},\"balance\":10.0,"
-                                        + "\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":\"Jane\",\"middleName\":\"Middle"
-                                        + " Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\",\"phoneNumber\":\"6625550144\",\"emailId"
-                                        + "\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation\":\"Occupation\",\"sourceOfIncome\":\"Source"
-                                        + " Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword\":\"aWxvdmV5b3U=\",\"kyc\":true,"
-                                        + "\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}"
-                                        + ",\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state\":\"MD\",\"pincode\":1}}"
-                                        + "}}"));
+                                        + " Type\",\"remarks\":\"Remarks\",\"toAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}},\"fromAccount\":{\"accountNo\":1234567890,\"accountType\":\"3\",\"ifscCode\":\"Ifsc"
+                                        + " Code\",\"isActive\":true,\"mailingAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\",\"state"
+                                        + "\":\"MD\",\"pincode\":1},\"balance\":10.0,\"transactionPassword\":\"aWxvdmV5b3U=\",\"user\":{\"uid\":1,\"firstName\":"
+                                        + "\"Jane\",\"middleName\":\"Middle Name\",\"lastName\":\"Doe\",\"gender\":\"Gender\",\"fatherName\":\"Father Name\","
+                                        + "\"phoneNumber\":\"6625550144\",\"emailId\":\"42\",\"panNumber\":\"42\",\"aadharNumber\":\"42\",\"dob\":\"Dob\",\"occupation"
+                                        + "\":\"Occupation\",\"sourceOfIncome\":\"Source Of Income\",\"grossAnnualIncome\":\"Gross Annual Income\",\"loginPassword"
+                                        + "\":\"aWxvdmV5b3U=\",\"kyc\":true,\"residentialAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford"
+                                        + "\",\"state\":\"MD\",\"pincode\":1},\"permanentAddress\":{\"addressId\":1,\"address\":\"42 Main St\",\"city\":\"Oxford\""
+                                        + ",\"state\":\"MD\",\"pincode\":1}}}}"));
     }
 
     /**
@@ -374,11 +691,16 @@ class TransactionControllerTest {
      */
     @Test
     void testDeleteTransaction() throws Exception {
+        // Arrange
         doNothing().when(transactionService).deleteTransaction(Mockito.<Long>any());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/{transactionId}", 1L);
+
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(transactionController)
                 .build()
                 .perform(requestBuilder);
+
+        // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
@@ -387,27 +709,18 @@ class TransactionControllerTest {
      */
     @Test
     void testDeleteTransaction2() throws Exception {
+        // Arrange
         doThrow(new TransactionNotFoundException("Transaction Not Found")).when(transactionService)
                 .deleteTransaction(Mockito.<Long>any());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/{transactionId}", 1L);
-        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(transactionController)
-                .build()
-                .perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
 
-    /**
-     * Method under test: {@link TransactionController#deleteTransaction(Long)}
-     */
-    @Test
-    void testDeleteTransaction3() throws Exception {
-        doNothing().when(transactionService).deleteTransaction(Mockito.<Long>any());
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/{transactionId}", 1L);
-        requestBuilder.contentType("https://example.org/example");
+        // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(transactionController)
                 .build()
                 .perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     /**
@@ -433,6 +746,7 @@ class TransactionControllerTest {
         //       at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:3964)
         //   See https://diff.blue/R013 to resolve this issue.
 
+        // Arrange
         MockHttpServletRequestBuilder contentTypeResult = MockMvcRequestBuilders.put("/{transactionId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -441,6 +755,7 @@ class TransactionControllerTest {
 
         Account fromAccount = new Account();
         fromAccount.setAccountNo(1234567890L);
+        fromAccount.setAccountType("3");
         fromAccount.setBalance(10.0d);
         fromAccount.setIfscCode("Ifsc Code");
         fromAccount.setIsActive(true);
@@ -494,6 +809,7 @@ class TransactionControllerTest {
 
         Account toAccount = new Account();
         toAccount.setAccountNo(1234567890L);
+        toAccount.setAccountType("3");
         toAccount.setBalance(10.0d);
         toAccount.setIfscCode("Ifsc Code");
         toAccount.setIsActive(true);
@@ -546,6 +862,8 @@ class TransactionControllerTest {
         transaction.setTransactionType("Transaction Type");
         MockHttpServletRequestBuilder requestBuilder = contentTypeResult
                 .content((new ObjectMapper()).writeValueAsString(transaction));
+
+        // Act
         MockMvcBuilders.standaloneSetup(transactionController).build().perform(requestBuilder);
     }
 }
