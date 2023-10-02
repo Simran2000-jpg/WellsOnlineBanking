@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +68,26 @@ public class AccountController {
             // TODO: handle exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An Error Occurred: " + e.getMessage().substring(0, 100));
+        }
+    }
+
+    @PutMapping(value = "/updateTransactionPassword/{aid}")
+    public ResponseEntity<Account> updateTransactionPassword(@PathVariable Long aid, @RequestParam String oldTransactionPassword, @RequestParam String newTransactionPassword) {
+
+        try {
+            Account a = accountService.getAccountById(aid);
+
+            Base64.Encoder encoder = Base64.getEncoder();
+            String encodedString = encoder.encodeToString( // encrypt password in database field
+                    oldTransactionPassword.getBytes(StandardCharsets.UTF_8));
+            if (encodedString.equals(a.getTransactionPassword())) {
+                Account updatedAccount = accountService.updateTransactionPassword(a, newTransactionPassword);
+                return ResponseEntity.ok(updatedAccount);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

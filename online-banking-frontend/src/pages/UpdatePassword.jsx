@@ -62,7 +62,7 @@ const UpdatePassword = () => {
       if (err.response.status === 404) {
         toast.error("User not found");
       } else if (err.response.status === 401) {
-        toast("🥷🏻 Old Password mismatch");
+        toast("🥷🏻 Current Login Password wrong");
       }
     }
   };

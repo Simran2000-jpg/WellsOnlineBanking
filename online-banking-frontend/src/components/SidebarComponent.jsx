@@ -32,7 +32,7 @@ const SidebarComponent = () => {
         console.log("No data found");
         return;
       } else {
-        if(path[3]) {
+        if (path[3]) {
           response.map((account) =>
             account.accountNo == path[3] ? setSelectedAccount(account) : null
           );
@@ -52,31 +52,44 @@ const SidebarComponent = () => {
             <i className="bi bi-person"></i> Account Details
           </NavLink>
         </li>
-        {kyc && <li>
-          <NavLink to={`/${path[1]}/view-beneficiary`}>
-            <i className="bi bi-card-list"></i> Manage Beneficiary
-          </NavLink>
-        </li>}
-        {kyc && <li>
-          <NavLink to={`/${path[1]}/account-statement`}>
-            <i className="bi bi-file-text"></i> Account Statement
-          </NavLink>
-        </li>}
-        {kyc && <li>
-          <NavLink to={`/${path[1]}/funds-transfer`}>
-            <i className="bi bi-currency-exchange"></i> Funds Transfer
-          </NavLink>
-        </li>}
-        {kyc && path[3] && (!selectedAccount.transactionPassword) && (
+        {kyc && (
+          <li>
+            <NavLink to={`/${path[1]}/view-beneficiary`}>
+              <i className="bi bi-card-list"></i> Manage Beneficiary
+            </NavLink>
+          </li>
+        )}
+        {kyc && (
+          <li>
+            <NavLink to={`/${path[1]}/account-statement`}>
+              <i className="bi bi-file-text"></i> Account Statement
+            </NavLink>
+          </li>
+        )}
+        {kyc && (
+          <li>
+            <NavLink to={`/${path[1]}/funds-transfer`}>
+              <i className="bi bi-currency-exchange"></i> Funds Transfer
+            </NavLink>
+          </li>
+        )}
+        {kyc && path[3] && !selectedAccount.transactionPassword && (
           <li>
             <NavLink to={`/${path[1]}/internet-banking`}>
               <i className="bi bi-person-fill-add"></i> Internet banking
             </NavLink>
           </li>
         )}
+        {kyc && (
+          <li>
+            <NavLink to={`/${path[1]}/update-transactionPassword`}>
+              <i className="bi bi-key"></i> Transaction Password
+            </NavLink>
+          </li>
+        )}
         <li>
           <NavLink to={`/${path[1]}/update-password`}>
-            <i className="bi bi-lock"></i> Update Password
+            <i className="bi bi-lock"></i> Update Login Password
           </NavLink>
         </li>
       </ul>

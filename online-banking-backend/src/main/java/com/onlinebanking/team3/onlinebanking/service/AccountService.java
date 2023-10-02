@@ -41,6 +41,10 @@ public class AccountService {
     public void updateAccount(Account fromAccount) {
     }
 
+    public Account updateTransactionPassword(Account a, String transactionPassword) {
+        a.setTransactionPassword(transactionPassword);
+        return accountRepository.save(a);
+    }
 
     public List<Account> getActiveAccountsForUser(Long userId) {
         return accountRepository.findActiveAccountsForUser(userId);
