@@ -74,6 +74,11 @@ const SidebarComponent = () => {
             </NavLink>
           </li>
         )}
+        <li>
+          <NavLink to={`/${path[1]}/update-password`}>
+            <i className="bi bi-lock"></i> Update Password
+          </NavLink>
+        </li>
       </ul>
     </div>
   );

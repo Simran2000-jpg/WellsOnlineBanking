@@ -50,7 +50,7 @@ public class UserService {
             existingUser.setMiddleName(updatedUser.getMiddleName());
             existingUser.setOccupation(updatedUser.getOccupation());
             existingUser.setSourceOfIncome(updatedUser.getSourceOfIncome());
-            // existingUser.s
+            existingUser.setLoginPassword(updatedUser.getLoginPassword());
             existingUser.setEmailId(updatedUser.getEmailId());
 
 

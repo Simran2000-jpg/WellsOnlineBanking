@@ -9,6 +9,7 @@ import Transaction from "./Transaction";
 import AddBeneficiary from "./AddBeneficiary";
 import ViewBeneficiary from "./ViewBeneficiary";
 import Register from "../pages/Register";
+import UpdatePassword from "./UpdatePassword";
 
 const UserDasboard = () => {
   const location = useLocation();
@@ -30,6 +31,8 @@ const UserDasboard = () => {
         <ViewBeneficiary />
       ) : path[2] === "internet-banking" && path[3] ? (
         <Register />
+      ) : path[2] === "update-password" ? (
+        <UpdatePassword />
       ) : (
         ""
       )}

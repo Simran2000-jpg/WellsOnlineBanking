@@ -273,7 +273,7 @@ const OpenAccount = () => {
   };
 
   const nextOrSubmitButtonHandler = () => {
-    if (stepNumber === 4) history("/login");
+    if (stepNumber === 4) history("/login/newUser");
     else if (stepNumber !== FINAL_STEP_NUMBER)
       setStepNumber((prevState) => prevState + 1);
     else handleFormSubmit();

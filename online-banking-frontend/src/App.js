@@ -19,9 +19,11 @@ import NotFound from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import UpdatePassword from "./pages/UpdatePassword";
 
 function App() {
   const { userId } = useContext(Context);
+  console.log("app.js : ", userId);
 
   return (
     <>
@@ -33,21 +35,21 @@ function App() {
               <>
                 <Route path="/openaccount" element={<OpenAccount />}></Route>
                 <Route path="/login" element={<Login />}></Route>
+                <Route path="/login/newUser" element={<Login />}></Route>
               </>
             ) : (
               <Route path="/" element={<Home />}></Route>
             )}
-            {userId === "admin" ? (
+            {userId === "admin" && (
               <>
                 <Route path="/admin" element={<Admin />}></Route>
                 <Route path="/user/:id" element={<UserDetails />}></Route>
               </>
-            ) : (
-              <Route path="/login" element={<Login />}></Route>
             )}
 
-            {userId ? (
+            {userId !== null ? (
               <>
+              <Route path="/update-password" element={<UpdatePassword />}></Route>
                 <Route path="/dashboard" element={<UserDasboard />}></Route>
                 <Route
                   path="/dashboard/:xyz"

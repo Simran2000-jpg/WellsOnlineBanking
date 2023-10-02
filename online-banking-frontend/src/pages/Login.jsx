@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Register.css";
 import { Context } from "../context/Context";
@@ -7,6 +7,9 @@ import { toast } from "react-toastify";
 
 const Login = () => {
   const history = useNavigate();
+
+  const location = useLocation();
+  const path = location.pathname.split("/");
 
   const { dispatch, isFetching } = useContext(Context);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -56,7 +59,10 @@ const Login = () => {
             "KYC is still pending, contact admin for verification as you won't be able to use all the functionality"
           );
         }
-        history("/");
+        if(path[2] === "newUser")
+          history("/update-password");
+        else
+          history("/");
       } else {
         setError(true);
         dispatch({
@@ -111,9 +117,9 @@ const Login = () => {
                   </button>
                 </div>
               </form>
-              {error && (
+              {/* {error && (
                 <span className="loginError">Invalid credentials!</span>
-              )}
+              )} */}
             </div>
           </div>
         </div>

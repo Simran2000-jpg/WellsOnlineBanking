@@ -97,7 +97,26 @@ public class UserController {
         }
     }
 
+    @PutMapping(value = "/updateLoginPassword/{uid}")
+    public ResponseEntity<User> updateLoginPassword(@PathVariable Long uid, @RequestParam String oldLoginPassword, @RequestParam String newLoginPassword) {
 
+        try {
+            User u = uService.getUserById(uid);
+
+            Base64.Encoder encoder = Base64.getEncoder();
+            String encodedString = encoder.encodeToString( // encrypt password in database field
+                    oldLoginPassword.getBytes(StandardCharsets.UTF_8));
+            if (encodedString.equals(u.getLoginPassword())) {
+                u.setLoginPassword(newLoginPassword);
+                User updatedUser = uService.updateUser(uid, u);
+                return ResponseEntity.ok(u);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     @PutMapping("/register")
     public ResponseEntity<String> registerInternetBanking(@RequestParam String emailId,
