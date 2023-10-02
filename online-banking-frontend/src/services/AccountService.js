@@ -12,4 +12,14 @@ export default class AccountService {
             return error;
         }
     }
+
+    static async getAllFromAccounts(userId) {
+        try {
+            const response = await axios.get(baseURL + `/active/${userId}`);
+            return response;
+        } 
+        catch (error) {
+            return error;
+        }
+    }
 }

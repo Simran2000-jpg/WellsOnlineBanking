@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins="http://localhost:3000")
 public class AccountController {
     @Autowired
     private AccountService accountService;
